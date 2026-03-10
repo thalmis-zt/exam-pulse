@@ -6,7 +6,22 @@
  *   :root  — light mode defaults
  *   .dark  — dark mode overrides (toggle this class on <html> or <body>)
  *
- * WARNING: Never override primitive tokens here. Only this file is
+ * WARNING: Never override primitive tokens here.
+ *
+ * Primitives (--color-blue-500, --color-gray-50, etc.) are raw values
+ * defined once in primitives.css. They have no light/dark meaning —
+ * they just describe what a colour IS.
+ *
+ * Semantic tokens are what carry meaning (--color-primary, --color-text).
+ * Only semantic tokens should differ between :root and .dark.
+ *
+ *  CORRECT WAY — overriding a semantic token in .dark:
+ *    .dark { --color-background: #0F1117; }
+ *
+ * WRONG WAY — overriding a primitive in .dark:
+ *    .dark { --color-gray-50: #0F1117; }
+ *    This would corrupt every other token that references --color-gray-50,
+ *    including any component using it outside of a background context. Only this file is
  * modified when changing theme appearance.
  */
 
