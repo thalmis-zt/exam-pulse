@@ -1,0 +1,52 @@
+/*
+ * Primitive Tokens
+ * ----------------
+ * Raw, named design values with no semantic meaning.
+ * Placed inside @theme so Tailwind v4 registers them as utilities.
+ * All other token files reference these via var().
+ */
+
+@theme {
+  /* ── Color: Blue scale ─────────────────────────────────────── */
+  --color-blue-50:  #EBF4FE;
+  --color-blue-500: #258CF4; /* brand primary  */
+  --color-blue-600: #1A78D8;
+
+  /* ── Color: Gray scale ─────────────────────────────────────── */
+  --color-gray-50:  #F3F3F3; /* light-bg-gray     */
+  --color-gray-200: #DEE1E6; /* border-gray       */
+  --color-gray-500: #565D6D; /* text-gray         */
+  --color-gray-900: #171A1F;
+
+  /* ── Color: Accent ─────────────────────────────────────────── */
+  --color-green-100: #DCF9E5; /* light-green       */
+  --color-green-500: #26D926; /* secondary-green   */
+  --color-red-500:   #E64C4C; /* red               */
+  --color-white:     #FFFFFF;
+
+  /* ── Spacing scale (4px base grid) ────────────────────────── */
+  --space-1:  0.25rem;  /*  4px */
+  --space-2:  0.5rem;   /*  8px */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  --space-32: 8rem;     /* 128px */
+
+  /* ── Border radius ─────────────────────────────────────────── */
+  --radius-sm:   0.25rem; /*  4px */
+  --radius-md:   0.5rem;  /*  8px */
+  --radius-lg:   0.75rem; /* 12px */
+  --radius-xl:   1rem;    /* 16px */
+  --radius-full: 9999px;  /* pill / circle */
+
+  /* ── Shadows ───────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.10), 0 2px 4px -2px rgb(0 0 0 / 0.10);
+}

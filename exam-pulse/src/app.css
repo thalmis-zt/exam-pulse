@@ -1,0 +1,17 @@
+/*
+ * app.css — Global design system entry point
+ * -------------------------------------------
+ * Import order matters:
+ *   1. Primitives first  (raw values, @theme)
+ *   2. Semantic tokens   (map to primitives, :root + .dark)
+ *   3. States            (feedback + domain colours)
+ *   4. Layout / Motion   (structural + animation constants)
+ *   5. Typography        (font + type scale, @theme)
+ */
+
+@import "$lib/design-system/tokens/primitives.css";
+@import "$lib/design-system/tokens/semantic.css";
+@import "$lib/design-system/tokens/states.css";
+@import "$lib/design-system/tokens/layout.css";
+@import "$lib/design-system/tokens/motion.css";
+@import "$lib/design-system/base/typography.css";

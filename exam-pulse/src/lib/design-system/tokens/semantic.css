@@ -1,0 +1,62 @@
+/*
+ * Semantic Tokens
+ * ---------------
+ * Meaningful design decisions that map to primitives.
+ * Two layers:
+ *   :root  — light mode defaults
+ *   .dark  — dark mode overrides (toggle this class on <html> or <body>)
+ *
+ * WARNING: Never override primitive tokens here. Only this file is
+ * modified when changing theme appearance.
+ */
+
+/* ── Light mode (default) ────────────────────────────────────── */
+:root {
+  /* Background & surfaces */
+  --color-background: var(--color-gray-50);
+  --color-surface:    var(--color-white);
+
+  /* Primary UI */
+  --color-primary:       var(--color-blue-500);
+  --color-primary-hover: var(--color-blue-600);
+
+  /* Secondary UI */
+  --color-secondary:       var(--color-green-500);
+  --color-secondary-hover: var(--color-green-600);
+  /* Borders */
+  --color-border: var(--color-gray-200);
+
+  /* Text */
+  --color-text:       var(--color-gray-900);
+  --color-text-muted: var(--color-gray-500);
+
+  /* Surface elevation levels */
+  --surface-background: var(--color-gray-50);
+  --surface-card:       var(--color-white);
+  --surface-modal:      var(--color-white);
+  --surface-dropdown:   var(--color-white);
+}
+
+/* ── Dark mode overrides ─────────────────────────────────────── */
+.dark {
+  /* Background & surfaces */
+  --color-background: #0F1117;
+  --color-surface:    #1A1D27;
+
+  /* Primary UI — same hue, full opacity still reads well on dark */
+  --color-primary:       var(--color-blue-500);
+  --color-primary-hover: var(--color-blue-600);
+
+  /* Borders */
+  --color-border: #2C2F3E;
+
+  /* Text */
+  --color-text:       #F0F2F7;
+  --color-text-muted: #8B91A7;
+
+  /* Surface elevation levels */
+  --surface-background: #0F1117;
+  --surface-card:       #1A1D27;
+  --surface-modal:      #22263A;
+  --surface-dropdown:   #1E2130;
+}

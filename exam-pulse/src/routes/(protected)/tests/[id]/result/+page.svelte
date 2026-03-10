@@ -1,0 +1,1 @@
+<!-- Data: single test result for [id] — score, rank, time taken, per-question breakdown (correct/incorrect/skipped), subject-wise accuracy, and XP earned -->

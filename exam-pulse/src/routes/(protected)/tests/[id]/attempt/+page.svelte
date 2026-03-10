@@ -1,0 +1,1 @@
+<!-- Data: active test session for [id] — question list with options, current question index, timer, flagged/skipped state per question, and auto-save progress -->
