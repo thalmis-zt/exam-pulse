@@ -42,7 +42,9 @@
 	<div class="flex items-start justify-between gap-4">
 		<div class="flex flex-col gap-1">
 			<h3 class="m-0 text-lg font-bold leading-snug text-(--color-text)">{title}</h3>
-			<p class="m-0 text-sm text-(--color-text-muted)">{description}</p>
+			{#if description}
+            <p class="m-0 text-sm text-(--color-text-muted)">{description}</p>
+            {/if}
 		</div>
 		<span class="
 			shrink-0 inline-flex items-center
@@ -71,7 +73,7 @@
 		<button
 			class="
 				shrink-0 inline-flex items-center justify-center
-				size-10
+				size-6
 				bg-transparent border-2 border-(--color-primary) rounded-full
 				text-(--color-primary) cursor-pointer
 				transition duration-(--motion-fast) ease-(--ease-standard)
@@ -80,7 +82,7 @@
 			onclick={onclick}
 			aria-label="Start test"
 		>
-			<Play size={18} />
+			<Play size={12} />
 		</button>
 	</div>
 </article>
