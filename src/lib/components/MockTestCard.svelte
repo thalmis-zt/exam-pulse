@@ -1,5 +1,6 @@
 <script>
 	import { Clock, ClipboardList, Users, Play } from '@lucide/svelte';
+	import XpBadge from './XpBadge.svelte';
 
 	/**
 	 * @typedef {Object} Props
@@ -46,14 +47,7 @@
             <p class="m-0 text-sm text-(--color-text-muted)">{description}</p>
             {/if}
 		</div>
-		<span class="
-			shrink-0 inline-flex items-center
-			px-3 py-1
-			bg-(--color-success-surface) text-(--color-success)
-			text-sm font-semibold rounded-full whitespace-nowrap
-		">
-			{xp}
-		</span>
+		<XpBadge {xp} />
 	</div>
 
 	<!-- Bottom row: meta stats + play button -->
