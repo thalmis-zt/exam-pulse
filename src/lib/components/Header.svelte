@@ -49,7 +49,7 @@
 		sticky top-0 z-50
 		flex items-center justify-between
 		h-16 px-6
-		bg-surface border-b border-stroke
+		bg-canvas-base border-b border-stroke
 	"
 >
 	<!-- ── Brand ─────────────────────────────────────────────── -->
