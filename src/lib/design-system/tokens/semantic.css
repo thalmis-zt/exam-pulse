@@ -25,8 +25,8 @@
 @theme {
   /* Canvas — page background */
   --color-canvas: var(--color-gray-50);
-  --color-base: var(--color-white);
-  --color-base-fixed: var(--color-white);
+  --color-canvas-base: var(--color-white);
+  --color-canvas-base-fixed: var(--color-white);
 
   /* Primary UI */
   --color-primary:       var(--color-blue-500);
@@ -62,7 +62,7 @@
  */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-base:          var(--color-navy-950);
+    --color-canvas-base:     var(--color-navy-950);
     --color-canvas:          var(--color-navy-900);
     --color-stroke:          var(--color-navy-600);
     --color-fg:              var(--color-gray-100);
@@ -74,7 +74,7 @@
 }
 
 [data-theme="dark"] {
-  --color-base:          var(--color-navy-950);
+  --color-canvas-base:          var(--color-navy-950);
   --color-canvas:          var(--color-navy-900);
   --color-stroke:          var(--color-navy-600);
   --color-fg:              var(--color-gray-100);
