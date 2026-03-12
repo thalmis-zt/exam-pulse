@@ -1,1 +1,5 @@
-<!-- Data: list of subject/topic focus areas with mastery percentage, weak chapter highlights, and suggested practice questions per area -->
+<script>
+	import FocusAreasPage from '$lib/focus-areas/FocusAreasPage.svelte';
+</script>
+
+<FocusAreasPage />

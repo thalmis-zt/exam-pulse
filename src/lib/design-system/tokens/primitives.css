@@ -9,6 +9,9 @@
 @theme {
   /* ── Color: Blue scale ─────────────────────────────────────── */
   --color-blue-50:  #EBF4FE;
+  --color-blue-75:  #F1F7FE;   
+  --color-blue-100: #F1F2FE; 
+
   --color-blue-500: #258CF4; /* brand primary  */
   --color-blue-600: #1A78D8;
 
