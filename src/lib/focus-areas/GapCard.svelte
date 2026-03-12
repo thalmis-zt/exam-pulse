@@ -29,11 +29,11 @@
 </script>
 
 <!-- Responsive Card: Vertical on mobile, structured on desktop -->
-<div class="bg-surface-card flex flex-col gap-3 rounded-md p-4 md:p-6 shadow-sm">
+<div class="bg-surface-card flex flex-col gap-3 rounded-md p-4 md:p-6 shadow-md">
 	<!-- Header: Stack on mobile, spread on desktop -->
 	<div class="flex flex-col md:flex-row md:items-start md:justify-between md:gap-3">
 		<div class="flex flex-1 items-start gap-2 md:gap-3">
-			<div class="bg-info/10 rounded-md p-2">
+			<div class="bg-info-surface rounded-md p-2">
 				<Brain size={26} class="text-info flex-shrink-0" />
 			</div>
 			<div class="flex flex-col">
@@ -81,7 +81,7 @@
 		</div>
 
 		<!-- Progress bar -->
-		<div class="bg-border h-2 w-full overflow-hidden rounded-full">
+		<div class="bg-border h-1.5 w-full overflow-hidden rounded-full">
 			<div
 				class="bg-danger ease-standard h-full transition-all duration-500"
 				style="width: {fillPercent}%"
@@ -91,11 +91,10 @@
 
 	<!-- CTA Button -->
 	<Button
-		btnType="custom"
-		customClass="flex items-center justify-center gap-2 py-2 md:py-3 px-3 md:px-4 rounded-lg bg-info/10 text-info font-semibold md:font-bold text-xs md:text-sm transition duration-fast ease-standard hover:bg-info/20 active:brightness-95 font-Inter"
+		btnType="primaryLight"
 		{onclick}
 	>
-		<Target size={16} class="md:size-[18px]" />
+		<Target size={16} />
 		<span>Targeted Practice</span>
 	</Button>
 </div>

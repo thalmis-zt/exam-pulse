@@ -12,7 +12,7 @@
 	);
 </script>
 
-<section class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-6 bg-surface-card-subtle p-4 md:p-6 rounded-xl md:rounded-lg border-0 md:border md:border-info">
+<section class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-6 bg-surface-card-subtle p-4 md:p-6 rounded-md shadow-sm">
 	<!-- Left content -->
 	<div class="flex flex-col gap-2">
 		<h2 class="text-base font-bold text-fg font-Inter">Questions Solved</h2>
@@ -29,6 +29,6 @@
 
 	<!-- Right icon badge (desktop only) -->
 	<div class="hidden md:flex flex-shrink-0">
-		<ClipboardCheck size={60} class="text-info/20" />
+		<ClipboardCheck size={80} class="text-info-surface" />
 	</div>
 </section>

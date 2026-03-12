@@ -1,13 +1,12 @@
 <script>
 	import { onMount } from 'svelte';
+	import { getFocusAreasData } from '$lib/focus-areas/mock/focusAreas.service.js';
 	import QuestionsSolvedSummary from '$lib/focus-areas/QuestionsSolvedSummary.svelte';
 	import ScoreBoosters from '$lib/focus-areas/ScoreBoosters.svelte';
 	import KnowledgeGaps from '$lib/focus-areas/KnowledgeGaps.svelte';
 	import MistakeLog from '$lib/focus-areas/MistakeLog.svelte';
 	import LearningTip from '$lib/focus-areas/LearningTip.svelte';
-	import { getFocusAreasData } from '$lib/focus-areas/mock/focusAreas.service.js';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
-
 
 	let data = $state(null);
 
@@ -35,13 +34,13 @@
 		<SectionHeader title="Focus Areas" subtitle="Personalized insights to boost your exam prep" />
 
 		{#if isLoading}
-			<!-- Loading state -->
+			<!-- Loading state / Replace when universal laoder is available -->
 			<div class="flex flex-col items-center justify-center gap-3 py-12">
 				<div class="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin"></div>
 				<p class="text-fg-muted text-sm">Loading focus areas...</p>
 			</div>
 		{:else if hasError}
-			<!-- Error state -->
+			<!-- Error state / replace when universal error component is available -->
 			<div
 				class="flex flex-col items-center justify-center gap-3 py-12 p-4 rounded-lg bg-surface-card border border-border"
 			>
@@ -66,14 +65,14 @@
 			<!-- Two-column layout (desktop) - Knowledge Gaps, Mistake Log, Learning Tips -->
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 				<!-- Left column: Knowledge Gaps (takes 2/3 width) -->
-				<div class="md:col-span-2">
+				<div class="lg:col-span-2">
 					{#if data.knowledgeGaps && data.knowledgeGaps.length > 0}
 						<KnowledgeGaps gaps={data.knowledgeGaps} />
 					{/if}
 				</div>
 
 				<!-- Right column: Mistake Log and Learning Tips (takes 1/3 width, stacked) -->
-				<div class="flex flex-col gap-6 md:mt-10">
+				<div class="flex flex-col gap-6 lg:mt-10">
 					<!-- Mistake Log -->
 					<MistakeLog onclick={() => console.log('Navigate to mistake log')} />
 

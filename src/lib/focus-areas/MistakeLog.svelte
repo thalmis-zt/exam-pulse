@@ -7,10 +7,10 @@
 
 <!-- Mistake Log CTA Card -->
 <section
-	class="border-stroke-strong flex flex-col items-center gap-4 rounded-md bg-surface-card/60 border border-dashed p-6 text-center md:p-8 shadow"
+	class="border-stroke-strong flex flex-col items-center gap-4 rounded-md bg-surface-card/60 border border-dashed p-6 text-center md:p-8 shadow-sm"
 >
 	<!-- Icon badge -->
-	<div class="bg-info/10 flex h-12 w-12 items-center justify-center rounded-full">
+	<div class="bg-info-surface flex h-12 w-12 items-center justify-center rounded-full">
 		<Brain size={24} class="text-info" />
 	</div>
 
@@ -23,5 +23,5 @@
 	</p>
 
 	<!-- CTA Button -->
-	<Button btnType="secondary" {onclick}>Review Mistake Log</Button>
+	<Button btnType="primaryLight" {onclick}>Review Mistake Log</Button>
 </section>

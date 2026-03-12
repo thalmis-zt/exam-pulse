@@ -48,6 +48,8 @@
   --color-surface-card:    var(--color-white);
   --color-surface-modal:   var(--color-white);
   --color-surface-popover: var(--color-white);
+  --color-surface-card-subtle: var(--color-blue-75);
+  --color-surface-card-grayscale-subtle: var(--color-gray-400);
 }
 
 /* ── Dark mode overrides ─────────────────────────────────────── */
@@ -64,6 +66,8 @@
     --color-fg:              var(--color-gray-100);
     --color-fg-muted:        var(--color-gray-400);
     --color-surface-card:    var(--color-navy-900);
+    --color-surface-card-subtle:var(--color-gray-surface-dark)
+  --color-surface-card-grayscale-subtle: var(--color-gray-400);
     --color-surface-modal:   var(--color-navy-700);
     --color-surface-popover: var(--color-navy-800);
   }
@@ -76,6 +80,7 @@
   --color-fg:              var(--color-gray-100);
   --color-fg-muted:        var(--color-gray-400);
   --color-surface-card:    var(--color-navy-900);
+  --color-surface-card-grayscale-subtle: var(--color-gray-400);
   --color-surface-modal:   var(--color-navy-700);
   --color-surface-popover: var(--color-navy-800);
 }
