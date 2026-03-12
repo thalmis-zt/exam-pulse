@@ -12,7 +12,8 @@
   --color-blue-75:  #F1F7FE;   
   --color-blue-100: #F1F2FE; 
 
-  --color-blue-500: #258CF4; /* brand primary  */
+  --color-blue-400: #60A5FA; /* info (dark mode)  */
+  --color-blue-500: #258CF4; /* brand primary     */
   --color-blue-600: #1A78D8;
 
   /* ── Color: Gray scale ─────────────────────────────────────── */
@@ -22,10 +23,36 @@
   --color-gray-900: #171A1F;
 
   /* ── Color: Accent ─────────────────────────────────────────── */
-  --color-green-100: #DCF9E5; /* light-green       */
-  --color-green-500: #26D926; /* secondary-green   */
-  --color-red-500:   #E64C4C; /* red               */
+  --color-green-100: #DCF9E5; /* light-green                     */
+  --color-green-400: #4ADE80; /* light green (dark-mode success) */
+  --color-green-500: #26D926; /* secondary-green                 */
+  --color-green-600: #1EBA1E; /* secondary-hover                 */
+  --color-orange-100: #FEF3DC; /* warning / flagged surface      */
+  --color-orange-500: #F5A623; /* warning / flagged              */
+  --color-yellow-400: #FBBF24; /* warning (dark mode)            */
+  --color-red-100:   #FDEAEA; /* light red tint                  */
+  --color-red-400:   #F87171; /* light red (dark-mode danger)    */
+  --color-red-500:   #E64C4C; /* red                             */
   --color-white:     #FFFFFF;
+
+  /* ── Color: Extended Gray scale ────────────────────────────── */
+  --color-gray-100: #F0F2F7; /* near-white fg for dark mode */
+  --color-gray-400: #8B91A7; /* muted text for dark mode    */
+  --color-gray-700: #374151; /* skipped state (dark mode)   */
+
+  /* ── Color: Dark UI surfaces (navy) ────────────────────────── */
+  --color-navy-950: #0F1117; /* dark canvas          */
+  --color-navy-900: #1A1D27; /* dark surface-card    */
+  --color-navy-800: #1E2130; /* dark surface-popover */
+  --color-navy-700: #22263A; /* dark surface-modal   */
+  --color-navy-600: #2C2F3E; /* dark stroke / border */
+
+  /* ── Color: Dark state surfaces (20 % alpha overlays) ──────── */
+  --color-green-surface-dark:  #14532D33;
+  --color-orange-surface-dark: #78350F33;
+  --color-red-surface-dark:    #7F1D1D33;
+  --color-blue-surface-dark:   #1E3A5F33;
+  --color-gray-surface-dark:   #1F293733;
 
   /* ── Spacing scale (4px base grid) ────────────────────────── */
   --space-1:  0.25rem;  /*  4px */

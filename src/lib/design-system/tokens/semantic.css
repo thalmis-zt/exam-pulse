@@ -25,14 +25,18 @@
 @theme {
 	/* Canvas — page background */
 	--color-canvas: var(--color-gray-50);
+  --color-base: var(--color-white);
+  --color-base-fixed: var(--color-white);
 
 	/* Primary UI */
 	--color-primary: var(--color-blue-500);
 	--color-primary-hover: var(--color-blue-600);
+  --color-primary-light: var(--color-blue-50);
+  --color-primary-light-hover: var(--color-blue-50);
 
-	/* Secondary UI */
-	--color-secondary: var(--color-green-500);
-	--color-secondary-hover: var(--color-green-600);
+  /* Secondary UI */
+  --color-secondary:       var(--color-green-500);
+  --color-secondary-hover: var(--color-green-600);
 
 	/* Stroke — borders and dividers */
 	--color-stroke: var(--color-gray-200);
@@ -40,12 +44,10 @@
 		--color-fg: var(--color-gray-900);
 	--color-fg-muted: var(--color-gray-500);
 
-	/* Surface elevation levels */
-	--color-surface-card: var(--color-white);
-	--color-surface-modal: var(--color-white);
-	--color-surface-popover: var(--color-white);
-
-	--color-surface-card-subtle: var(--color-blue-75);
+  /* Surface elevation levels */
+  --color-surface-card:    var(--color-white);
+  --color-surface-modal:   var(--color-white);
+  --color-surface-popover: var(--color-white);
 }
 
 /* ── Dark mode overrides ─────────────────────────────────────── */
@@ -55,27 +57,23 @@
  *   b) User has explicitly chosen dark                     ([data-theme="dark"])
  */
 @media (prefers-color-scheme: dark) {
-	:root:not([data-theme='light']) {
-		--color-canvas: #0f1117;
-		--color-stroke: #2c2f3e;
-		--color-stroke-strong: #f0f2f7;
-		--color-fg: #f0f2f7;
-		--color-fg-muted: #8b91a7;
-		--color-surface-card: #1a1d27;
-		--color-surface-card-subtle: #1a2338;
-		--color-surface-modal: #22263a;
-		--color-surface-popover: #1e2130;
-	}
+  :root:not([data-theme="light"]) {
+    --color-canvas:          #0F1117;
+    --color-stroke:          #2C2F3E;
+    --color-fg:              #F0F2F7;
+    --color-fg-muted:        #8B91A7;
+    --color-surface-card:    #1A1D27;
+    --color-surface-modal:   #22263A;
+    --color-surface-popover: #1E2130;
+  }
 }
 
-[data-theme='dark'] {
-	--color-canvas: #0f1117;
-	--color-stroke: #2c2f3e;
-	--color-stroke-strong: #f0f2f7;
-	--color-fg: #f0f2f7;
-	--color-fg-muted: #8b91a7;
-	--color-surface-card: #1a1d27;
-	--color-surface-card-subtle: #1a2338;
-	--color-surface-modal: #22263a;
-	--color-surface-popover: #1e2130;
+[data-theme="dark"] {
+  --color-canvas:          #0F1117;
+  --color-stroke:          #2C2F3E;
+  --color-fg:              #F0F2F7;
+  --color-fg-muted:        #8B91A7;
+  --color-surface-card:    #1A1D27;
+  --color-surface-modal:   #22263A;
+  --color-surface-popover: #1E2130;
 }
