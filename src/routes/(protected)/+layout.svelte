@@ -20,19 +20,20 @@ import Header from '$lib/components/Header.svelte';
 	
 </script>
 
-<div class="flex min-h-screen flex-col bg-canvas">
+<div class="flex flex-col bg-canvas">
 
 	{#if showHeader}
 		<Header />
 	{/if}
 
-	<div class="flex flex-1">
+	<div class="">
 
 		{#if showSidebar}
 			<!-- space for sidebar -->
+             <!-- <aside>Sidebar</aside> -->
 		{/if}
 
-		<main class="flex-1 flex flex-col px-4 pt-4 pb-24">
+		<main class="flex-1 flex flex-col px-4 pt-4 pb-24 min-h-screen max-w-6xl mx-auto">
 			{@render children?.()}
 		</main>
 
