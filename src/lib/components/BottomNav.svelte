@@ -16,7 +16,7 @@
 	class="
 		fixed bottom-0 left-0 right-0 z-50
 		flex items-center justify-around
-		bg-(--surface-card) border-t border-(--color-border)
+		bg-surface-card border-t border-stroke
 		px-2 py-2 safe-area-pb
 	"
 >
@@ -29,7 +29,7 @@
 				flex-1 py-1 rounded-lg
 				transition duration-(--motion-fast) ease-(--ease-standard)
 				no-underline
-				{isActive ? 'text-(--color-primary)' : 'text-(--color-text-muted)'}
+				{isActive ? 'text-primary' : 'text-fg-muted'}
 			"
 		>
 			<tab.icon size={22} />

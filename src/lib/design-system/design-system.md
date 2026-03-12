@@ -11,8 +11,8 @@ src/lib/design-system/
 ├── design-system.md          ← you are here
 ├── tokens/
 │   ├── primitives.css        — raw values, @theme (Tailwind utilities)
-│   ├── semantic.css          — meaningful mappings, :root + .dark
-│   ├── states.css            — feedback + quiz domain colours
+│   ├── semantic.css          — meaningful mappings, @theme + media query + [data-theme]
+│   ├── states.css            — feedback + quiz domain colours, @theme + media query + [data-theme]
 │   ├── layout.css            — shell dimensions
 │   └── motion.css            — durations + easing
 └── base/
@@ -34,8 +34,8 @@ primitives  →  semantic  →  components
 | Layer | File | Directive | Purpose |
 |---|---|---|---|
 | Primitives | `tokens/primitives.css` | `@theme` | Raw values only — no meaning |
-| Semantic | `tokens/semantic.css` | `:root` / `.dark` | Map primitives to roles |
-| States | `tokens/states.css` | `:root` | Feedback + exam domain states |
+| Semantic | `tokens/semantic.css` | `@theme` + media query + `[data-theme]` | Map primitives to roles; generates Tailwind utilities |
+| States | `tokens/states.css` | `@theme` + media query + `[data-theme]` | Feedback + exam domain states; generates Tailwind utilities |
 | Layout | `tokens/layout.css` | `:root` | App shell dimensions |
 | Motion | `tokens/motion.css` | `:root` | Animation constants |
 | Typography | `base/typography.css` | `@theme` | Font stack + type scale |
@@ -103,67 +103,82 @@ Defined in `@theme` — Tailwind generates utility classes from these automatica
 
 ## Semantic Tokens
 
-Defined in `:root` and overridden in `.dark`. Always use these in components — they respond to the current theme automatically.
+Defined in `@theme` — Tailwind generates utility classes from all of these. They respond to the active theme automatically (OS preference or user override via `[data-theme]`).
 
-### Backgrounds & Surfaces
+### Canvas
 
-| Token | Light | Dark |
-|---|---|---|
-| `--color-background` | `#F3F3F3` | `#0F1117` |
-| `--color-surface` | `#FFFFFF` | `#1A1D27` |
+| Token | Tailwind class | Light | Dark | Use for |
+|---|---|---|---|---|
+| `--color-canvas` | `bg-canvas` | `#F3F3F3` | `#0F1117` | Page background |
 
 ### Primary
 
-| Token | Value (both themes) |
-|---|---|
-| `--color-primary` | `#258CF4` |
-| `--color-primary-hover` | `#1A78D8` |
-
-### Borders
-
-| Token | Light | Dark |
+| Token | Tailwind class | Value (both themes) |
 |---|---|---|
-| `--color-border` | `#DEE1E6` | `#2C2F3E` |
+| `--color-primary` | `bg-primary` / `text-primary` / `border-primary` | `#258CF4` |
+| `--color-primary-hover` | `bg-primary-hover` | `#1A78D8` |
 
-### Text
+### Secondary
 
-| Token | Light | Dark |
+| Token | Tailwind class | Value (both themes) |
 |---|---|---|
-| `--color-text` | `#171A20` | `#F0F2F7` |
-| `--color-text-muted` | `#565D6D` | `#8B91A7` |
+| `--color-secondary` | `bg-secondary` / `text-secondary` | `#3CDD71` |
+| `--color-secondary-hover` | `bg-secondary-hover` | (green-600) |
+
+### Stroke
+
+| Token | Tailwind class | Light | Dark |
+|---|---|---|---|
+| `--color-stroke` | `border-stroke` / `divide-stroke` | `#DEE1E6` | `#2C2F3E` |
+
+### Foreground (Text)
+
+| Token | Tailwind class | Light | Dark |
+|---|---|---|---|
+| `--color-fg` | `text-fg` | `#171A20` | `#F0F2F7` |
+| `--color-fg-muted` | `text-fg-muted` | `#565D6D` | `#8B91A7` |
 
 ### Surface Levels
 
 Use these to establish visual depth/elevation.
 
-| Token | Light | Dark | Use for |
-|---|---|---|---|
-| `--surface-background` | `#F3F3F3` | `#0F1117` | Page canvas |
-| `--surface-card` | `#FFFFFF` | `#1A1D27` | Content cards |
-| `--surface-modal` | `#FFFFFF` | `#22263A` | Modals / dialogs |
-| `--surface-dropdown` | `#FFFFFF` | `#1E2130` | Menus / popovers |
+| Token | Tailwind class | Light | Dark | Use for |
+|---|---|---|---|---|
+| `--color-surface-card` | `bg-surface-card` | `#FFFFFF` | `#1A1D27` | Content cards |
+| `--color-surface-modal` | `bg-surface-modal` | `#FFFFFF` | `#22263A` | Modals / dialogs |
+| `--color-surface-popover` | `bg-surface-popover` | `#FFFFFF` | `#1E2130` | Menus / popovers |
 
 ---
 
 ## State Tokens
 
+Defined in `@theme` — Tailwind generates utilities (`bg-success`, `text-danger`, `bg-danger-surface`, etc.) from all state tokens. Dark mode values are applied via `@media (prefers-color-scheme: dark)` and `[data-theme="dark"]`.
+
 ### Generic Feedback
 
-| Token | Value | Use for |
-|---|---|---|
-| `--color-success` | `#3CDD71` | Confirmations, completed states |
-| `--color-warning` | `#F5A623` | Caution, time warnings |
-| `--color-danger` | `#E64C4C` | Errors, destructive actions |
-| `--color-info` | `#258CF4` | Informational messages |
+| Token | Tailwind class | Light | Dark | Use for |
+|---|---|---|---|---|
+| `--color-success` | `bg-success` / `text-success` | `#3CDD71` | `#4ADE80` | Confirmations, completed states |
+| `--color-success-surface` | `bg-success-surface` | `#DCF9E5` | `#14532D33` | Success tint backgrounds |
+| `--color-warning` | `bg-warning` / `text-warning` | `#F5A623` | `#FBBF24` | Caution, time warnings |
+| `--color-warning-surface` | `bg-warning-surface` | `#FEF3DC` | `#78350F33` | Warning tint backgrounds |
+| `--color-danger` | `bg-danger` / `text-danger` | `#E64C4C` | `#F87171` | Errors, destructive actions |
+| `--color-danger-surface` | `bg-danger-surface` | `#FDEAEA` | `#7F1D1D33` | Danger tint backgrounds |
+| `--color-info` | `bg-info` / `text-info` | `#258CF4` | `#60A5FA` | Informational messages |
+| `--color-info-surface` | `bg-info-surface` | `#EBF4FE` | `#1E3A5F33` | Info tint backgrounds |
 
 ### Exam / Quiz Domain
 
-| Token | Value | Use for |
-|---|---|---|
-| `--color-correct` | `#3CDD71` | Correct answer highlight |
-| `--color-incorrect` | `#E64C4C` | Wrong answer highlight |
-| `--color-skipped` | `#DEE1E6` | Unanswered question indicator |
-| `--color-flagged` | `#F5A623` | Question flagged for review |
+| Token | Tailwind class | Light | Dark | Use for |
+|---|---|---|---|---|
+| `--color-correct` | `bg-correct` / `text-correct` | `#3CDD71` | `#4ADE80` | Correct answer highlight |
+| `--color-correct-surface` | `bg-correct-surface` | `#DCF9E5` | `#14532D33` | Correct answer tint |
+| `--color-incorrect` | `bg-incorrect` / `text-incorrect` | `#E64C4C` | `#F87171` | Wrong answer highlight |
+| `--color-incorrect-surface` | `bg-incorrect-surface` | `#FDEAEA` | `#7F1D1D33` | Wrong answer tint |
+| `--color-skipped` | `bg-skipped` / `text-skipped` | `#DEE1E6` | `#374151` | Unanswered question indicator |
+| `--color-skipped-surface` | `bg-skipped-surface` | `#F3F3F3` | `#1F293733` | Skipped question tint |
+| `--color-flagged` | `bg-flagged` / `text-flagged` | `#F5A623` | `#FBBF24` | Question flagged for review |
+| `--color-flagged-surface` | `bg-flagged-surface` | `#FEF3DC` | `#78350F33` | Flagged question tint |
 
 ---
 
@@ -238,77 +253,100 @@ Defined in `@theme` — Tailwind generates `font-sans`, `text-xs`, `text-sm`, et
 
 ## Dark Mode
 
-Toggle dark mode by adding the `.dark` class to `<html>` or `<body>`.
+Dark mode is applied in two ways — the system follows OS preference by default, and users can override it explicitly.
+
+### How it works
+
+| Scenario | Mechanism |
+|---|---|
+| OS is dark, no user preference | `@media (prefers-color-scheme: dark)` targets `:root:not([data-theme="light"])` |
+| User forces dark | `[data-theme="dark"]` set on `<html>` |
+| User forces light (overrides OS dark) | `[data-theme="light"]` set on `<html>`, blocks the media query via `:not` |
+| User follows system (default) | `data-theme` attribute removed from `<html>` |
+
+Use the `theme` store from `$lib/stores/theme.svelte.js` to manage this:
 
 ```svelte
-<!-- +layout.svelte -->
-<script>
-  let dark = $state(false);
-</script>
+import { theme } from '$lib/stores/theme.svelte.js';
 
-<svelte:element this="html" class={dark ? 'dark' : ''}>
-  {@render children()}
-</svelte:element>
+// Read current value ('light' | 'dark' | 'system')
+theme.current
+
+// Set a preference
+theme.set('dark');
+theme.set('light');
+theme.set('system'); // removes data-theme, follows OS
 ```
 
-Only semantic tokens change in dark mode. Primitive tokens are the same in both themes.
+Or use the drop-in toggle component:
+
+```svelte
+import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+<ThemeToggle />
+```
+
+Only semantic and state tokens change in dark mode. Primitive tokens are the same in both themes.
 
 ---
 
 ## How to Use Tokens in Components
 
-### Option A — Tailwind utilities (preferred for layout/spacing/type)
+All semantic and state tokens are registered in `@theme`, so Tailwind generates utility classes from them — use those directly. No arbitrary CSS variable syntax needed for any token in the design system.
 
-Primitive tokens registered via `@theme` become standard Tailwind utility classes:
+### Semantic tokens
 
 ```svelte
-<div class="bg-blue-500 text-white rounded-md shadow-sm px-4 py-2 text-sm font-sans">
-  Button
+<div class="bg-canvas text-fg border border-stroke">
+  <div class="bg-surface-card rounded-xl shadow-sm">
+    <p class="text-fg-muted text-sm">Muted caption</p>
+    <h2 class="text-fg font-bold">Heading</h2>
+    <button class="bg-primary hover:bg-primary-hover text-white">Action</button>
+  </div>
 </div>
 ```
 
-### Option B — CSS variables (required for semantic + state tokens)
-
-Semantic tokens are not Tailwind utilities — use them directly as CSS custom properties:
+### State tokens
 
 ```svelte
-<style>
-  .card {
-    background: var(--surface-card);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow var(--motion-fast) var(--ease-standard);
-  }
-
-  .card:hover {
-    box-shadow: var(--shadow-md);
-  }
-</style>
+<span class="bg-success-surface text-success">Correct</span>
+<span class="bg-danger-surface text-danger">Wrong</span>
+<span class="bg-warning-surface text-warning">Flagged</span>
 ```
 
-### Option C — Inline styles (avoid unless dynamic values are needed)
+### Arbitrary syntax — when to use it
+
+Only needed for tokens **not** in `@theme`: layout and motion tokens (defined in `:root`, not `@theme`).
 
 ```svelte
-<div style="color: var(--color-primary);">...</div>
-```
+<!-- Layout token — no utility class generated -->
+<header class="h-(--header-height)">
+
+<!-- Motion token — no utility class generated -->
+<div class="transition duration-(--motion-fast) ease-(--ease-standard)">
 
 ---
 
 ## Naming Conventions
 
 ```
---color-{role}        e.g. --color-primary, --color-text-muted
---surface-{level}     e.g. --surface-card, --surface-modal
---space-{scale}       e.g. --space-4
---radius-{size}       e.g. --radius-md
---shadow-{level}      e.g. --shadow-sm
---motion-{speed}      e.g. --motion-fast
---text-{size}         e.g. --text-base
---font-{family}       e.g. --font-sans
---color-{state}       e.g. --color-correct, --color-flagged
+--color-canvas            page background
+--color-fg                primary text
+--color-fg-muted          secondary/muted text
+--color-stroke            borders and dividers
+--color-surface-{level}   e.g. --color-surface-card, --color-surface-modal
+--color-primary           brand accent
+--color-secondary         secondary accent
+--color-{state}           e.g. --color-success, --color-danger
+--color-{state}-surface   e.g. --color-success-surface (tint background)
+--space-{scale}           e.g. --space-4
+--radius-{size}           e.g. --radius-md
+--shadow-{level}          e.g. --shadow-sm
+--motion-{speed}          e.g. --motion-fast
+--text-{size}             e.g. --text-base
+--font-{family}           e.g. --font-sans
 ```
+
+**Key principle:** token names describe their *role*, not their value. `--color-fg` means "foreground text" regardless of whether it resolves to near-black or near-white.
 
 ---
 
@@ -317,6 +355,6 @@ Semantic tokens are not Tailwind utilities — use them directly as CSS custom p
 1. **Never use primitive tokens in components.** Only reference semantic, state, layout, or motion tokens.
 2. **Never hardcode colours or spacing** in component styles. Always use a token.
 3. **Do not modify `primitives.css`** unless adding a new raw value. Meaning lives in `semantic.css`.
-4. **Dark mode = semantic overrides only.** Do not add `.dark` overrides to state, layout, or motion files.
+4. **Dark mode = semantic overrides only.** Do not add dark mode overrides to layout or motion files.
 5. **Do not create a `tailwind.config.js`.** This project is Tailwind v4 — configuration lives in CSS via `@theme`.
 6. **Extending the system** — add new primitives to `primitives.css`, then map them in `semantic.css`. Never skip the primitive layer.

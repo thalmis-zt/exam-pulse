@@ -10,17 +10,17 @@
 	 */
 
 	/** @type {Props} */
-	let { subject, testCount, icon, iconBg = 'bg-(--color-info-surface)', iconColor = 'text-(--color-primary)', onclick } = $props();
+	let { subject, testCount, icon, iconBg = 'bg-info-surface', iconColor = 'text-primary', onclick } = $props();
 </script>
 
 <button
 	class="
 		flex flex-col items-center justify-center gap-3
 		flex-1 min-w-0 py-5 px-3
-		bg-(--surface-card) border border-(--color-border) rounded-xl
+		bg-surface-card border border-stroke rounded-xl
 		cursor-pointer text-center
 		transition duration-(--motion-fast) ease-(--ease-standard)
-		hover:border-(--color-primary) hover:shadow-sm
+		hover:border-primary hover:shadow-sm
 	"
 	{onclick}
 >
@@ -33,7 +33,7 @@
 
 	<!-- Text -->
 	<div class="flex flex-col gap-0.5">
-		<p class="text-sm font-semibold text-(--color-text) leading-tight">{subject}</p>
-		<p class="text-xs text-(--color-text-muted)">{testCount} Tests</p>
+		<p class="text-sm font-semibold text-fg leading-tight">{subject}</p>
+		<p class="text-xs text-fg-muted">{testCount} Tests</p>
 	</div>
 </button>

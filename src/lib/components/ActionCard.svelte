@@ -14,7 +14,7 @@
 	/** @type {Props} */
 	let { title, subtitle, label, variant = 'primary', icon, onclick } = $props();
 
-	const bgClass = $derived(variant === 'success' ? 'bg-(--color-secondary)' : 'bg-(--color-primary)');
+	const bgClass = $derived(variant === 'success' ? 'bg-secondary' : 'bg-primary');
 </script>
 
 <button

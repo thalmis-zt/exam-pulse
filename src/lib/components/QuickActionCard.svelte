@@ -15,15 +15,15 @@
 	class="
 		flex flex-col items-center justify-center gap-2
 		flex-1 min-w-0 py-4 px-2
-		bg-(--surface-card) border border-(--color-border) rounded-xl
+		bg-surface-card border border-stroke rounded-xl
 		cursor-pointer text-center
 		transition duration-(--motion-fast) ease-(--ease-standard)
-		hover:border-(--color-primary) hover:shadow-sm
+		hover:border-primary hover:shadow-sm
 	"
 	{onclick}
 >
 	<!-- Icon -->
-	<div class="text-(--color-primary)">
+	<div class="text-primary">
 		{#if icon}
 			{@render icon()}
 		{/if}
@@ -31,7 +31,7 @@
 
 	<!-- Text -->
 	<div class="flex flex-col gap-0.5">
-		<p class="text-sm font-semibold text-(--color-primary) leading-tight">{title}</p>
-		<p class="text-xs text-(--color-text-muted) leading-tight">{description}</p>
+		<p class="text-sm font-semibold text-primary leading-tight">{title}</p>
+		<p class="text-xs text-fg-muted leading-tight">{description}</p>
 	</div>
 </button>
