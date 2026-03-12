@@ -14,7 +14,7 @@
   --color-blue-600: #1A78D8;
 
   /* ── Color: Gray scale ─────────────────────────────────────── */
-  --color-gray-50:  #F3F3F3; /* light-bg-gray     */
+  --color-gray-50:  #F9F9F9; /* light-bg-gray     */
   --color-gray-200: #DEE1E6; /* border-gray       */
   --color-gray-500: #565D6D; /* text-gray         */
   --color-gray-900: #171A1F;
@@ -27,7 +27,7 @@
   --color-orange-100: #FEF3DC; /* warning / flagged surface      */
   --color-orange-500: #F5A623; /* warning / flagged              */
   --color-yellow-400: #FBBF24; /* warning (dark mode)            */
-  --color-red-100:   #FDEAEA; /* light red tint                  */
+  --color-red-100:   #ffd1d1; /* light red tint                  */
   --color-red-400:   #F87171; /* light red (dark-mode danger)    */
   --color-red-500:   #E64C4C; /* red                             */
   --color-white:     #FFFFFF;

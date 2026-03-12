@@ -20,7 +20,7 @@ import Header from '$lib/components/Header.svelte';
 	
 </script>
 
-<div class="flex min-h-screen flex-col  bg-base">
+<div class="flex min-h-screen flex-col bg-canvas">
 
 	{#if showHeader}
 		<Header />
