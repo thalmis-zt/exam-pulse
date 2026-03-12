@@ -7,7 +7,7 @@
 <span class="
 	shrink-0 inline-flex items-center
 	px-3 py-1
-	bg-(--color-success-surface) text-(--color-success)
+	bg-success-surface text-success
 	text-sm font-semibold rounded-full whitespace-nowrap
 ">
 	{xp}

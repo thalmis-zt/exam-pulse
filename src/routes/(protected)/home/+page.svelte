@@ -22,14 +22,14 @@
 </script>
 
 <!-- Page shell: scroll with bottom-nav clearance -->
-<div class="flex flex-col gap-6 px-4 pt-4 pb-24 bg-(--color-background) min-h-screen">
+<div class="flex flex-col gap-6 px-4 pt-4 pb-24 bg-canvas min-h-screen">
 
 	<!-- Greeting -->
 	<UserGreetingCard name={user.name} rank={user.rank} />
 
 	<!-- Action cards -->
 	<div class="grid grid-cols-2 gap-3">
-		<ActionCard title="Practice" subtitle="Customized Questions" label="Start practice" variant="primary">
+		<ActionCard title="Practice" subtitle="Customized Questions" label="Start" variant="primary">
 			{#snippet icon()}<Zap size={28} />{/snippet}
 		</ActionCard>
 		<ActionCard title="Mock Tests" subtitle="Full Length Exams" label="Start" variant="success">
