@@ -23,10 +23,10 @@
  * bg-canvas, bg-primary, bg-surface-card, border-stroke, text-fg, text-fg-muted …
  */
 @theme {
-	/* Canvas — page background */
-	--color-canvas: var(--color-gray-50);
-  --color-base: var(--color-white);
-  --color-base-fixed: var(--color-white);
+  /* Canvas — page background */
+  --color-canvas: var(--color-gray-50);
+  --color-canvas-base: var(--color-white);
+  --color-canvas-base-fixed: var(--color-white);
 
 	/* Primary UI */
 	--color-primary: var(--color-blue-500);
@@ -58,22 +58,24 @@
  */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-canvas:          #0F1117;
-    --color-stroke:          #2C2F3E;
-    --color-fg:              #F0F2F7;
-    --color-fg-muted:        #8B91A7;
-    --color-surface-card:    #1A1D27;
-    --color-surface-modal:   #22263A;
-    --color-surface-popover: #1E2130;
+    --color-canvas-base:     var(--color-navy-950);
+    --color-canvas:          var(--color-navy-900);
+    --color-stroke:          var(--color-navy-600);
+    --color-fg:              var(--color-gray-100);
+    --color-fg-muted:        var(--color-gray-400);
+    --color-surface-card:    var(--color-navy-900);
+    --color-surface-modal:   var(--color-navy-700);
+    --color-surface-popover: var(--color-navy-800);
   }
 }
 
 [data-theme="dark"] {
-  --color-canvas:          #0F1117;
-  --color-stroke:          #2C2F3E;
-  --color-fg:              #F0F2F7;
-  --color-fg-muted:        #8B91A7;
-  --color-surface-card:    #1A1D27;
-  --color-surface-modal:   #22263A;
-  --color-surface-popover: #1E2130;
+  --color-canvas-base:          var(--color-navy-950);
+  --color-canvas:          var(--color-navy-900);
+  --color-stroke:          var(--color-navy-600);
+  --color-fg:              var(--color-gray-100);
+  --color-fg-muted:        var(--color-gray-400);
+  --color-surface-card:    var(--color-navy-900);
+  --color-surface-modal:   var(--color-navy-700);
+  --color-surface-popover: var(--color-navy-800);
 }
