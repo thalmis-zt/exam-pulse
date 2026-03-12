@@ -16,13 +16,13 @@
     "px-6 py-2 rounded-sm font-medium capitalize sm:text-sm text-xs text-nowrap text-center flex items-center justify-center gap-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition duration-(--motion-fast) ease-(--ease-standard)";
 
   const typeStyles = {
-    primary:         `${commonStyles} text-white bg-primary hover:bg-primary-hover`,
-    secondary:       `${commonStyles} bg-surface-card border border-stroke text-primary font-semibold hover:bg-canvas disabled:text-fg-muted`,
-    tertiary:        `${commonStyles} text-fg-muted bg-canvas border border-stroke hover:bg-stroke`,
-    danger:          `${commonStyles} text-white bg-danger hover:opacity-90`,
-    dangerSecondary: `${commonStyles} text-danger bg-danger-surface border border-danger`,
-    success:         `${commonStyles} text-white bg-success hover:opacity-90`,
-    successSecondary:`${commonStyles} bg-surface-card border border-stroke text-success font-semibold hover:bg-canvas disabled:text-fg-muted`,
+    primary:         `${commonStyles} text-base-fixed bg-primary hover:bg-primary-hover`,
+    primaryLight:       `${commonStyles} bg-primary-light border border-stroke text-primary font-semibold hover:bg-primary-light-hover disabled:text-fg-muted`,
+    // tertiary:        `${commonStyles} text-fg-muted bg-canvas border border-stroke hover:bg-stroke`,
+    danger:          `${commonStyles} text-base-fixed bg-danger hover:opacity-90`,
+    dangerLight: `${commonStyles} text-danger bg-danger-surface border border-danger`,
+    secondary:         `${commonStyles} text-white bg-secondary hover:opacity-90`,
+    secondaryLight:`${commonStyles} bg-secondary-light border border-stroke text-success font-semibold hover:bg-seoondary-light-hover disabled:text-fg-muted`,
     custom:          ``,
   };
 </script>

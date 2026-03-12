@@ -22,7 +22,7 @@
 </script>
 
 <!-- Page shell: scroll with bottom-nav clearance -->
-<div class="flex flex-col gap-6 px-4 pt-4 pb-24 bg-canvas min-h-screen">
+<div class="flex flex-col gap-6   min-h-screen">
 
 	<!-- Greeting -->
 	<UserGreetingCard name={user.name} rank={user.rank} />
@@ -38,7 +38,7 @@
 	</div>
 
 	<!-- Quick Actions -->
-	<section>
+	<section class="mb-3">
 		<SectionHeader title="Quick Actions" />
 		<div class="flex gap-3">
 			<QuickActionCard title="Quick Quiz" description="5-min challenge">
@@ -54,7 +54,7 @@
 	</section>
 
 	<!-- Subject Focus -->
-	<section>
+	<section class="mb-3">
 		<SectionHeader title="Subject Focus" showAll onViewAll={() => {}} />
 		<div class="flex gap-3">
 			<SubjectFocusCard subject="Mathematics" testCount={24}>
@@ -81,7 +81,7 @@
 
 	<!-- Recommended Mocks -->
 	<section>
-		<SectionHeader title="Recommended Mocks" />
+		<SectionHeader title="Recommended Mocks" showAll/>
 		<div class="flex flex-col gap-3">
 			{#each recommendedMocks as mock}
 				<MockTestCard
