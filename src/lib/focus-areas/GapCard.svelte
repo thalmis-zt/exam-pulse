@@ -94,7 +94,7 @@
 		btnType="primaryLight"
 		{onclick}
 	>
-		<Target size={16} />
+		<Target size={14} />
 		<span>Targeted Practice</span>
 	</Button>
 </div>
