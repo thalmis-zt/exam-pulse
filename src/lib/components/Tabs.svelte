@@ -1,20 +1,7 @@
 <script>
-	/**
-	 * @typedef {Object} TabOption
-	 * @property {string} value - Unique value for selection / routing
-	 * @property {string} label - Display text
-	 *
-	 * @typedef {Object} Props
-	 * @property {TabOption[]} options - Tab items
-	 * @property {string} selected - Currently selected value
-	 * @property {(value: string) => void} onSelect - Called when a tab is clicked
-	 * @property {'sm'|'md'|'lg'} [size] - Tab padding / text size
-	 */
 
-	/** @type {Props} */
 	let { options = [], selected, onSelect, size = 'md' } = $props();
 
-	/** @type {number} */
 	let focusedIndex = $state(0);
 
 	const selectedIndex = $derived(
