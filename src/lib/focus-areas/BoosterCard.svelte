@@ -7,7 +7,7 @@
 
 <div class="flex flex-col gap-3 p-4 rounded-md bg-surface-card border border-success-surface shadow-sm">
 <div class="mb-3">
-	<h3 class="text-base font-bold text-fg font-Inter">{subject || 'N/A'}</h3>
+	<h3 class="text-sm font-bold text-fg font-Inter">{subject || 'N/A'}</h3>
 	<p class="text-xs text-fg-muted font-Poppins">
 		Accuracy {accuracy || '-'}% &nbsp; | &nbsp; {timePerQuestion || '-'}s/q
 	</p>
@@ -29,7 +29,7 @@
         customClass="w-full justify-center"
 		on:click={onclick}
 	>
-		<Zap size={16} class="text-fg" />
+		<Zap size={14} class="text-fg" />
 		<span>Advanced Practice</span>
 	</Button>
 

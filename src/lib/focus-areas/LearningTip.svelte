@@ -8,7 +8,7 @@
 <section class="bg-surface-card flex flex-col gap-4 rounded-lg p-4 shadow-sm sm:p-6">
 	<!-- Section Header -->
 	<div>
-		<h2 class="text-fg-muted font-inter text-xs font-bold tracking-wide uppercase md:text-sm">
+		<h2 class="text-fg-muted font-inter text-xs font-bold tracking-wide uppercase">
 			Learning Tip
 		</h2>
 	</div>
@@ -22,7 +22,7 @@
 					<CheckCircle size={14} class="text-success mt-1 flex-shrink-0" />
 
 					<!-- Content -->
-					<p class="text-fg font-poppins text-sm">
+					<p class="text-fg font-poppins text-xs">
 						{tip.content}
 					</p>
 				</div>

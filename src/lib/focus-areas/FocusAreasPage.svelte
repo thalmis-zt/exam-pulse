@@ -63,16 +63,16 @@
 			{/if}
 
 			<!-- Two-column layout (desktop) - Knowledge Gaps, Mistake Log, Learning Tips -->
-			<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 				<!-- Left column: Knowledge Gaps (takes 2/3 width) -->
-				<div class="lg:col-span-2">
+				<div class="md:col-span-2">
 					{#if data.knowledgeGaps && data.knowledgeGaps.length > 0}
 						<KnowledgeGaps gaps={data.knowledgeGaps} />
 					{/if}
 				</div>
 
 				<!-- Right column: Mistake Log and Learning Tips (takes 1/3 width, stacked) -->
-				<div class="flex flex-col gap-6 lg:mt-10">
+				<div class="flex flex-col gap-6 md:mt-10">
 					<!-- Mistake Log -->
 					<MistakeLog onclick={() => console.log('Navigate to mistake log')} />
 

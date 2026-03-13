@@ -37,7 +37,7 @@
 				<Brain size={26} class="text-info flex-shrink-0" />
 			</div>
 			<div class="flex flex-col">
-				<h3 class="text-fg font-Inter text-base font-bold">{subject}</h3>
+				<h3 class="text-fg font-Inter text-sm font-bold">{subject}</h3>
 				<div class="flex items-center gap-1">
 					<AlertCircle size={10} />
 					<p class="text-fg-muted font-Poppins text-xs">Needs improvement</p>
@@ -46,8 +46,8 @@
 		</div>
 		<!-- Mastery badge: Only visible on desktop -->
 		<div class="hidden flex-col items-end md:flex">
-			<span class="text-danger font-Inter text-xl font-bold">{fillPercent}%</span>
-			<span class="text-fg-muted font-Inter text-xs font-semibold">MASTERY</span>
+			<span class="text-danger font-Inter text-lg font-bold">{fillPercent}%</span>
+			<span class="text-fg-muted font-Inter text-2xs font-semibold">MASTERY</span>
 		</div>
 	</div>
 
@@ -74,8 +74,8 @@
 	<!-- Progress Section -->
 	<div class="flex flex-col gap-2 py-2 md:gap-3 md:py-0">
 		<div class="flex items-center justify-between">
-			<span class="text-fg-muted font-Inter text-xs font-semibold">CURRENT LEVEL</span>
-			<span class="text-danger font-Inter text-xs font-semibold"
+			<span class="text-fg-muted font-Inter text-2xs font-semibold">CURRENT LEVEL</span>
+			<span class="text-danger font-Inter text-2xs font-semibold"
 				>TARGET: {targetMastery}%</span
 			>
 		</div>
