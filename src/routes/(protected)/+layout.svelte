@@ -1,8 +1,23 @@
 <script>
-	import '../layout.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import '../../app.css';
+import Header from '$lib/components/Header.svelte';
 
-	let { children } = $props();
+	import { page } from '$app/stores';
+	// import { sidebarCollapsed } from '$lib/stores/sidebarStore.js';
+
+	let { children, data } = $props();
+
+	const route = $derived($page.url.pathname);
+
+	const routesWithoutHeader = ['/', '/login', '/rptview'];
+	const routesWithoutSidebar = ['/', '/login', '/rptview'];
+
+	let showHeader = $derived(!routesWithoutHeader.includes(route));
+	let showSidebar = $derived(!routesWithoutSidebar.includes(route));
+
+	
+
+	
 </script>
 
 <div class="flex flex-col bg-canvas">
