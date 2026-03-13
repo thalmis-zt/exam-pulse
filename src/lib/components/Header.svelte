@@ -25,9 +25,10 @@
 	 * @property {() => void} [onProfileClick]
 	 */
 
-	import { Zap, Search, Bell } from '@lucide/svelte';
+	import { Zap, Search, Bell, Menu } from '@lucide/svelte';
 	import { page } from '$app/stores';
 	import NavItem from './NavItem.svelte';
+	import { sidebar } from '$lib/stores/sidebar.svelte.js';
 
 	/** @type {Props} */
 	let {
@@ -48,10 +49,23 @@
 	class="
 		sticky top-0 z-50
 		flex items-center justify-between
-		h-16 px-6
+		h-16 lg:px-6 md:px-4 px-2 
 		bg-canvas-base border-b border-stroke
 	"
 >
+<div class="flex gap-2 justify-center">
+
+	<!-- ── Hamburger (mobile only) ──────────────────────────── -->
+	<button
+		class="lg:hidden flex items-center justify-center size-10 rounded-md text-fg-muted
+				transition duration-(--motion-fast) ease-(--ease-standard)
+				hover:bg-canvas hover:text-fg cursor-pointer mr-1"
+		onclick={sidebar.toggle}
+		aria-label="Toggle navigation"
+	>
+		<Menu size={24} />
+	</button>
+
 	<!-- ── Brand ─────────────────────────────────────────────── -->
 	<a href={logoHref} class="flex items-center gap-2 no-underline shrink-0">
 		<div class="size-9 rounded-xl bg-primary flex items-center justify-center">
@@ -59,6 +73,7 @@
 		</div>
 		<span class="text-base font-bold text-fg tracking-tight">Exam Buddy</span>
 	</a>
+</div>
 
 	<!-- ── Nav items ─────────────────────────────────────────── -->
 	<nav class="flex items-center gap-0.5 ml-8">
@@ -75,7 +90,7 @@
 	<!-- ── Right cluster ─────────────────────────────────────── -->
 	<div class="flex items-center gap-3 ml-auto">
 		<!-- Search -->
-		<button
+		<!-- <button
 			class="
 				flex items-center gap-2
 				h-9 px-3 min-w-52
@@ -89,7 +104,7 @@
 		>
 			<Search size={15} class="shrink-0 text-fg-muted" />
 			<span class="truncate">{searchPlaceholder}</span>
-		</button>
+		</button> -->
 
 		<!-- Notification bell -->
 		<button

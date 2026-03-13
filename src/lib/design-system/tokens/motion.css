@@ -4,7 +4,7 @@
  * Duration and easing constants for consistent animation across the UI.
  */
 
-:root {
+@theme {
   --motion-fast:   100ms;
   --motion-normal: 200ms;
   --motion-slow:   350ms;

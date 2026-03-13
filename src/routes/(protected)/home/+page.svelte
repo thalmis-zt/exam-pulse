@@ -97,5 +97,3 @@
 	</section>
 </div>
 
-<!-- Fixed bottom navigation -->
-<BottomNav />
