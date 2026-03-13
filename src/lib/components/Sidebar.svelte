@@ -66,7 +66,7 @@
 	class="
 		fixed lg:static z-40 flex flex-col shrink-0 mt-[calc(var(--header-height))] lg:mt-0
 		min-h-screen top-0
-		bg-canvas border-r border-stroke
+		bg-canvas-base border-r border-stroke
 		transition-all duration-(--motion-normal) ease-(--ease-standard) 
     {collapsed ? 'w-16' : 'w-60'}
 		
