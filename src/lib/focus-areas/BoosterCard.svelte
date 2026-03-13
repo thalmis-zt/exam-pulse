@@ -34,6 +34,6 @@
 	</Button>
 
 	<!-- Description -->
-	<p class="text-xs text-fg-muted mt-2 text-center font-Poppins">{description}</p>
+	<p class="text-3xs italic text-fg-muted mt-2 text-center font-Poppins">{description}</p>
     </div>
 </div>
