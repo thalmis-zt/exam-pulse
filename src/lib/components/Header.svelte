@@ -39,7 +39,7 @@
 		searchPlaceholder = 'Search exams, subjects...',
 		onSearchClick,
 		onNotificationClick,
-		onProfileClick,
+		onProfileClick
 	} = $props();
 
 	const pathname = $derived($page.url.pathname);
@@ -47,36 +47,35 @@
 
 <header
 	class="
-		sticky top-0 z-50
-		flex items-center justify-between
-		h-16 lg:px-6 md:px-4 px-2 
-		bg-canvas-base border-b border-stroke
+		bg-canvas-base border-stroke sticky
+		top-0 z-50 flex
+		h-16 items-center justify-between border-b
+		px-2 md:px-4 lg:px-6
 	"
 >
-<div class="flex gap-2 justify-center">
+	<div class="flex justify-center gap-2">
+		<!-- ── Hamburger (mobile only) ──────────────────────────── -->
+		<button
+			class="text-fg-muted hover:bg-canvas hover:text-fg mr-1 flex size-10 cursor-pointer
+				items-center justify-center rounded-md
+				transition duration-(--motion-fast) ease-(--ease-standard) lg:hidden"
+			onclick={sidebar.toggle}
+			aria-label="Toggle navigation"
+		>
+			<Menu size={24} />
+		</button>
 
-	<!-- ── Hamburger (mobile only) ──────────────────────────── -->
-	<button
-		class="lg:hidden flex items-center justify-center size-10 rounded-md text-fg-muted
-				transition duration-(--motion-fast) ease-(--ease-standard)
-				hover:bg-canvas hover:text-fg cursor-pointer mr-1"
-		onclick={sidebar.toggle}
-		aria-label="Toggle navigation"
-	>
-		<Menu size={24} />
-	</button>
-
-	<!-- ── Brand ─────────────────────────────────────────────── -->
-	<a href={logoHref} class="flex items-center gap-2 no-underline shrink-0">
-		<div class="size-9 rounded-xl bg-primary flex items-center justify-center">
-			<Zap size={18} color="white" fill="white" />
-		</div>
-		<span class="text-base font-bold text-fg tracking-tight">Exam Buddy</span>
-	</a>
-</div>
+		<!-- ── Brand ─────────────────────────────────────────────── -->
+		<a href={logoHref} class="flex shrink-0 items-center gap-2 no-underline">
+			<div class="bg-primary flex size-9 items-center justify-center rounded-xl">
+				<Zap size={18} color="white" fill="white" />
+			</div>
+			<span class="text-fg text-base font-bold tracking-tight">Exam Buddy</span>
+		</a>
+	</div>
 
 	<!-- ── Nav items ─────────────────────────────────────────── -->
-	<nav class="flex items-center gap-0.5 ml-8">
+	<nav class="ml-8 flex items-center gap-0.5">
 		{#each navItems as item (item.href)}
 			<NavItem
 				label={item.label}
@@ -88,7 +87,7 @@
 	</nav>
 
 	<!-- ── Right cluster ─────────────────────────────────────── -->
-	<div class="flex items-center gap-3 ml-auto">
+	<div class="ml-auto flex items-center gap-3">
 		<!-- Search -->
 		<!-- <button
 			class="
@@ -109,12 +108,12 @@
 		<!-- Notification bell -->
 		<button
 			class="
-				relative size-9 rounded-full
-				flex items-center justify-center
-				text-fg-muted
-				transition duration-(--motion-fast) ease-(--ease-standard)
-				hover:bg-canvas hover:text-fg
+				text-fg-muted hover:bg-canvas hover:text-fg
+				relative flex size-9
 				cursor-pointer
+				items-center justify-center rounded-full
+				transition duration-(--motion-fast)
+				ease-(--ease-standard)
 			"
 			onclick={onNotificationClick}
 			aria-label="Notifications"
@@ -123,8 +122,8 @@
 			{#if notificationCount > 0}
 				<span
 					class="
-						absolute top-1 right-1
-						size-2 rounded-full bg-danger
+						bg-danger absolute top-1
+						right-1 size-2 rounded-full
 					"
 				></span>
 			{/if}
@@ -134,29 +133,33 @@
 		{#if user}
 			<button
 				class="
-					flex items-center gap-2.5
-					pl-1 pr-2 py-1
-					rounded-full
-					cursor-pointer
-					transition duration-(--motion-fast) ease-(--ease-standard)
-					hover:bg-canvas
+					hover:bg-canvas flex cursor-pointer
+					items-center gap-2.5 rounded-full
+					py-1
+					pr-2
+					pl-1 transition duration-(--motion-fast)
+					ease-(--ease-standard)
 				"
 				onclick={onProfileClick}
 			>
 				<!-- Text -->
 				<div class="flex flex-col items-end leading-tight">
-					<span class="text-sm font-semibold text-fg">{user.name}</span>
+					<span class="text-fg text-sm font-semibold">{user.name}</span>
 					{#if user.rank}
-						<span class="text-xs text-fg-muted">{user.rank}</span>
+						<span class="text-fg-muted text-xs">{user.rank}</span>
 					{/if}
 				</div>
 
 				<!-- Avatar -->
-				<div class="size-9 rounded-full overflow-hidden bg-primary-light border-2 border-stroke shrink-0">
+				<div
+					class="bg-primary-light border-stroke size-9 shrink-0 overflow-hidden rounded-full border-2"
+				>
 					{#if user.avatarSrc}
 						<img src={user.avatarSrc} alt={user.name} class="size-full object-cover" />
 					{:else}
-						<div class="size-full flex items-center justify-center bg-primary-light text-primary font-bold text-sm">
+						<div
+							class="bg-primary-light text-primary flex size-full items-center justify-center text-sm font-bold"
+						>
 							{user.name.charAt(0).toUpperCase()}
 						</div>
 					{/if}
