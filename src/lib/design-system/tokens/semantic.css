@@ -28,37 +28,36 @@
   --color-canvas-base: var(--color-white);
   --color-canvas-base-fixed: var(--color-white);
 
-  /* Primary UI */
-  --color-primary:       var(--color-blue-500);
-  --color-primary-hover: var(--color-blue-600);
+	/* Primary UI */
+	--color-primary: var(--color-blue-500);
+	--color-primary-hover: var(--color-blue-600);
   --color-primary-light: var(--color-blue-50);
   --color-primary-light-hover: var(--color-blue-50);
 
   /* Secondary UI */
   --color-secondary:       var(--color-green-500);
   --color-secondary-hover: var(--color-green-600);
-  --color-secondary-light: var(--color-green-100);
-  --color-secondary-light-hover: var(--color-green-100);
 
-  /* Stroke — borders and dividers */
-  --color-stroke: var(--color-gray-200);
-
-  /* Foreground — text */
-  --color-fg:       var(--color-gray-900);
-  --color-fg-muted: var(--color-gray-500);
+	/* Stroke — borders and dividers */
+	--color-stroke: var(--color-gray-200);
+	--color-stroke-strong: var(--color-gray-900)
+		--color-fg: var(--color-gray-900);
+	--color-fg-muted: var(--color-gray-500);
 
   /* Surface elevation levels */
-  --color-surface:    var(--color-white);
   --color-surface-card:    var(--color-white);
   --color-surface-modal:   var(--color-white);
   --color-surface-popover: var(--color-white);
 
+  --color-surface-card-subtle: var(--color-blue-75);
+  --color-surface-card-grayscale-subtle: var(--color-gray-400);
 
   /* The padding for the bottom of navigation bar */
   --padding-navbar-bottom: calc(var(--spacing-safe-bottom) + 0.5rem);
 
   /* The offset for sticky header to stay below the notch */
   --margin-header-top: var(--spacing-safe-top);
+
 }
 
 /* ── Dark mode overrides ─────────────────────────────────────── */
@@ -75,6 +74,8 @@
     --color-fg:              var(--color-gray-100);
     --color-fg-muted:        var(--color-gray-400);
     --color-surface-card:    var(--color-navy-900);
+    --color-surface-card-subtle:var(--color-gray-surface-dark)
+  --color-surface-card-grayscale-subtle: var(--color-gray-400);
     --color-surface-modal:   var(--color-navy-700);
     --color-surface-popover: var(--color-navy-800);
   }
@@ -87,6 +88,7 @@
   --color-fg:              var(--color-gray-100);
   --color-fg-muted:        var(--color-gray-400);
   --color-surface-card:    var(--color-navy-900);
+  --color-surface-card-grayscale-subtle: var(--color-gray-400);
   --color-surface-modal:   var(--color-navy-700);
   --color-surface-popover: var(--color-navy-800);
 }
