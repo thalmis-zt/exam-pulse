@@ -52,6 +52,13 @@
   --color-surface-card:    var(--color-white);
   --color-surface-modal:   var(--color-white);
   --color-surface-popover: var(--color-white);
+
+
+  /* The padding for the bottom of navigation bar */
+  --padding-navbar-bottom: calc(var(--spacing-safe-bottom) + 0.5rem);
+
+  /* The offset for sticky header to stay below the notch */
+  --margin-header-top: var(--spacing-safe-top);
 }
 
 /* ── Dark mode overrides ─────────────────────────────────────── */

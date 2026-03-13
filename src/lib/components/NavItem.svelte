@@ -8,11 +8,14 @@
 	 */
 
 	/** @type {Props} */
+
+    	import { resolve } from '$app/paths';
+        
 	let { label, href, icon: Icon, active = false } = $props();
 </script>
 
 <a
-	{href}
+	href={resolve(href ?? '/')}
 	class="
 		flex items-center gap-1.5
 		px-3 py-2 rounded-lg
