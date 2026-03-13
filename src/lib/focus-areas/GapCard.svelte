@@ -51,10 +51,10 @@
 		</div>
 	</div>
 
-	<hr class="md:border-stroke hidden md:block md:border-t md:pt-2" />
+	<hr class="sm:border-stroke hidden sm:block sm:border-t sm:pt-2" />
 
 	<!-- Stats -->
-	<div class="grid grid-cols-3  md:divide-x md:divide-border md:divide-stroke">
+	<div class="grid grid-cols-3  sm:divide-x sm:divide-border sm:divide-stroke">
 		{#each stats as stat, index (index)}
 			<div class="flex flex-col items-center gap-1 px-2 text-xs md:text-sm">
 				<span class="text-fg-muted font-Poppins text-xs">{stat.label}</span>
@@ -69,7 +69,7 @@
 		{/each}
 	</div>
 
-    <hr class="md:border-stroke hidden md:block md:border-t md:pt-2" />
+    <hr class="sm:border-stroke hidden sm:block sm:border-t sm:pt-2" />
 
 	<!-- Progress Section -->
 	<div class="flex flex-col gap-2 py-2 md:gap-3 md:py-0">
