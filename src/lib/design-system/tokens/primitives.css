@@ -30,7 +30,7 @@
   --color-orange-100: #FEF3DC; /* warning / flagged surface      */
   --color-orange-500: #F5A623; /* warning / flagged              */
   --color-yellow-400: #FBBF24; /* warning (dark mode)            */
-  --color-red-100:   #FDEAEA; /* light red tint                  */
+  --color-red-100:   #ffd1d1; /* light red tint                  */
   --color-red-400:   #F87171; /* light red (dark-mode danger)    */
   --color-red-500:   #E64C4C; /* red                             */
   --color-white:     #FFFFFF;

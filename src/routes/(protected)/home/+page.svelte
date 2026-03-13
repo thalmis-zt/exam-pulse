@@ -5,8 +5,8 @@
 	import SectionHeader      from '$lib/components/SectionHeader.svelte';
 	import UserGreetingCard   from '$lib/components/UserGreetingCard.svelte';
 	import ActionCard         from '$lib/components/ActionCard.svelte';
-	import QuickActionCard    from '$lib/components/QuickActionCard.svelte';
-	import SubjectFocusCard   from '$lib/components/SubjectFocusCard.svelte';
+	import QuickActionCard    from '$lib/home/QuickActionCard.svelte';
+	import SubjectFocusCard   from '$lib/home/SubjectFocusCard.svelte';
 	import MockTestCard        from '$lib/components/MockTestCard.svelte';
 	import BottomNav          from '$lib/components/BottomNav.svelte';
 
