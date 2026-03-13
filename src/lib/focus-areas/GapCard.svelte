@@ -20,7 +20,7 @@
 		{ label: 'Accuracy', mobileLabel: 'Accuracy', value: `${accuracy}%`, icon: Target },
 		{ label: 'Avg. Speed', mobileLabel: 'Speed', value: `${avgSpeed}s/q`, icon: Clock },
 		{
-			label: 'Incorrect/Unattempted',
+			label: 'Incorrect',
 			mobileLabel: 'Wrong',
 			value: `${wrongAttempts}/${totalQuestions}`,
 			icon: AlertTriangle
