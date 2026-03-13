@@ -1,6 +1,0 @@
-/* Design system tokens — must load before Tailwind processes @theme */
-@import '../app.css';
-
-@import 'tailwindcss';
-@plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
