@@ -64,7 +64,7 @@
 >
 	<span
 		class="
-			absolute top-0.5 left-0.5 rounded-full bg-white shadow-sm
+			absolute top-0.5 left-0.5 rounded-full bg-canvas-base-fixed shadow-sm
 			transition-transform duration-(--motion-fast) ease-(--ease-standard)
 			{sizeConfig.handle}
 			{checked ? sizeConfig.translateOn : 'translate-x-0'}
