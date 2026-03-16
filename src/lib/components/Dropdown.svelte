@@ -1,4 +1,7 @@
 <script>
+
+	import { ChevronDown, X, Check } from '@lucide/svelte';
+
 	let {
 		options = [],
 		value = $bindable(null),
@@ -143,18 +146,22 @@
 						</div>
 					{:else if options?.length > 0}
 						{#each options as option, index (option?.id ?? index)}
+							{@const isSelected = value && (value === option || value?.id === option?.id || getOptionLabel(value) === getOptionLabel(option))}
 							<button
 								type="button"
 								role="option"
-								aria-selected={value === option}
+								aria-selected={isSelected}
 								class="
-									text-fg hover:bg-canvas block w-full px-4 py-2 text-left text-sm
+									text-fg hover:bg-canvas flex w-full items-center justify-between gap-2 px-4 py-2 text-left text-sm
 									transition duration-(--motion-fast) ease-(--ease-standard)
-									{value === option ? 'bg-primary-light text-primary' : ''}
+									{isSelected ? 'bg-primary-light text-primary font-medium' : ''}
 								"
 								onclick={() => handleSelect(option)}
 							>
-								{getOptionLabel(option)}
+								<span>{getOptionLabel(option)}</span>
+								{#if isSelected}
+									<Check size={16} class="shrink-0" />
+								{/if}
 							</button>
 						{/each}
 					{:else}
