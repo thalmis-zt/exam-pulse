@@ -15,7 +15,7 @@ import BottomNav          from '$lib/components/BottomNav.svelte';
 		<Sidebar />
 	{/if}
 
-	<main class="flex-1 flex flex-col  px-6 pt-6 pb-24 max-w-6xl mx-auto">
+	<main class="flex-1 flex flex-col  px-6 pt-6 pb-24 max-w-6xl mx-auto w-full">
 		{@render children?.()}
         <BottomNav />
 	</main>
