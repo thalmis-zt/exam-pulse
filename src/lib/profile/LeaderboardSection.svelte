@@ -1,12 +1,6 @@
 <script>
-	import LeaderboardItem from './LeaderboardItem.svelte';
+	import LeaderboardItem from '$lib/profile/LeaderboardItem.svelte';
 
-	/**
-	 * @type {{
-	 *   leaderboard: import('./mock/profile.schema.js').LeaderboardEntry[],
-	 *   period?: string
-	 * }}
-	 */
 	let { leaderboard, period = 'Weekly' } = $props();
 </script>
 

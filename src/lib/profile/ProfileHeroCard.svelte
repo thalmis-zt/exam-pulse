@@ -2,18 +2,10 @@
 	import { Pencil } from '@lucide/svelte';
 	import Badge from '$lib/components/Badge.svelte';
 	import ProgressBar from '$lib/components/ProgressBar.svelte';
+	import Avatar from '$lib/components/Avatar.svelte';
 
 	/** @type {{ user: import('./mock/profile.schema.js').UserProfile }} */
 	let { user } = $props();
-
-	const initials = $derived(
-		user.name
-			.split(' ')
-			.map((w) => w[0])
-			.join('')
-			.slice(0, 2)
-			.toUpperCase()
-	);
 </script>
 
 <div class="bg-surface-card rounded-md border border-stroke p-4 relative flex flex-col gap-4">
@@ -30,24 +22,12 @@
 	<div class="flex items-start gap-3">
 		<!-- Avatar -->
 		<div class="relative shrink-0">
-			{#if user.avatar}
-				<img
-					src={user.avatar}
-					alt={user.name}
-					class="w-16 h-16 rounded-full object-cover"
-				/>
-			{:else}
-				<div
-					class="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-primary font-bold text-lg select-none"
-				>
-					{initials}
-				</div>
-			{/if}
+			<Avatar src={user.avatar ?? ''} name={user.name} size="lg" />
 			<!-- Online indicator -->
-			<span
+			<!-- <span
 				class="absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full bg-success border-2 border-surface-card"
 				aria-hidden="true"
-			></span>
+			></span> -->
 		</div>
 
 		<!-- Name, badges, handle, bio -->

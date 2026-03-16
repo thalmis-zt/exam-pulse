@@ -26,11 +26,11 @@
 			</div>
 
 			<!-- Metadata chips -->
-			<div class="flex items-center gap-3 flex-wrap text-xs text-fg-muted">
-				<span class="flex items-center gap-1">
+			<div class="flex items-center gap-3 flex-wrap text-sm text-fg-muted">
+				<!-- <span class="flex items-center gap-1">
 					<ClipboardList size={13} class="shrink-0" />
 					{goal.examsCount.toLocaleString()} Exams
-				</span>
+				</span> -->
 				<span class="flex items-center gap-1">
 					<BookOpen size={13} class="shrink-0" />
 					{goal.topicsCount} Topics

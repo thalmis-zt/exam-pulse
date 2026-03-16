@@ -20,18 +20,18 @@
 	);
 </script>
 
-<div class="flex items-center gap-3 px-3 py-3 rounded-lg bg-canvas">
+<div class="flex items-center gap-3 px-3 py-3 rounded-lg bg-canvas-base">
 	<!-- Score pill -->
-	<div
+	<!-- <div
 		class="shrink-0 w-11 h-11 rounded-lg flex items-center justify-center text-sm font-bold {scoreColor()}"
 	>
 		{exam.scorePercent !== null ? `${exam.scorePercent}%` : '—'}
-	</div>
+	</div> -->
 
 	<!-- Exam details -->
 	<div class="flex flex-col gap-0.5 flex-1 min-w-0">
-		<span class="text-sm font-semibold text-fg truncate">{exam.title}</span>
-		<span class="text-xs text-fg-muted">{exam.subject} • {exam.date}</span>
+		<span class="text-base font-semibold text-fg truncate">{exam.title}</span>
+		<span class="text-sm text-fg-muted">{exam.subject} • {exam.date}</span>
 	</div>
 
 	<!-- Status badge -->

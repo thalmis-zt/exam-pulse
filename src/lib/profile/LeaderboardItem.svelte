@@ -18,7 +18,7 @@
 	class="flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors
 		{entry.isCurrentUser
 		? 'bg-primary-light border border-primary/30'
-		: 'bg-canvas hover:bg-stroke/40'}"
+		: 'bg-canvas-base hover:bg-stroke/40'}"
 >
 	<!-- Rank -->
 	<span

@@ -73,7 +73,7 @@
 				</div>
 
 				<!-- Right column (2/3): Subjects, Exams, Achievements, Leaderboard -->
-				<div class="md:col-span-2 flex flex-col gap-6">
+				<div class="md:col-span-2 flex flex-col gap-12">
 
 					<!-- My Subjects -->
 					<section class="flex flex-col gap-3">

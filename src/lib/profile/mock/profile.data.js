@@ -57,9 +57,11 @@ export const performance = {
 
 /** @type {import('./profile.schema.js').SubjectItem[]} */
 export const subjects = [
-	{ id: 'subj_1', name: 'Advanced Mathematics', grade: 'Grade 12', lessons: 13, icon: 'BookOpen' },
-	{ id: 'subj_2', name: 'Organic Chemistry', grade: 'Grade 12', lessons: 9, icon: 'FlaskConical' },
-	{ id: 'subj_3', name: 'Quantum Physics', grade: 'Grade 12', lessons: 15, icon: 'Atom' }
+	{ id: 'subj_1', name: 'Mathematics', grade: 'Grade 12', lessons: 13,  },
+	{ id: 'subj_2', name: 'Chemistry', grade: 'Grade 12', lessons: 9,  },
+	{ id: 'subj_3', name: 'Physics', grade: 'Grade 12', lessons: 15,  },
+	{ id: 'subj_4', name: 'Biology', grade: 'Grade 12', lessons: 15, },
+	{ id: 'subj_5', name: 'Aptitude', grade: 'Grade 12', lessons: 15, },
 ];
 
 /** @type {import('./profile.schema.js').RecentExam[]} */

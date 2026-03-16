@@ -35,7 +35,7 @@
 	const IconComponent = $derived(iconMap[achievement.icon] ?? Zap);
 </script>
 
-<div class="flex flex-col items-center gap-2 p-3 rounded-xl bg-canvas text-center">
+<div class="flex flex-col items-center gap-2 p-3 rounded-md bg-canvas-base text-center">
 	<BadgeIcon
 		label={achievement.label}
 		variant={iconVariant}

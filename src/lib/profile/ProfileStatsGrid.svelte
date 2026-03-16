@@ -11,12 +11,12 @@
 	<StatTile value="{stats.avgScore}%" label="Avg. Score" />
 	<StatTile value="{stats.accuracy}%" label="Accuracy" />
 
+    <StatTile value={stats.totalQuizzes} label="Total Quizzes" />
+    <Button btnType="primaryLight" onclick={() => {}}>
+        <History size={14} />
+        History
+    </Button>
 	<!-- Total Quizzes — spans full width with History button -->
-	<div class="col-span-2 flex items-center justify-between p-3 rounded-lg bg-canvas">
-		<StatTile value={stats.totalQuizzes} label="Total Quizzes" />
-		<Button btnType="primaryLight" onclick={() => {}}>
-			<History size={14} />
-			History
-		</Button>
-	</div>
+	<!-- <div class="col-span-2 flex items-center justify-between p-3 rounded-lg bg-canvas">
+	</div> -->
 </div>
