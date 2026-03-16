@@ -57,22 +57,27 @@
 	<section class="mb-3">
 		<SectionHeader title="Subject Focus" showAll onViewAll={() => {}} />
 		<div class="flex gap-3">
-			<SubjectFocusCard subject="Mathematics" testCount={24}>
+			<SubjectFocusCard
+				subject="Mathematics"
+				testCount={24}
+				iconBg="bg-subject-mathematics-surface"
+				iconColor="text-subject-mathematics"
+			>
 				{#snippet icon()}<FileText size={20} />{/snippet}
 			</SubjectFocusCard>
 			<SubjectFocusCard
 				subject="Chemistry"
 				testCount={18}
-				iconBg="bg-purple-100 dark:bg-purple-900/30"
-				iconColor="text-purple-500"
+				iconBg="bg-subject-chemistry-surface"
+				iconColor="text-subject-chemistry"
 			>
 				{#snippet icon()}<Target size={20} />{/snippet}
 			</SubjectFocusCard>
 			<SubjectFocusCard
 				subject="Physics"
 				testCount={12}
-				iconBg="bg-orange-100 dark:bg-orange-900/30"
-				iconColor="text-orange-500"
+				iconBg="bg-subject-physics-surface"
+				iconColor="text-subject-physics"
 			>
 				{#snippet icon()}<Zap size={20} />{/snippet}
 			</SubjectFocusCard>

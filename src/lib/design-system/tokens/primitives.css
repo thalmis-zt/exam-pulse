@@ -27,6 +27,9 @@
   --color-green-400: #4ADE80; /* light green (dark-mode success) */
   --color-green-500: #26D926; /* secondary-green                 */
   --color-green-600: #1EBA1E; /* secondary-hover                 */
+  --color-purple-100: #F3E8FF; /* chemistry surface (light)     */
+  --color-purple-400: #C084FC; /* chemistry accent (dark mode)  */
+  --color-purple-500: #A855F7; /* chemistry accent              */
   --color-orange-100: #FEF3DC; /* warning / flagged surface      */
   --color-orange-500: #F5A623; /* warning / flagged              */
   --color-yellow-400: #FBBF24; /* warning (dark mode)            */
@@ -54,6 +57,7 @@
   --color-red-surface-dark:    #7F1D1D33;
   --color-blue-surface-dark:   #1E3A5F33;
   --color-gray-surface-dark:   #1F293733;
+  --color-purple-surface-dark: #3B076433; /* chemistry surface (dark)      */
 
   /* ── Spacing scale (4px base grid) ────────────────────────── */
   --space-1:  0.25rem;  /*  4px */
