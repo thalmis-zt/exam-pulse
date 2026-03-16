@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import {
 		getSavedQuestions,
-		searchSavedQuestions,
 		deleteSavedQuestion,
 		getSubjectStats
 	} from '$lib/saved-questions/mock/saved-questions.service.js';
@@ -101,25 +100,14 @@
 		hasError = false;
 		errorMessage = '';
 
-		if (!query.trim()) {
-			// Reset to initial state
-			try {
-				const response = await getSavedQuestions(1, PAGE_SIZE, { subject: selectedSubject });
-				questions = response.questions;
-				totalCount = response.totalCount;
-				hasMore = response.hasMore;
-			} catch (error) {
-				hasError = true;
-				errorMessage = error.message || 'Search failed.';
-			}
-			return;
-		}
-
 		try {
-			const results = await searchSavedQuestions(query, { subject: selectedSubject });
-			questions = results.slice(0, PAGE_SIZE);
-			totalCount = results.length;
-			hasMore = results.length > PAGE_SIZE;
+			const response = await getSavedQuestions(1, PAGE_SIZE, {
+				subject: selectedSubject,
+				query: query.trim() || undefined
+			});
+			questions = response.questions;
+			totalCount = response.totalCount;
+			hasMore = response.hasMore;
 		} catch (error) {
 			console.error('Search error:', error);
 			hasError = true;
@@ -153,25 +141,11 @@
 			// Remove from local list
 			questions = questions.filter((q) => q.id !== questionId);
 			totalCount = Math.max(0, totalCount - 1);
-
-			// Clear delete state
-			if (deleteErrors[questionId]) {
-				delete deleteErrors[questionId];
-				deleteErrors = deleteErrors; // Trigger reactivity
-			}
 		} catch (error) {
 			console.error('Delete error:', error);
-			// Store error per question
+			// Store error for modal display (to be handled by deletion confirmation modal)
 			deleteErrors[questionId] = error.message || 'Failed to delete question. Please try again.';
 			deleteErrors = deleteErrors; // Trigger reactivity
-		}
-	}
-
-	async function handleRetryDelete(questionId) {
-		if (deleteErrors[questionId]) {
-			delete deleteErrors[questionId];
-			deleteErrors = deleteErrors;
-			await handleDeleteQuestion(questionId);
 		}
 	}
 
@@ -237,8 +211,8 @@
 						/>
 					</svg>
 				</div>
-				<h3 class="text-fg font-inter text-lg font-bold md:text-xl">No saved questions yet</h3>
-				<p class="text-fg-muted font-poppins max-w-sm text-center text-sm md:text-base">
+				<h3 class="text-fg font-inter text-base font-bold">No saved questions yet</h3>
+				<p class="text-fg-muted font-poppins max-w-sm text-center text-sm ">
 					Start saving questions during practice to review them later.
 				</p>
 				<button
@@ -261,8 +235,9 @@
 						onFilterClick={handleFilterClick}
 					/>
 
-					<!-- Error Alert (for delete or other operations) -->
-					{#if hasError && questions.length > 0}
+					<!-- Questions List or Error State -->
+					{#if hasError && questions.length === 0}
+						<!-- Search/Filter Error State -->
 						<ErrorUI
 							message={errorMessage}
 							onRetry={loadInitialData}
@@ -272,51 +247,38 @@
 								errorMessage = '';
 							}}
 						/>
-					{/if}
-
-					<!-- Questions List -->
-					<div class="flex flex-col gap-4">
-						{#each questions as question (question.id)}
-							<QuestionCard
-								{question}
-								onDelete={handleDeleteQuestion}
-								onAttempt={(data) => console.log('Question attempted:', data)}
-							/>
-
-							<!-- Individual Question Delete Error -->
-							{#if deleteErrors[question.id]}
-								<ErrorUI
-									message={deleteErrors[question.id]}
-									onRetry={() => handleRetryDelete(question.id)}
-									isDismissible={true}
-									onDismiss={() => {
-										delete deleteErrors[question.id];
-										deleteErrors = deleteErrors;
-									}}
+					{:else}
+						<!-- Questions List -->
+						<div class="flex flex-col gap-4">
+							{#each questions as question (question.id)}
+								<QuestionCard
+									{question}
+									onDelete={handleDeleteQuestion}
+									onAttempt={(data) => console.log('Question attempted:', data)}
 								/>
-							{/if}
-						{/each}
-					</div>
+							{/each}
+						</div>
 
-					<!-- Load More Button -->
-					{#if hasMore}
-						<Button
-							btnType="primaryLight"
-							onclick={loadMoreQuestions}
-							disabled={isLoadingMore}
-						>
-							{#if isLoadingMore}
-								Loading...
-							{:else}
-								Load More Questions ({questions.length} of {totalCount})
-							{/if}
-						</Button>
+						<!-- Load More Button -->
+						{#if hasMore}
+							<Button
+								btnType="primaryLight"
+								onclick={loadMoreQuestions}
+								disabled={isLoadingMore}
+							>
+								{#if isLoadingMore}
+									Loading...
+								{:else}
+									Load More Questions ({questions.length} of {totalCount})
+								{/if}
+							</Button>
+						{/if}
+
+						<!-- Results Info -->
+						<p class="text-fg-muted font-poppins text-center text-xs md:text-sm">
+							Showing {questions.length} of {totalCount} questions
+						</p>
 					{/if}
-
-					<!-- Results Info -->
-					<p class="text-fg-muted font-poppins text-center text-xs md:text-sm">
-						Showing {questions.length} of {totalCount} questions
-					</p>
 				</div>
 
 				<!-- Right Panel (Desktop Only) -->
