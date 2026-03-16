@@ -123,7 +123,7 @@
 						class="
 							cursor-pointer rounded-full border-none px-2.5 py-1
 							transition duration-(--motion-fast)
-							{activeLevel === lvl ? 'bg-primary text-white' : 'text-fg-muted hover:text-fg bg-transparent'}
+							{activeLevel === lvl ? 'bg-primary text-canvas-base-fixed' : 'text-fg-muted hover:text-fg bg-transparent'}
 						"
 					>
 						{lvl}
@@ -141,7 +141,7 @@
 						cursor-pointer rounded-full border px-4 py-1.5 text-sm
 						font-medium transition duration-(--motion-fast)
 						{activeSubject === subj
-						? 'bg-primary border-primary text-white'
+						? 'bg-primary border-primary text-canvas-base-fixed'
 						: 'text-fg border-stroke hover:border-primary hover:text-primary bg-transparent'}
 					"
 				>
