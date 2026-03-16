@@ -5,7 +5,7 @@
 	let { account } = $props();
 </script>
 
-<div class="bg-surface-card rounded-xl border border-stroke p-4 flex flex-col gap-1">
+<div class="bg-surface-card rounded-md border border-stroke p-4 flex flex-col gap-1">
 	<h3 class="text-sm font-bold text-fg mb-2">Account &amp; Security</h3>
 
 	<!-- Email -->

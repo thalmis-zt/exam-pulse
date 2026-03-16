@@ -1,17 +1,20 @@
 <script>
 	import { Zap, Target, Star, Trophy, Moon } from '@lucide/svelte';
 	import Badge from '$lib/components/Badge.svelte';
+	import BadgeIcon from '$lib/components/BadgeIcon.svelte';
 
 	/** @type {{ achievement: import('./mock/profile.schema.js').Achievement }} */
 	let { achievement } = $props();
 
 	const iconMap = { Zap, Target, Star, Trophy, Moon };
 
-	const iconBgClass = $derived(() => {
-		if (achievement.status === 'completed') return 'bg-secondary-light text-secondary';
-		if (achievement.status === 'in_progress') return 'bg-warning-surface text-warning';
-		return 'bg-canvas text-fg-muted';
-	});
+	const iconVariant = $derived(
+		achievement.status === 'completed'
+			? 'secondary'
+			: achievement.status === 'in_progress'
+				? 'warning'
+				: 'primary'
+	);
 
 	const badgeVariant = $derived(
 		achievement.status === 'completed'
@@ -33,13 +36,15 @@
 </script>
 
 <div class="flex flex-col items-center gap-2 p-3 rounded-xl bg-canvas text-center">
-	<!-- Icon circle -->
-	<div class="w-12 h-12 rounded-full flex items-center justify-center {iconBgClass()}">
-		<IconComponent size={22} />
-	</div>
-
-	<!-- Label -->
-	<span class="text-xs font-medium text-fg leading-tight">{achievement.label}</span>
+	<BadgeIcon
+		label={achievement.label}
+		variant={iconVariant}
+		shape="circle"
+		size="md"
+		class={achievement.status === 'locked' ? 'opacity-50' : ''}
+	>
+		{#snippet icon()}<IconComponent />{/snippet}
+	</BadgeIcon>
 
 	<!-- Status chip via Badge -->
 	<Badge label={badgeLabel} variant={badgeVariant} size="sm" />

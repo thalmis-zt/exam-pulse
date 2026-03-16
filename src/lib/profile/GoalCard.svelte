@@ -7,7 +7,7 @@
 	let { goals } = $props();
 </script>
 
-<div class="bg-surface-card rounded-xl border border-stroke p-4 flex flex-col gap-4">
+<div class="bg-surface-card rounded-md border border-stroke p-4 flex flex-col gap-4">
 	{#each goals as goal, i (goal.id)}
 		<div class="flex flex-col gap-2 {i > 0 ? 'pt-4 border-t border-stroke' : ''}">
 			<!-- Goal label -->

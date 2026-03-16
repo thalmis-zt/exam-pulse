@@ -6,7 +6,7 @@
 	let { metrics } = $props();
 </script>
 
-<div class="bg-surface-card rounded-xl border border-stroke p-4 flex flex-col gap-4">
+<div class="bg-surface-card rounded-md border border-stroke p-4 flex flex-col gap-4">
 	<!-- Section label -->
 	<div class="flex items-center gap-2">
 		<TrendingUp size={16} class="text-primary shrink-0" />

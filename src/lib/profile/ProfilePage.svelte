@@ -64,8 +64,8 @@
 
 				<!-- Left column (1/3): Goals, Performance, Account -->
 				<div class="flex flex-col gap-6">
-					<GoalCard goals={data.goals} />
 					<PerformanceMetricsCard metrics={data.performance} />
+					<GoalCard goals={data.goals} />
 					<!-- Account & Security — left col on desktop, bottom on mobile (reordered via order) -->
 					<div class="order-last md:order-0">
 						<AccountSecuritySection account={data.account} />
