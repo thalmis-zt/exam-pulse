@@ -2,6 +2,7 @@
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import RecommendedMock from '$lib/components/RecommendedMock.svelte';
 	import MockTestCard from '$lib/components/MockTestCard.svelte';
+	import Button from '$lib/components/Button.svelte';
 
 	/* ── Mock data (replace with server load data) ─────────── */
 	const recommended = [
@@ -166,7 +167,7 @@
 
 		<!-- View All button -->
 		<div class="mt-6 flex justify-center">
-			<button
+			<!-- <button
 				class="
 				border-primary text-primary hover:bg-primary
 				cursor-pointer rounded-xl
@@ -177,7 +178,10 @@
 			"
 			>
 				View All Mock Tests
-			</button>
+			</button> -->
+            <Button btnType="primaryLight">
+                View All Mock Tests
+            </Button>
 		</div>
 	</section>
 </div>
