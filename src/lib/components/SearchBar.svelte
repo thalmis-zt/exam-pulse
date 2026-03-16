@@ -4,7 +4,6 @@
 	let {
 		placeholder = 'Search...',
 		height = '40px',
-		width = '100%',
 		className = '',
 		inputClass = '',
 		value = $bindable(''),
@@ -39,7 +38,7 @@
 		focus-within:border-primary focus-within:ring-1 focus-within:ring-primary
 		{className}
 	"
-	style="width: {width === '1/2' ? '50%' : width}; height: {height};"
+	style="height: {height};"
 >
 	<Search class="size-4 shrink-0 text-fg-muted" />
 
