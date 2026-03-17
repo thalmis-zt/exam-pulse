@@ -4,13 +4,6 @@
 	/** @type {{ exam: import('./mock/profile.schema.js').RecentExam }} */
 	let { exam } = $props();
 
-	const scoreColor = $derived(() => {
-		if (exam.scorePercent === null) return 'bg-canvas text-fg-muted';
-		if (exam.scorePercent >= 80) return 'bg-secondary-light text-secondary';
-		if (exam.scorePercent >= 60) return 'bg-warning-surface text-warning';
-		return 'bg-danger-surface text-danger';
-	});
-
 	const statusVariant = $derived(
 		exam.status === 'completed' ? 'success' : 'warning'
 	);
@@ -20,7 +13,11 @@
 	);
 </script>
 
-<div class="flex items-center gap-3 px-3 py-3 rounded-lg bg-canvas-base">
+<button
+	class="w-full flex items-center gap-3 px-3 py-3 rounded-lg bg-canvas-base text-left hover:bg-stroke/40 transition-colors cursor-pointer border-none"
+	aria-label={exam.title}
+	onclick={() => {}}
+>
 	<!-- Score pill -->
 	<!-- <div
 		class="shrink-0 w-11 h-11 rounded-lg flex items-center justify-center text-sm font-bold {scoreColor()}"
@@ -33,7 +30,7 @@
 		<span class="text-base font-semibold text-fg truncate">{exam.title}</span>
 		<span class="text-sm text-fg-muted">{exam.subject} • {exam.date}</span>
 	</div>
-
+       
 	<!-- Status badge -->
 	<Badge label={statusLabel} variant={statusVariant} size="sm" />
-</div>
+</button>

@@ -3,8 +3,8 @@
 	import Badge from '$lib/components/Badge.svelte';
 	import BadgeIcon from '$lib/components/BadgeIcon.svelte';
 
-	/** @type {{ achievement: import('./mock/profile.schema.js').Achievement }} */
-	let { achievement } = $props();
+	/** @type {{ achievement: import('./mock/profile.schema.js').Achievement, onclick?: () => void }} */
+	let { achievement, onclick } = $props();
 
 	const iconMap = { Zap, Target, Star, Trophy, Moon };
 
@@ -35,17 +35,19 @@
 	const IconComponent = $derived(iconMap[achievement.icon] ?? Zap);
 </script>
 
-<div class="flex flex-col items-center gap-2 p-3 rounded-md bg-canvas-base text-center">
+<button
+	class="flex flex-col items-center gap-2 p-3 rounded-md bg-canvas-base text-center w-full border-none cursor-pointer hover:bg-stroke/40 transition-colors {achievement.status === 'locked' ? 'opacity-50' : ''}"
+	{onclick}
+>
 	<BadgeIcon
 		label={achievement.label}
 		variant={iconVariant}
 		shape="circle"
 		size="md"
-		class={achievement.status === 'locked' ? 'opacity-50' : ''}
 	>
 		{#snippet icon()}<IconComponent />{/snippet}
 	</BadgeIcon>
 
 	<!-- Status chip via Badge -->
 	<Badge label={badgeLabel} variant={badgeVariant} size="sm" />
-</div>
+</button>

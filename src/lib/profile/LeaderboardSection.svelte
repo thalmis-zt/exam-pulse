@@ -4,7 +4,7 @@
 	let { leaderboard, period = 'Weekly' } = $props();
 </script>
 
-<div class="bg-surface-card rounded-md border border-stroke p-4 flex flex-col gap-3">
+<div class="bg-surface-card rounded-md p-4 flex flex-col gap-3">
 	<!-- Header -->
 	<div class="flex items-center justify-between">
 		<h3 class="text-sm font-bold text-fg">Leaderboard ({period})</h3>

@@ -8,7 +8,7 @@
 	let { user } = $props();
 </script>
 
-<div class="bg-surface-card rounded-md border border-stroke p-4 relative flex flex-col gap-4">
+<div class="bg-surface-card rounded-md p-4 relative flex flex-col gap-4">
 	<!-- Edit button -->
 	<button
 		class="absolute top-3 right-3 flex items-center gap-1 text-sm text-primary font-medium hover:opacity-80 transition-opacity bg-transparent border-none cursor-pointer"
