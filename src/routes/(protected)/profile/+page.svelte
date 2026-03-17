@@ -1,1 +1,5 @@
-<!-- Data: user name, avatar, rank, total XP, joined date, overall accuracy, tests attempted, badges earned, and performance trends by subject -->
+<script>
+	import ProfilePage from '$lib/profile/ProfilePage.svelte';
+</script>
+
+<ProfilePage />
