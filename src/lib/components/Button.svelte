@@ -23,7 +23,7 @@
     // tertiary:        `${commonStyles} text-fg-muted bg-canvas border border-stroke hover:bg-stroke`,
     danger:          `${commonStyles} text-canvas-base-fixed bg-danger hover:opacity-90`,
     dangerLight: `${commonStyles} text-danger bg-danger-surface `,
-    black:           `${commonStyles} text-white bg-black hover:bg-gray-900`,
+    black:           `${commonStyles} text-white bg-fg`,
     custom:          ``,
   };
 </script>
