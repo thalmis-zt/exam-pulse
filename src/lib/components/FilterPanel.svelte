@@ -39,21 +39,35 @@
 	}
 
 	const hasAnySelection = $derived(Object.keys(value ?? {}).some((k) => value[k]));
+
+	const styles = $derived.by(() => ({
+		container: 'space-y-4',
+		topRow: 'flex gap-3 items-center',
+		prefixWrapper: 'flex-1 min-w-0',
+		toggleButton:
+			'text-canvas-base-fixed bg-primary hover:bg-primary-hover shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition duration-(--motion-fast)',
+		filterCard: 'border-stroke rounded-xl border bg-surface-card p-5 space-y-5',
+		filterLabel: 'text-fg-muted mb-2 text-xs font-semibold uppercase tracking-wide',
+		pillsRow: 'flex flex-wrap gap-2',
+		pill: (selected) =>
+			`rounded-full border px-4 py-2 text-sm font-medium transition duration-(--motion-fast) ${
+				selected
+					? 'bg-primary text-canvas-base-fixed border-transparent'
+					: 'bg-surface-card text-fg border-stroke hover:border-primary/50'
+			}`,
+		clearSection: 'border-stroke border-t pt-4',
+		clearButton: 'text-fg-muted hover:text-fg text-center text-sm transition'
+	}));
 </script>
 
-<div class="space-y-4">
-	<!-- Top row: prefix (e.g. search) + Hide/Show Filters button -->
-	<div class="flex gap-3 items-center">
+<div class={styles.container}>
+	<div class={styles.topRow}>
 		{#if prefix}
-			<div class="flex-1 min-w-0">{@render prefix()}</div>
+			<div class={styles.prefixWrapper}>{@render prefix()}</div>
 		{/if}
 		<button
 			type="button"
-			class="
-				text-canvas-base-fixed bg-primary hover:bg-primary-hover
-				shrink-0 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium
-				transition duration-(--motion-fast)
-			"
+			class={styles.toggleButton}
 			onclick={() => (collapsed = !collapsed)}
 			aria-expanded={!collapsed}
 		>
@@ -63,22 +77,16 @@
 	</div>
 
 	{#if !collapsed}
-		<div class="border-stroke rounded-xl border bg-surface-card p-5 space-y-5">
+		<div class={styles.filterCard}>
 			{#each filters as filter (filter.key)}
 				<div>
-					<p class="text-fg-muted mb-2 text-xs font-semibold uppercase tracking-wide">
-						{filter.label}
-					</p>
-					<div class="flex flex-wrap gap-2">
+					<p class={styles.filterLabel}>{filter.label}</p>
+					<div class={styles.pillsRow}>
 						{#each filter.options ?? [] as opt, i (opt?.id ?? `${filter.key}-${i}`)}
 							{@const selected = isSelected(filter.key, opt)}
 							<button
 								type="button"
-								class="
-									rounded-full border px-4 py-2 text-sm font-medium
-									transition duration-(--motion-fast)
-									{selected ? 'bg-primary text-canvas-base-fixed border-transparent' : 'bg-surface-card text-fg border-stroke hover:border-primary/50'}
-								"
+								class={styles.pill(selected)}
 								onclick={() => handleSelect(filter.key, opt)}
 							>
 								{getOptionLabel(opt)}
@@ -89,12 +97,8 @@
 			{/each}
 
 			{#if hasAnySelection}
-				<div class="border-stroke border-t pt-4">
-					<button
-						type="button"
-						class="text-fg-muted hover:text-fg text-center text-sm transition"
-						onclick={handleClearAll}
-					>
+				<div class={styles.clearSection}>
+					<button type="button" class={styles.clearButton} onclick={handleClearAll}>
 						Clear all filters
 					</button>
 				</div>
