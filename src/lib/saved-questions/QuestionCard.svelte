@@ -46,12 +46,12 @@
 	function getOptionButtonClass(option) {
 		if (selectedOption === option.label) {
 			if (option.label === question.correctOptionLabel) {
-				return 'border-success bg-emerald-50';
+				return 'border-success bg-success-surface';
 			} else {
-				return 'border-danger bg-red-50';
+				return 'border-danger bg-danger-surface';
 			}
 		}
-		return 'border-border border-info';
+		return 'border-info';
 	}
 </script>
 
