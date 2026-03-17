@@ -1,22 +1,7 @@
 <script>
-	/**
-	 * StepperInput: quantity selector with minus/plus buttons and editable value.
-	 * Pill-shaped container. Value + unit in center. Minus/plus buttons in primary color.
-	 *
-	 * @typedef {Object} Props
-	 * @property {number} [value] - Current value (bindable)
-	 * @property {number} [min] - Minimum value
-	 * @property {number} [max] - Maximum value
-	 * @property {number} [step] - Increment/decrement step
-	 * @property {string} [label] - Label above (e.g. "Number of Questions")
-	 * @property {string} [unit] - Unit after value (e.g. "Items", "Questions")
-	 * @property {boolean} [disabled]
-	 * @property {(value: number) => void} [onChange]
-	 */
 
 	import { Minus, Plus } from '@lucide/svelte';
 
-	/** @type {Props} */
 	let {
 		value = $bindable(0),
 		min = 0,
