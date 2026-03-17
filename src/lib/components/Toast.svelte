@@ -14,26 +14,22 @@
 		success: {
 			icon: CheckCircle,
 			iconBg: 'bg-success-surface',
-			iconColor: 'text-success',
-			barColor: 'bg-success'
+			iconColor: 'text-success'
 		},
 		warning: {
 			icon: AlertTriangle,
 			iconBg: 'bg-warning-surface',
-			iconColor: 'text-warning',
-			barColor: 'bg-warning'
+			iconColor: 'text-warning'
 		},
 		error: {
 			icon: XCircle,
 			iconBg: 'bg-danger-surface',
-			iconColor: 'text-danger',
-			barColor: 'bg-danger'
+			iconColor: 'text-danger'
 		},
 		info: {
 			icon: Info,
 			iconBg: 'bg-info-surface',
-			iconColor: 'text-info',
-			barColor: 'bg-info'
+			iconColor: 'text-info'
 		}
 	};
 
@@ -59,7 +55,7 @@
 <div
 	class="
 		relative flex items-start gap-3 rounded-xl border border-stroke
-		bg-surface-card p-4 pr-12 shadow-lg
+		bg-surface-card p-4 shadow-lg
 		{className}
 	"
 	role="alert"
@@ -92,7 +88,4 @@
 	>
 		<X size={18} />
 	</button>
-
-	<!-- Right vertical bar -->
-	<div class="absolute right-0 top-0 bottom-0 w-1 rounded-r-xl {cfg.barColor}"></div>
 </div>
