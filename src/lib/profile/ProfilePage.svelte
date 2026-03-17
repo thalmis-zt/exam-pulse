@@ -57,8 +57,8 @@
 				<div class="flex flex-col gap-6">
 					<div class="flex flex-col gap-3">
 						<div class="flex items-center gap-2">
-							<TrendingUp size={16} class="text-primary shrink-0" />
-							<SectionHeader title="Performance Metrics" />
+							<!-- <TrendingUp size={16} class="text-primary shrink-0" /> -->
+							<!-- <SectionHeader title="Performance Metrics" /> -->
 						</div>
 						<PerformanceMetricsCard stats={data.stats} metrics={data.performance} />
 					</div>

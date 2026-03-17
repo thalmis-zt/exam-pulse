@@ -8,6 +8,7 @@
 </script>
 
 <div class="bg-surface-card rounded-md  p-4 flex flex-col gap-4">
+<h3 class="text-sm font-bold text-fg mb-2">My Goals</h3>
 	{#each goals as goal, i (goal.id)}
 		<div class="flex flex-col gap-2 {i > 0 ? 'pt-4 border-t border-stroke' : ''}">
 			<!-- Goal label -->

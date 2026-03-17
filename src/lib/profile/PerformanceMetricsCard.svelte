@@ -15,6 +15,7 @@
 
 <div class="bg-surface-card flex flex-col gap-4 rounded-md p-4">
 	<!-- Stats row -->
+	 <h3 class="text-sm font-bold text-fg mb-2">Preformance Metrics</h3>
 	<div class="grid grid-cols-2 gap-3">
 		<StatTile value="{stats.avgScore}%" label="Avg. Score" />
 		<StatTile value="{stats.accuracy}%" label="Accuracy" />
