@@ -166,9 +166,9 @@
 
 	// Computed values - use $derived to reactively track subjectStats changes
 	const displayedStats = $derived([
-		{ subject: 'Physics', icon: Atom, count: subjectStats.physics, backgroundColor: 'blue' },
-		{ subject: 'Chemistry', icon: Beaker, count: subjectStats.chemistry, backgroundColor: 'red' },
-		{ subject: 'Maths', icon: BarChart3, count: subjectStats.maths, backgroundColor: 'green' }
+		{ subject: 'Physics', icon: Atom, count: subjectStats.physics, backgroundColor: 'info' },
+		{ subject: 'Chemistry', icon: Beaker, count: subjectStats.chemistry, backgroundColor: 'danger' },
+		{ subject: 'Maths', icon: BarChart3, count: subjectStats.maths, backgroundColor: 'success' }
 	]);
 </script>
 
@@ -181,12 +181,12 @@
 		<div class="grid grid-cols-3 gap-3">
 			{#each displayedStats as stat (stat.subject)}
 				<StatsCard
-					subject={stat.subject}
+					label={stat.subject}
 					icon={stat.icon}
-					count={stat.count}
-					backgroundColor={stat.backgroundColor}
-					isActive={selectedSubject === stat.subject}
-					onclick={() => handleFilterBySubject(stat.subject)}
+					value={stat.count}
+					variant={stat.backgroundColor}
+					active={selectedSubject === stat.subject}
+					onClick={() => handleFilterBySubject(stat.subject)}
 				/>
 			{/each}
 		</div>
