@@ -40,16 +40,35 @@
 
 	/* Stroke — borders and dividers */
 	--color-stroke: var(--color-gray-200);
-	--color-stroke-strong: var(--color-gray-900)
-		--color-fg: var(--color-gray-900);
+	--color-stroke-strong: var(--color-gray-900);
+	--color-fg: var(--color-gray-900);
 	--color-fg-muted: var(--color-gray-500);
 
   /* Surface elevation levels */
   --color-surface-card:    var(--color-white);
   --color-surface-modal:   var(--color-white);
   --color-surface-popover: var(--color-white);
+
   --color-surface-card-subtle: var(--color-blue-75);
   --color-surface-card-grayscale-subtle: var(--color-gray-400);
+
+  /* ── Subject accent colours ────────────────────────────────── */
+  /* Mathematics — blue (reuses primary scale) */
+  --color-subject-mathematics:         var(--color-blue-500);
+  --color-subject-mathematics-surface: var(--color-blue-50);
+  /* Chemistry — purple */
+  --color-subject-chemistry:           var(--color-purple-500);
+  --color-subject-chemistry-surface:   var(--color-purple-100);
+  /* Physics — orange (reuses warning scale) */
+  --color-subject-physics:             var(--color-orange-500);
+  --color-subject-physics-surface:     var(--color-orange-100);
+
+  /* The padding for the bottom of navigation bar */
+  --padding-navbar-bottom: calc(var(--spacing-safe-bottom) + 0.5rem);
+
+  /* The offset for sticky header to stay below the notch */
+  --margin-header-top: var(--spacing-safe-top);
+
 }
 
 /* ── Dark mode overrides ─────────────────────────────────────── */
@@ -60,13 +79,19 @@
  */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    --color-subject-mathematics:         var(--color-blue-400);
+    --color-subject-mathematics-surface: var(--color-blue-surface-dark);
+    --color-subject-chemistry:           var(--color-purple-400);
+    --color-subject-chemistry-surface:   var(--color-purple-surface-dark);
+    --color-subject-physics:             var(--color-yellow-400);
+    --color-subject-physics-surface:     var(--color-orange-surface-dark);
     --color-canvas-base:     var(--color-navy-950);
     --color-canvas:          var(--color-navy-900);
     --color-stroke:          var(--color-navy-600);
-    --color-fg:              var(--color-gray-100);
+    --color-fg:              var(--color-white);
     --color-fg-muted:        var(--color-gray-400);
     --color-surface-card:    var(--color-navy-900);
-    --color-surface-card-subtle:var(--color-gray-surface-dark)
+    --color-surface-card-subtle:var(--color-gray-surface-dark);
   --color-surface-card-grayscale-subtle: var(--color-gray-400);
     --color-surface-modal:   var(--color-navy-700);
     --color-surface-popover: var(--color-navy-800);
@@ -74,10 +99,16 @@
 }
 
 [data-theme="dark"] {
+  --color-subject-mathematics:         var(--color-blue-400);
+  --color-subject-mathematics-surface: var(--color-blue-surface-dark);
+  --color-subject-chemistry:           var(--color-purple-400);
+  --color-subject-chemistry-surface:   var(--color-purple-surface-dark);
+  --color-subject-physics:             var(--color-yellow-400);
+  --color-subject-physics-surface:     var(--color-orange-surface-dark);
   --color-canvas-base:          var(--color-navy-950);
   --color-canvas:          var(--color-navy-900);
   --color-stroke:          var(--color-navy-600);
-  --color-fg:              var(--color-gray-100);
+  --color-fg:              var(--color-white);
   --color-fg-muted:        var(--color-gray-400);
   --color-surface-card:    var(--color-navy-900);
   --color-surface-card-grayscale-subtle: var(--color-gray-400);

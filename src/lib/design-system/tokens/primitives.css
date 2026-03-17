@@ -27,6 +27,9 @@
   --color-green-400: #4ADE80; /* light green (dark-mode success) */
   --color-green-500: #26D926; /* secondary-green                 */
   --color-green-600: #1EBA1E; /* secondary-hover                 */
+  --color-purple-100: #F3E8FF; /* chemistry surface (light)     */
+  --color-purple-400: #C084FC; /* chemistry accent (dark mode)  */
+  --color-purple-500: #A855F7; /* chemistry accent              */
   --color-orange-100: #FEF3DC; /* warning / flagged surface      */
   --color-orange-500: #F5A623; /* warning / flagged              */
   --color-yellow-400: #FBBF24; /* warning (dark mode)            */
@@ -34,6 +37,7 @@
   --color-red-400:   #F87171; /* light red (dark-mode danger)    */
   --color-red-500:   #E64C4C; /* red                             */
   --color-white:     #FFFFFF;
+  --color-black:     #000000;
 
   /* ── Color: Extended Gray scale ────────────────────────────── */
   --color-gray-100: #F0F2F7; /* near-white fg for dark mode */
@@ -53,6 +57,7 @@
   --color-red-surface-dark:    #7F1D1D33;
   --color-blue-surface-dark:   #1E3A5F33;
   --color-gray-surface-dark:   #1F293733;
+  --color-purple-surface-dark: #3B076433; /* chemistry surface (dark)      */
 
   /* ── Spacing scale (4px base grid) ────────────────────────── */
   --space-1:  0.25rem;  /*  4px */
@@ -68,6 +73,12 @@
   --space-20: 5rem;     /* 80px */
   --space-24: 6rem;     /* 96px */
   --space-32: 8rem;     /* 128px */
+
+   /* Core hardware spacing constants */
+  --spacing-safe-top: env(safe-area-inset-top);
+  --spacing-safe-bottom: env(safe-area-inset-bottom);
+  --spacing-safe-left: env(safe-area-inset-left);
+  --spacing-safe-right: env(safe-area-inset-right);
 
   /* ── Border radius ─────────────────────────────────────────── */
   --radius-sm:   0.25rem; /*  4px */
