@@ -23,6 +23,7 @@
     // tertiary:        `${commonStyles} text-fg-muted bg-canvas border border-stroke hover:bg-stroke`,
     danger:          `${commonStyles} text-canvas-base-fixed bg-danger hover:opacity-90`,
     dangerLight: `${commonStyles} text-danger bg-danger-surface `,
+    black:           `${commonStyles} text-white bg-fg`,
     flagged:        `${commonStyles} text-canvas-base-fixed bg-flagged hover:opacity-90 rounded-md uppercase font-semibold`,
     flaggedLight:   `${commonStyles} bg-canvas-base-fixed text-flagged border-2 border-flagged rounded-md uppercase font-semibold hover:bg-flagged-surface`,
     custom:          ``,
