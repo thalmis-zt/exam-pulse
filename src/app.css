@@ -15,6 +15,7 @@
 @import "$lib/design-system/tokens/layout.css";
 @import "$lib/design-system/tokens/motion.css";
 @import "$lib/design-system/base/typography.css";
+@import "$lib/design-system/base/breakpoints.css";
 
 /* Design system tokens — must load before Tailwind processes @theme */
 @import 'tailwindcss';

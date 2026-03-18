@@ -1,37 +1,79 @@
 <script>
-	let { subject, icon: IconComponent, count, backgroundColor = 'default', isActive = false, onclick } = $props();
+	let {
+		label = '',
+		icon: Icon,
+		value = 0,
+		variant = 'default', // default | info | success | danger
+		size = 'md', // sm | md | lg
+		active = false,
+		disabled = false,
+		onClick = () => {},
+		children
+	} = $props();
 
-	const bgMap = {
+	const variantStyles = {
 		default: 'bg-surface-card',
-		blue: 'bg-info-surface',
-		green: 'bg-success-surface/50',
-		red: 'bg-danger-surface/50'
+		info: 'bg-info-surface',
+		success: 'bg-success-surface/50',
+		danger: 'bg-danger-surface/50'
 	};
 
-	const bgClass = $derived(bgMap[backgroundColor] ?? bgMap.default);
+	const sizeStyles = {
+		sm: {
+			container: 'p-3 gap-2',
+			icon: 'w-8 h-8',
+			value: 'text-sm'
+		},
+		md: {
+			container: 'p-4 gap-2',
+			icon: 'w-10 h-10',
+			value: 'text-base'
+		},
+		lg: {
+			container: 'p-5 gap-3',
+			icon: 'w-12 h-12',
+			value: 'text-lg'
+		}
+	};
+
+	const variantClass = $derived(variantStyles[variant] ?? variantStyles.default);
+	const sizeClass = $derived(sizeStyles[size] ?? sizeStyles.md);
 </script>
 
 <button
-	class="flex flex-col md:flex-row md:items-center md:gap-3 gap-2 p-4 rounded-lg {bgClass} transition-all duration-fast ease-standard cursor-pointer shadow-sm"
-	{onclick}
+	type="button"
+	class="
+		flex flex-col md:flex-row md:items-center md:gap-3
+		{sizeClass.container}
+		rounded-md
+		{variantClass}
+		shadow-sm
+		transition-all duration-fast ease-standard
+		{disabled ? 'opacity-50 cursor-not-allowed' : ''}
+	"
+	onclick={!disabled ? onClick : undefined}
+	aria-pressed={active}
 >
 	<!-- Icon -->
-	<div class="flex-shrink-0 text-primary bg-canvas-base/80 w-10 h-10 rounded-lg flex items-center justify-center">
-		<svelte:component this={IconComponent} size={16} strokeWidth={1.5} />
-	</div>
+	{#if Icon}
+		<div class="shrink-0 text-primary bg-canvas-base/80 {sizeClass.icon} rounded-md flex items-center justify-center">
+			<Icon size={16} strokeWidth={1.5} />
+		</div>
+	{/if}
 
-	<!-- Content Wrapper -->
+	<!-- Content -->
 	<div class="flex flex-col items-start">
-		<!-- Subject Name -->
+		<!-- Label -->
 		<span class="text-2xs font-semibold text-fg-muted font-inter uppercase tracking-wide">
-			{subject}
+			{label}
 		</span>
 
-		<!-- Count -->
-		<span class="text-base font-bold text-fg font-Inter">
-			{count}
+		<!-- Value -->
+		<span class="{sizeClass.value} font-bold text-fg font-inter">
+			{value}
 		</span>
+
+		<!-- Optional Slot -->
+		{@render children?.()}
 	</div>
 </button>
-
-
