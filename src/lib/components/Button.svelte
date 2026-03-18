@@ -27,6 +27,7 @@
     flagged:        `${commonStyles} text-canvas-base-fixed bg-flagged hover:opacity-90 rounded-md uppercase font-semibold`,
     flaggedLight:   `${commonStyles} bg-canvas-base-fixed text-flagged border-2 border-flagged rounded-md uppercase font-semibold hover:bg-flagged-surface`,
     custom:          ``,
+    ghost:           `${commonStyles} bg-white text-fg hover:bg-stroke`,
   };
 </script>
 

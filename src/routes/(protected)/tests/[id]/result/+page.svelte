@@ -1,1 +1,6 @@
-<!-- Data: single test result for [id] — score, rank, time taken, per-question breakdown (correct/incorrect/skipped), subject-wise accuracy, and XP earned -->
+<script>
+	import { page } from '$app/stores';
+	import QuizSummaryPage from '$lib/quiz-summary/QuizSummaryPage.svelte';
+</script>
+
+<QuizSummaryPage testId={$page.params.id} />
