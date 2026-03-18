@@ -170,13 +170,15 @@
 		</div>
 
 		<!-- Negative Marking -->
-		<NegativeMarkingCard
-			isEnabled={enableNegativeMarking}
-			deductionAmount={negativeMarkingDeduction}
-			onToggle={(enabled) => {
-				enableNegativeMarking = enabled;
-			}}
-		/>
+		<div class="grid grid-cols-1 sm:grid-cols-2">
+			<NegativeMarkingCard
+				isEnabled={enableNegativeMarking}
+				deductionAmount={negativeMarkingDeduction}
+				onToggle={(enabled) => {
+					enableNegativeMarking = enabled;
+				}}
+			/>
+		</div>
 
 		<!-- Error Message -->
 		{#if formError}

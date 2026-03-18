@@ -33,7 +33,7 @@
 
 	<div>
 		<span class="text-fg text-2xs block font-medium tracking-wider mb-3">Subject *</span>
-		<div class="flex gap-2 overflow-x-auto snap-x snap-mandatory md:flex-wrap md:justify-center md:overflow-visible pb-2 md:pb-0">
+		<div class="flex gap-2 overflow-x-auto snap-x snap-mandatory md:flex-wrap md:justify-start md:overflow-visible pb-2 md:pb-0">
 			{#each subjects as subject, index (subject.id)}
 				<button
 					type="button"
