@@ -1,5 +1,5 @@
 <script>
-	let { label, icon, variant = 'primary', shape = 'circle', size = 'md', class: className = '' } = $props();
+	let { label, icon, variant = 'primary', shape = 'circle', size = 'md', class: className = '', showLabel = true } = $props();
 
 	const variantClasses = {
 		primary: 'bg-primary-light text-primary',
@@ -41,7 +41,9 @@
 	</div>
 
 	<!-- Label -->
-	<p class={styles.label}>
-		{label}
-	</p>
+	{#if showLabel}
+		<p class={styles.label}>
+			{label}
+		</p>
+	{/if}
 </div>
