@@ -58,7 +58,7 @@
 
 <!-- Use generic Loader and Error Components once the reusable components are merged -->
 <div class="transition duration-motion-normal ease-ease-standard">
-	<div class="mx-auto px-4 md:px-6 py-4 md:py-6">
+	<div class="">
 		<div>
 			{#if isLoading}
 				<!-- Loading state -->
