@@ -24,7 +24,7 @@
 >
 	<!-- Row 1: Topic name + question count + icon buttons (right-aligned) -->
 	<div class="flex items-center justify-between gap-2 min-w-0">
-		<div class="flex flex-col min-w-0">
+		<div class="flex flex-col gap-1.5 min-w-0">
 			<h3 class="text-sm font-semibold text-fg truncate">{topic.name}</h3>
 			<span class="text-xs font-medium text-primary">{topic.questionCount} Questions</span>
 		</div>
