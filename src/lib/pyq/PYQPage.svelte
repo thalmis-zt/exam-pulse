@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { Atom, Beaker, Calculator, Sparkles, HelpCircle, ArrowRight, Search } from '@lucide/svelte';
+	import { Atom, Beaker, Calculator, Sparkles, HelpCircle, ArrowRight } from '@lucide/svelte';
 	import { getPYQData } from '$lib/pyq/mock/pyq.service.js';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import IconHeading from '$lib/components/IconHeading.svelte';
@@ -14,7 +14,6 @@
 	let isLoading = $state(true);
 	let hasError = $state(false);
 	let errorMessage = $state('');
-	let searchQuery = $state('');
 	let activeExamType = $state('All');
 	let selectedYear = $state(null);
 	let examTypeSelected = $state(['All']);
@@ -84,16 +83,7 @@
 		// TODO: Navigate to year-wise practice
 	}
 
-	// Filter topics by search (client-side for mock)
-	const filteredSections = $derived.by(() => {
-		if (!data?.subjectSections) return [];
-		const q = searchQuery?.toLowerCase().trim();
-		if (!q) return data.subjectSections;
-		return data.subjectSections.map((section) => ({
-			...section,
-			topics: section.topics.filter((t) => t.name.toLowerCase().includes(q)),
-		})).filter((s) => s.topics.length > 0);
-	});
+	const filteredSections = $derived(data?.subjectSections ?? []);
 </script>
 
 <div class="flex flex-col gap-6 min-h-screen">
@@ -102,19 +92,6 @@
 		title="Previous Year Questions"
 		subtitle="Practice with real exam questions by topic"
 	/>
-
-	<!-- Search -->
-	<div
-		class="flex items-center gap-2 border border-stroke rounded-full bg-surface-card px-3 py-2 shadow-sm"
-	>
-		<Search size={14} class="text-fg-muted shrink-0" />
-		<input
-			type="text"
-			bind:value={searchQuery}
-			placeholder="Search topics, years, or exams..."
-			class="flex-1 min-w-0 bg-transparent text-sm text-fg font-poppins outline-none border-none ring-0 focus:ring-0 placeholder:text-fg-muted"
-		/>
-	</div>
 
 	{#if isLoading}
 		<div class="flex flex-col items-center justify-center gap-3 py-12">
