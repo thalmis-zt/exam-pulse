@@ -125,7 +125,7 @@
 			<p class="text-danger mt-1 text-xs">{validationErrors}</p>
 		{/if}
 
-		<!-- Dropdown panel -->
+		{#if showDropdown}
 		<div
 			class="
 				absolute right-0 z-40 mt-2 max-h-52 w-full
@@ -138,8 +138,7 @@
 			aria-labelledby="select-button"
 			tabindex="-1"
 		>
-			{#if showDropdown}
-				<div class="py-1" role="group">
+			<div class="py-1" role="group">
 					{#if loading}
 						<div class="text-fg-muted px-4 py-3 text-sm italic">
 							Loading...
@@ -170,7 +169,7 @@
 						</div>
 					{/if}
 				</div>
-			{/if}
 		</div>
+		{/if}
 	</div>
 </div>
