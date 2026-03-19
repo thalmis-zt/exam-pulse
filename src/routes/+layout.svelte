@@ -3,20 +3,25 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
-    import { page } from '$app/stores';
-	const route = $derived($page.url.pathname);
+	import { page } from '$app/stores';
+
 	let { children } = $props();
 
-		const routesWithoutHeader = ['/', '/login', '/rptview'];
+	const route = $derived($page.url.pathname);
+	const isQuizAttempt = $derived(/^\/tests\/[^/]+\/attempt\/?$/.test(route));
 
-		let showHeader = $derived(!routesWithoutHeader.includes(route));
+	const routesWithoutHeader = ['/', '/login', '/rptview'];
+	const showHeader = $derived(!routesWithoutHeader.includes(route) && !isQuizAttempt);
+	const showFooter = $derived(!routesWithoutHeader.includes(route));
 </script>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 <div class="min-h-screen flex flex-col">
-{#if showHeader}
+	{#if showHeader}
 		<Header />
 	{/if}
 	{@render children()}
-	<Footer />
+	{#if showFooter}
+		<Footer />
+	{/if}
 </div>
