@@ -4,7 +4,8 @@
 		src = '',
 		alt = '',
 		name = '',
-		size = 'md'
+		size = 'md',
+		overlay
 	} = $props();
 
 	let imageLoaded = $state(false);
@@ -23,7 +24,8 @@
 		({
 			sm: 'size-8 text-xs',
 			md: 'size-9 text-sm',
-			lg: 'size-20 text-2xl'
+			lg: 'size-20 text-2xl',
+			xl: 'size-24 text-3xl'
 		})[size] ?? 'size-9 text-sm'
 	);
 
@@ -39,11 +41,12 @@
 
 <div
 	class="
-		relative inline-flex shrink-0 overflow-hidden rounded-full
+		relative inline-flex shrink-0 overflow-visible rounded-full
 		border-2 border-stroke bg-primary-light
 		{sizeClasses}
 	"
 >
+	<div class="size-full overflow-hidden rounded-full">
 	{#if showImage}
 		<img
 			src={src}
@@ -68,6 +71,18 @@
 			class="text-primary flex size-full items-center justify-center font-bold"
 		>
 			{getInitials(name)}
+		</div>
+	{/if}
+	</div>
+
+	{#if overlay}
+		<div
+			class="
+				absolute bottom-0 right-1 flex size-7 items-center justify-center
+				rounded-full border-2 border-surface-card bg-primary text-white
+			"
+		>
+			{@render overlay()}
 		</div>
 	{/if}
 </div>
