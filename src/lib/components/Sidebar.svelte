@@ -45,8 +45,13 @@
 					{ label: 'Mock Tests', href: '/mock-tests', icon: ClipboardList }
 				]
 			},
-			{ label: 'Starred', href: '/starred-questions', icon: Star },
-			{ label: 'Focus Areas', href: '/focus-areas', icon: Target }
+			{ label: 'Saved', href: '/saved-questions', icon: Star },
+			{ label: 'Focus Areas', href: '/focus-areas', icon: Target },
+			{ label: 'Test History', href: '/test-history', icon: Target },
+			{ label: 'Mistake Logs', href: '/mistake-log', icon: Target },
+			{ label: 'Test Config', href: '/test-config', icon: Target },
+			{ label: 'Test Attempt', href: '/tests/2/attempt', icon: Target },
+			{ label: 'Test Result', href: '/tests/2/result', icon: Target },
 		]
 	} = $props();
 
