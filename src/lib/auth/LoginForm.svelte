@@ -1,0 +1,122 @@
+<script>
+	import { goto } from '$app/navigation';
+	import { Zap } from '@lucide/svelte';
+	import TextInput from '$lib/components/TextInput.svelte';
+	import PasswordInput from '$lib/components/PasswordInput.svelte';
+	import Button from '$lib/components/Button.svelte';
+
+	let email = $state('');
+	let password = $state('');
+
+	let emailError = $state('');
+	let passwordError = $state('');
+
+	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+	function validateEmail() {
+		if (!email.trim()) {
+			emailError = 'Email is required';
+			return false;
+		}
+		if (!EMAIL_REGEX.test(email.trim())) {
+			emailError = 'Please enter a valid email address';
+			return false;
+		}
+		emailError = '';
+		return true;
+	}
+
+	function validatePassword() {
+		if (!password) {
+			passwordError = 'Password is required';
+			return false;
+		}
+		passwordError = '';
+		return true;
+	}
+
+	function handleSubmit(e) {
+		e.preventDefault();
+		emailError = '';
+		passwordError = '';
+
+		const emailValid = validateEmail();
+		const passwordValid = validatePassword();
+
+		if (!emailValid || !passwordValid) return;
+
+		// No backend: redirect to home
+		goto('/home');
+	}
+</script>
+
+<div class="bg-canvas flex min-h-screen items-center justify-center px-4 py-12">
+	<div class="w-full max-w-md">
+		<!-- Header -->
+		<div class="mb-8 flex flex-col items-center text-center">
+			<a href="/" class="mb-4 flex items-center gap-2 no-underline">
+				<div class="bg-primary flex size-10 items-center justify-center rounded-xl">
+					<Zap size={22} color="white" fill="white" />
+				</div>
+				<span class="text-fg text-xl font-bold tracking-tight">Exam Buddy</span>
+			</a>
+			<p class="text-fg-muted text-sm">Sign in to your account</p>
+		</div>
+
+		<!-- Form Card -->
+		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
+			<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
+				<TextInput
+					label="Email"
+					type="email"
+					placeholder="Enter your email"
+					bind:value={email}
+					error={emailError}
+					required
+					onblur={validateEmail}
+				/>
+				<div>
+					<div class="mb-2 flex items-center justify-between">
+						<label for="login-password" class="text-sm font-medium text-fg">
+							Password
+							<span class="text-danger" aria-hidden="true">*</span>
+						</label>
+						<a href="" class="text-primary text-sm font-medium hover:underline">
+							Forgot password?
+						</a>
+					</div>
+					<PasswordInput
+						id="login-password"
+						placeholder="Enter your password"
+						bind:value={password}
+						error={passwordError}
+						required
+						onblur={validatePassword}
+					/>
+				</div>
+
+				<Button type="submit" btnType="primary" customClass="w-full py-3 font-semibold rounded-xl">
+					Sign In
+				</Button>
+			</form>
+
+			<div class="border-stroke mt-6 flex items-center gap-3 border-t pt-6">
+				<span class="bg-stroke h-px flex-1"></span>
+				<span class="text-fg-muted text-xs">OR</span>
+				<span class="bg-stroke h-px flex-1"></span>
+			</div>
+
+			<p class="mt-6 text-center text-sm text-fg-muted">
+				Don't have an account?
+				<a href="/register" class="text-primary font-medium hover:underline">Sign up</a>
+			</p>
+		</div>
+
+		<p class="text-fg-muted mt-6 text-center text-xs">
+			By signing in, you agree to our
+			<a href="/terms" class="text-primary hover:underline">Terms of Service</a>
+			and
+			<a href="/privacy" class="text-primary hover:underline">Privacy Policy</a>.
+		</p>
+	</div>
+</div>
