@@ -1,5 +1,4 @@
 <script>
-
 	import { ChevronDown, X, Check } from '@lucide/svelte';
 
 	let {
@@ -12,6 +11,7 @@
 		loading = false,
 		validationErrors = '',
 		type = '',
+		icon,
 		onSelect,
 		onClear
 	} = $props();
@@ -58,9 +58,7 @@
 
 <div class="w-full">
 	{#if title}
-		<p
-			class="text-fg mb-1 block text-xs font-medium capitalize leading-5 sm:text-xs"
-		>
+		<p class="text-fg mb-2 block text-sm font-medium leading-5">
 			{title}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
 		</p>
 	{/if}
@@ -71,8 +69,8 @@
 				type="button"
 				class="
 					flex w-full items-center justify-between gap-2
-					border border-stroke rounded-full
-					bg-surface-card px-3 py-2
+					border border-stroke rounded-lg
+					bg-surface-card px-3 py-2.5
 					shadow-sm
 					transition duration-(--motion-fast) ease-(--ease-standard)
 					text-sm text-fg outline-none
@@ -89,8 +87,13 @@
 				{disabled}
 				onclick={() => !disabled && (showDropdown = !showDropdown)}
 			>
-				<span class="min-w-0 truncate">
-					{value ? getOptionLabel(value) : placeholder}
+				<span class="flex min-w-0 flex-1 items-center gap-2">
+					{#if icon}
+						<span class="shrink-0 text-fg-muted [&_svg]:size-4">{@render icon()}</span>
+					{/if}
+					<span class="min-w-0 truncate">
+						{value ? getOptionLabel(value) : placeholder}
+					</span>
 				</span>
 
 				<!-- Right side: loading | clear | chevron -->
