@@ -31,6 +31,7 @@
 
 	$effect(() => {
 		if (typeof window === 'undefined') return;
+		if (!showDropdown) return;
 		document.addEventListener('click', handleClickOutside);
 		return () => document.removeEventListener('click', handleClickOutside);
 	});
@@ -146,7 +147,7 @@
 						</div>
 					{:else if options?.length > 0}
 						{#each options as option, index (option?.id ?? index)}
-							{@const isSelected = value && (value === option || value?.id === option?.id || getOptionLabel(value) === getOptionLabel(option))}
+							{@const isSelected = value && value?.id === option?.id}
 							<button
 								type="button"
 								role="option"
