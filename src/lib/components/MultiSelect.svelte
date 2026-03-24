@@ -22,12 +22,7 @@
 	}
 
 	function isOptionSelected(option) {
-		return value?.some(
-			(opt) =>
-				opt === option ||
-				opt?.id === option?.id ||
-				getOptionLabel(opt) === getOptionLabel(option)
-		);
+		return value?.some((opt) => opt?.id === option?.id);
 	}
 
 	function handleClickOutside(event) {
@@ -38,6 +33,7 @@
 
 	$effect(() => {
 		if (typeof window === 'undefined') return;
+		if (!showDropdown) return;
 		document.addEventListener('click', handleClickOutside);
 		return () => document.removeEventListener('click', handleClickOutside);
 	});
@@ -46,12 +42,7 @@
 		const selected = isOptionSelected(option);
 		let next;
 		if (selected) {
-			next = value.filter(
-				(opt) =>
-					opt !== option &&
-					opt?.id !== option?.id &&
-					getOptionLabel(opt) !== getOptionLabel(option)
-			);
+			next = value.filter((opt) => opt?.id !== option?.id);
 		} else {
 			next = [...(value ?? []), option];
 		}
@@ -62,12 +53,7 @@
 	function handleRemoveOption(e, option) {
 		e?.preventDefault?.();
 		e?.stopPropagation?.();
-		const next = value.filter(
-			(opt) =>
-				opt !== option &&
-				opt?.id !== option?.id &&
-				getOptionLabel(opt) !== getOptionLabel(option)
-		);
+		const next = value.filter((opt) => opt?.id !== option?.id);
 		value = next;
 		showDropdown = false;
 		onChange?.({ selectedOptions: next, selectedValues: next.map((o) => o?.id) });
@@ -96,7 +82,7 @@
 			<button
 				type="button"
 				class="
-					flex min-h-[38px] w-full items-center justify-between gap-2
+					flex min-h-10 w-full items-center justify-between gap-2
 					border border-stroke rounded-full
 					bg-surface-card px-3 py-2
 					shadow-sm
