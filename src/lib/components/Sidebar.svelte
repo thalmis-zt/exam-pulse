@@ -20,6 +20,7 @@
 		BookOpen,
 		PenLine,
 		ClipboardList,
+		FileText,
 		Star,
 		Target,
 		CircleUser,
@@ -42,7 +43,8 @@
 				icon: BookOpen,
 				children: [
 					{ label: 'Practice', href: '/tests/create', icon: PenLine },
-					{ label: 'Mock Tests', href: '/mock-tests', icon: ClipboardList }
+					{ label: 'Mock Tests', href: '/mock-tests', icon: ClipboardList },
+					{ label: 'PYQ Papers', href: '/pyq', icon: FileText }
 				]
 			},
 			{ label: 'Saved', href: '/saved-questions', icon: Star },
