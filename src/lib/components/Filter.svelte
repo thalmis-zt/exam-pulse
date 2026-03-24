@@ -1,11 +1,32 @@
 <script>
 	import { Filter as FilterIcon, X } from '@lucide/svelte';
+	import Button from '$lib/components/Button.svelte';
 	import Searchable from '$lib/components/Searchable.svelte';
 	import Dropdown from '$lib/components/Dropdown.svelte';
 
+	/**
+	 * @typedef {{ id: string; name?: string; title?: string }} FilterOption
+	 *
+	 * @typedef {{
+	 *   key: string;
+	 *   label: string;
+	 *   type: 'dropdown' | 'searchable';
+	 *   options: FilterOption[];
+	 * }} FilterConfig
+	 *
+	 * @typedef {Record<string, FilterOption | null>} FilterValue
+	 *
+	 * @typedef {Record<string, string>} FilterDependencies
+	 * Maps dependent filter key → parent filter key. A filter is shown only when its parent has a selection.
+	 * Example: { chapter: 'subject', topic: 'chapter' } — chapter shows when subject is selected; topic shows when chapter is selected.
+	 */
+
 	let {
+		/** @type {FilterConfig[]} */
 		filters = [],
+		/** @type {FilterValue} */
 		value = $bindable({}),
+		/** @type {FilterDependencies} */
 		dependencies = {},
 		loading = false,
 		onApply
@@ -98,6 +119,7 @@
 
 	$effect(() => {
 		if (typeof window === 'undefined') return;
+		if (!isExpanded) return;
 		document.addEventListener('click', handleClickOutside);
 		return () => document.removeEventListener('click', handleClickOutside);
 	});
@@ -187,26 +209,17 @@
 			{/if}
 
 			<div class="mt-4 flex items-center justify-between">
-				<button
-					type="button"
-					class="text-fg-muted hover:text-fg text-sm transition"
-					onclick={handleClearAll}
-				>
+				<Button btnType="custom" customClass="text-fg-muted hover:text-fg text-sm px-0 py-0 bg-transparent border-none cursor-pointer" onclick={handleClearAll}>
 					Clear All
-				</button>
-				<button
-					type="button"
-					class="bg-primary text-canvas-base-fixed hover:bg-primary-hover rounded-full px-4 py-2 text-sm font-medium transition disabled:opacity-60"
-					disabled={loading}
-					onclick={handleApply}
-				>
+				</Button>
+				<Button btnType="primary" disabled={loading} onclick={handleApply}>
 					{#if loading}
 						<span
 							class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-white border-t-transparent"
 						></span>
 					{/if}
 					Apply
-				</button>
+				</Button>
 			</div>
 		</div>
 	{/if}
