@@ -15,6 +15,9 @@
 
 	const variantClasses = {
 		primary: 'text-primary',
+		secondary: 'text-secondary',
+		success: 'text-success',
+		danger: 'text-danger',
 		custom: ''
 	};
 
