@@ -10,7 +10,7 @@
 	const route = $derived($page.url.pathname);
 	const isQuizAttempt = $derived(/^\/tests\/[^/]+\/attempt\/?$/.test(route));
 
-	const routesWithoutHeader = ['/', '/login', '/rptview'];
+	const routesWithoutHeader = ['/', '/login', '/register', '/verify-otp', '/rptview'];
 	const showHeader = $derived(!routesWithoutHeader.includes(route) && !isQuizAttempt);
 	const showFooter = $derived(!routesWithoutHeader.includes(route));
 </script>
