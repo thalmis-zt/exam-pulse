@@ -2,7 +2,6 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Error from '$lib/components/Error.svelte';
-	import { AlertTriangle } from '@lucide/svelte';
 	let {
 		open = false,
 		onclose,
@@ -25,6 +24,10 @@
 	);
 
 	const displayConfirmationLabel = $derived(confirmationLabel || `Type "${confirmationValue}" to confirm`);
+
+	const modalTitle = $derived(
+		`Are you sure you want to delete ${entity?.[fields[0]?.key] ?? entityName}?`
+	);
 
 	$effect(() => {
 		if (!open) {
@@ -79,7 +82,7 @@
 
 <Modal
 	open={open}
-	title="Delete {entityName}?"
+	title={modalTitle}
 	size="md"
 	showClose={!loading}
 	closeOnBackdropClick={!loading}
@@ -99,21 +102,6 @@
 					/>
 				{/if}
 
-				<!-- Warning block -->
-				<div
-					class="flex items-start gap-4 rounded-xl border border-danger/30 bg-danger-surface p-4"
-				>
-					<AlertTriangle class="size-6 shrink-0 text-danger" />
-					<div>
-						<p class="text-fg font-semibold">
-							Are you sure you want to delete
-							<strong class="text-danger">
-								{entity[fields[0]?.key] ?? 'this item'}
-							</strong>?
-						</p>
-						<p class="text-fg-muted mt-1 text-sm">This action cannot be undone.</p>
-					</div>
-				</div>
 
 				<!-- Entity details -->
 				{#if fields.length}
