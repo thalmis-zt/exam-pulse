@@ -1,5 +1,6 @@
 <script>
 	import { Minus } from '@lucide/svelte';
+	import Toggle from '$lib/components/Toggle.svelte';
 
 	let {
 		isEnabled = $bindable(false),
@@ -46,15 +47,12 @@
 			</div>
 		</div>
 
-		<!-- Use toggle component when resuable components are merged  -->
-		<label class="relative inline-flex cursor-pointer items-center">
-			<input type="checkbox" checked={isEnabled} onchange={handleToggle} class="peer sr-only" />
-			<div
-				class="h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-blue-600"
-			></div>
-			<div
-				class="absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5"
-			></div>
-		</label>
+		<Toggle
+			bind:checked={isEnabled}
+			onToggle={(next) => onToggle(next)}
+			ariaLabel="Enable negative marking"
+			size="md"
+			variant="secondary"
+		/>
 	</div>
 </div>

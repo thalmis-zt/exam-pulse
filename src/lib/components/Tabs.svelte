@@ -1,6 +1,15 @@
 <script>
+	let {
+		options = [],
+		selected,
+		onSelect,
+		size = 'md',
+		title = '',
+		required = false,
+		class: className = ''
+	} = $props();
 
-	let { options = [], selected, onSelect, size = 'md' } = $props();
+	const titleId = `tabs-label-${crypto.randomUUID()}`;
 
 	let focusedIndex = $state(0);
 
@@ -41,33 +50,43 @@
 	};
 </script>
 
-<div
-	role="tablist"
-	aria-label="Tabs"
-	tabindex="0"
-	class="inline-flex items-center gap-1 p-1 rounded-lg bg-stroke"
-	onkeydown={handleKeydown}
->
-	{#each options as option, i}
-		<button
-			role="tab"
-			type="button"
-			tabindex={selectedIndex === i ? 0 : -1}
-			aria-selected={selected === option.value}
-			aria-controls="tabpanel-{option.value}"
-			id="tab-{option.value}"
-			class="
-				rounded-md font-medium whitespace-nowrap
-				transition duration-(--motion-fast) ease-(--ease-standard)
-				{sizeClasses[size]}
-				{selected === option.value
-					? 'bg-surface-card text-primary shadow-sm'
-					: 'bg-transparent text-fg-muted hover:text-fg'}
-			"
-			onclick={() => onSelect?.(option.value)}
-			onfocus={() => (focusedIndex = i)}
-		>
-			{option.label}
-		</button>
-	{/each}
+<div class="w-full min-w-0 {className}">
+	{#if title}
+		<p id={titleId} class="text-fg mb-2 block text-sm font-medium leading-5">
+			{title}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
+		</p>
+	{/if}
+
+	<div
+		role="tablist"
+		aria-label={title ? undefined : 'Tabs'}
+		aria-labelledby={title ? titleId : undefined}
+		tabindex="0"
+		class="flex w-full min-w-0 items-center gap-1 rounded-lg bg-stroke px-3 py-1 sm:px-6"
+		onkeydown={handleKeydown}
+	>
+		{#each options as option, i}
+			<button
+				role="tab"
+				type="button"
+				tabindex={selectedIndex === i ? 0 : -1}
+				aria-selected={selected === option.value}
+				aria-controls="tabpanel-{option.value}"
+				id="tab-{option.value}"
+				class="
+					min-w-0 flex-1 text-center
+					rounded-md font-medium whitespace-nowrap
+					transition duration-(--motion-fast) ease-(--ease-standard)
+					{sizeClasses[size]}
+					{selected === option.value
+						? 'bg-surface-card text-primary shadow-sm'
+						: 'bg-transparent text-fg-muted hover:text-fg'}
+				"
+				onclick={() => onSelect?.(option.value)}
+				onfocus={() => (focusedIndex = i)}
+			>
+				{option.label}
+			</button>
+		{/each}
+	</div>
 </div>
