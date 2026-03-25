@@ -29,7 +29,7 @@
 </script>
 
 <!-- Responsive Card: Vertical on mobile, structured on desktop -->
-<div class="bg-surface-card flex flex-col gap-3 rounded-md p-4 md:p-6 shadow-md">
+<div class="bg-surface-card flex flex-col gap-3 rounded-md p-4 shadow-md md:p-6">
 	<!-- Header: Stack on mobile, spread on desktop -->
 	<div class="flex flex-col md:flex-row md:items-start md:justify-between md:gap-3">
 		<div class="flex flex-1 items-start gap-2 md:gap-3">
@@ -54,7 +54,9 @@
 	<hr class="sm:border-stroke hidden sm:block sm:border-t sm:pt-2" />
 
 	<!-- Stats -->
-	<div class="grid grid-cols-3  sm:divide-x sm:divide-border sm:divide-stroke">
+	<div
+		class="350px:grid-cols-3 350px:gap-0 sm:divide-x sm:divide-border sm:divide-stroke grid grid-cols-2 gap-2"
+	>
 		{#each stats as stat, index (index)}
 			<div class="flex flex-col items-center gap-1 px-2 text-xs md:text-sm">
 				<span class="text-fg-muted font-Poppins text-xs">{stat.label}</span>
@@ -69,15 +71,13 @@
 		{/each}
 	</div>
 
-    <hr class="sm:border-stroke hidden sm:block sm:border-t sm:pt-2" />
+	<hr class="sm:border-stroke hidden sm:block sm:border-t sm:pt-2" />
 
 	<!-- Progress Section -->
 	<div class="flex flex-col gap-2 py-2 md:gap-3 md:py-0">
 		<div class="flex items-center justify-between">
 			<span class="text-fg-muted font-Inter text-2xs font-semibold">CURRENT LEVEL</span>
-			<span class="text-danger font-Inter text-2xs font-semibold"
-				>TARGET: {targetMastery}%</span
-			>
+			<span class="text-danger font-Inter text-2xs font-semibold">TARGET: {targetMastery}%</span>
 		</div>
 
 		<!-- Progress bar -->
@@ -90,10 +90,7 @@
 	</div>
 
 	<!-- CTA Button -->
-	<Button
-		btnType="primaryLight"
-		{onclick}
-	>
+	<Button btnType="primaryLight" {onclick}>
 		<Target size={14} />
 		<span>Targeted Practice</span>
 	</Button>
