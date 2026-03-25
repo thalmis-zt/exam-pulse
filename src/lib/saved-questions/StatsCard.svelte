@@ -25,14 +25,14 @@
 			value: 'text-sm'
 		},
 		md: {
-			container: 'p-4 gap-2',
-			icon: 'w-10 h-10',
-			value: 'text-base'
+			container: 'p-3 sm:p-4 gap-2',
+			icon: 'w-8 h-8 sm:w-10 sm:h-10',
+			value: 'text-sm sm:text-base'
 		},
 		lg: {
-			container: 'p-5 gap-3',
-			icon: 'w-12 h-12',
-			value: 'text-lg'
+			container: 'p-4 sm:p-5 gap-3',
+			icon: 'w-10 sm:w-12 h-10 sm:h-12',
+			value: 'text-base sm:text-lg'
 		}
 	};
 
@@ -64,7 +64,7 @@
 	<!-- Content -->
 	<div class="flex flex-col items-start">
 		<!-- Label -->
-		<span class="text-2xs font-semibold text-fg-muted font-inter uppercase tracking-wide">
+		<span class="text-2xs font-semibold text-fg-muted font-inter uppercase tracking-wide break-word">
 			{label}
 		</span>
 
