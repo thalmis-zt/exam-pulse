@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
 	import { User, Phone, GraduationCap, BookOpen, Trophy, Clock, ArrowRight, Target, Calendar } from '@lucide/svelte';
 	import { Camera } from '@lucide/svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
@@ -9,10 +10,12 @@
 	import VerticalStepper from '$lib/components/VerticalStepper.svelte';
 	import InfoCard from '$lib/registration/InfoCard.svelte';
 	import ChipGroup from '$lib/components/ChipGroup.svelte';
-	import ChoiceCard from '$lib/registration/ChoiceCard.svelte';
-	import SegmentedControl from '$lib/registration/SegmentedControl.svelte';
-	import Checkbox from '$lib/registration/Checkbox.svelte';
+	import ChoiceCard from '$lib/components/ChoiceCard.svelte';
+	import SegmentedControl from '$lib/components/SegmentedControl.svelte';
+	import Checkbox from '$lib/components/Checkbox.svelte';
 	import IconHeading from '$lib/components/IconHeading.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import Error from '$lib/components/Error.svelte';
 	import {
 		STEPS,
 		INFO_CARD,
@@ -23,6 +26,7 @@
 		LEARNING_GOAL_OPTIONS,
 		PRACTICE_QUESTIONS_OPTIONS,
 		STUDY_DURATION_OPTIONS,
+		getRegistrationOptions,
 		submitProfile
 	} from '$lib/registration/mock/registration.service.js';
 
@@ -38,9 +42,32 @@
 	let studyDurationHours = $state(2);
 	let agreeToTerms = $state(false);
 
+	let isLoading = $state(true);
+	let hasLoadError = $state(false);
+	let loadErrorMessage = $state('');
+
 	let isSubmitting = $state(false);
-	let formError = $state('');
 	let currentStep = $state(1); // 0-based: 0=Basic, 1=Academic, etc.
+
+	async function loadRegistrationOptions() {
+		isLoading = true;
+		hasLoadError = false;
+		loadErrorMessage = '';
+		try {
+			await getRegistrationOptions();
+		} catch (err) {
+			console.error('Failed to load registration options:', err);
+			hasLoadError = true;
+			loadErrorMessage =
+				err?.message || 'Failed to load registration options. Please try again.';
+		} finally {
+			isLoading = false;
+		}
+	}
+
+	onMount(() => {
+		loadRegistrationOptions();
+	});
 
 	// Derive steps with status from currentStep
 	const stepsWithStatus = $derived(
@@ -51,15 +78,12 @@
 	);
 
 	async function handleSaveDraft() {
-		formError = '';
 		// Could persist to localStorage or API
 		console.log('Save draft', { fullName, contactNumber, educationBoard, targetExam, targetYear, primarySubjects, learningGoal, practiceQuestionsPerDay, studyDurationHours });
 	}
 
 	async function handleSaveAndContinue() {
-		formError = '';
 		if (!agreeToTerms) {
-			formError = 'Please agree to the Terms of Service to continue.';
 			return;
 		}
 		isSubmitting = true;
@@ -78,7 +102,7 @@
 			// Navigate to next page (e.g. dashboard)
 			// goto('/home');
 		} catch (err) {
-			formError = err?.message || 'Something went wrong. Please try again.';
+			console.error('Submit profile failed:', err);
 		} finally {
 			isSubmitting = false;
 		}
@@ -99,6 +123,21 @@
 		</div>
 	</header>
 
+	{#if isLoading}
+		<div class="flex flex-1 flex-col items-center justify-center py-24">
+			<Spinner message="Loading profile..." />
+		</div>
+	{:else if hasLoadError}
+		<div class="mx-auto w-full max-w-4xl flex-1 px-4 py-8 lg:px-8">
+			<Error
+				title="Something went wrong"
+				subtitle={loadErrorMessage}
+				showClose={false}
+				action={{ text: 'Retry', handler: loadRegistrationOptions }}
+				class="w-full"
+			/>
+		</div>
+	{:else}
 	<!-- Two columns below header - centered, no card background -->
 	<div class="flex flex-1 justify-center px-4 py-8 lg:px-8">
 		<div class="flex w-full max-w-5xl flex-col gap-8 lg:flex-row lg:gap-12">
@@ -252,10 +291,6 @@
 
 				<!-- Form Actions - horizontal: checkbox left, buttons right -->
 				<div class="flex flex-col gap-4 border-t border-stroke pt-10">
-					{#if formError}
-						<p class="text-sm text-danger">{formError}</p>
-					{/if}
-
 					<div class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
 						<Checkbox
 							bind:checked={agreeToTerms}
@@ -273,10 +308,18 @@
 								type="button"
 								onclick={handleSaveAndContinue}
 								disabled={isSubmitting}
-								customClass="font-semibold"
+								customClass="font-semibold inline-flex items-center justify-center gap-2 min-w-[11rem]"
 							>
 								{#if isSubmitting}
-									Saving...
+									<span class="inline-flex items-center gap-2">
+										<Spinner
+											size="sm"
+											variant="custom"
+											class="text-canvas-base-fixed"
+											ariaLabel="Saving"
+										/>
+										<span>Saving...</span>
+									</span>
 								{:else}
 									Save and Continue
 									<ArrowRight size={16} class="ml-1" />
@@ -295,4 +338,5 @@
 			</main>
 		</div>
 	</div>
+	{/if}
 </div>
