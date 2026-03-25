@@ -36,6 +36,7 @@
 
   /* Secondary UI */
   --color-secondary:       var(--color-green-500);
+  --color-secondary-light: var(--color-green-50);
   --color-secondary-hover: var(--color-green-600);
 
 	/* Stroke — borders and dividers */
