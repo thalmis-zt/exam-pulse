@@ -8,6 +8,8 @@
 		entity = null,
 		entityName = 'item',
 		fields = [],
+		titleOverride = '',
+		details,
 		confirmationValue = 'delete',
 		confirmationLabel = '',
 		onconfirm,
@@ -25,9 +27,11 @@
 
 	const displayConfirmationLabel = $derived(confirmationLabel || `Type "${confirmationValue}" to confirm`);
 
-	const modalTitle = $derived(
-		`Are you sure you want to delete ${entity?.[fields[0]?.key] ?? entityName}?`
-	);
+	const modalTitle = $derived.by(() => {
+		const custom = (titleOverride ?? '').trim();
+		if (custom) return custom;
+		return `Are you sure you want to delete ${entity?.[fields[0]?.key] ?? entityName}?`;
+	});
 
 	$effect(() => {
 		if (!open) {
@@ -104,19 +108,21 @@
 				{/if}
 
 
-				<!-- Entity details -->
-				{#if fields.length}
-				<div class="rounded-xl border border-stroke bg-surface-card p-4">
-					<h4 class="text-fg mb-3 text-sm font-semibold">{entityName} details</h4>
-					<dl class="grid gap-y-2">
-						{#each fields as field}
-							<div class="flex items-center gap-x-2">
-								<dt class="text-fg-muted text-sm font-medium">{field.label}:</dt>
-								<dd class="text-fg text-sm font-medium">{entity[field.key] ?? '—'}</dd>
-							</div>
-						{/each}
-					</dl>
-				</div>
+				<!-- Entity details: custom snippet or default dl -->
+				{#if details}
+					{@render details()}
+				{:else if fields.length}
+					<div class="rounded-xl border border-stroke bg-surface-card p-4">
+						<h4 class="text-fg mb-3 text-sm font-semibold">{entityName} details</h4>
+						<dl class="grid gap-y-2">
+							{#each fields as field}
+								<div class="flex items-center gap-x-2">
+									<dt class="text-fg-muted text-sm font-medium">{field.label}:</dt>
+									<dd class="text-fg text-sm font-medium">{entity[field.key] ?? '—'}</dd>
+								</div>
+							{/each}
+						</dl>
+					</div>
 				{/if}
 
 				<!-- Confirmation input -->
