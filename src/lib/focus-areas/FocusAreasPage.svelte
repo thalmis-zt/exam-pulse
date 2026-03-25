@@ -7,6 +7,8 @@
 	import MistakeLog from '$lib/focus-areas/MistakeLog.svelte';
 	import LearningTip from '$lib/focus-areas/LearningTip.svelte';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
+	import StateDisplay from '$lib/components/StateDisplay.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
 
 	let data = $state(null);
 
@@ -14,7 +16,10 @@
 	let hasError = $state(false);
 	let errorMessage = $state('');
 
-	onMount(async () => {
+	const loadFocusAreas = async () => {
+		isLoading = true;
+		hasError = false;
+		errorMessage = '';
 		try {
 			data = await getFocusAreasData();
 			isLoading = false;
@@ -24,32 +29,33 @@
 			errorMessage = error?.message || 'Failed to load focus areas. Please try again.';
 			isLoading = false;
 		}
-	});
+	};
+
+	onMount(loadFocusAreas);
 </script>
 
 <!-- Page shell with bottom-nav clearance -->
-<div class="bg-canvas min-h-screen transition duration-motion-normal ease-ease-standard">
+<div>
 	<div class="flex flex-col gap-6">
 		<!-- Header -->
 		<SectionHeader title="Focus Areas" subtitle="Personalized insights to boost your exam prep" />
 
 		{#if isLoading}
-			<!-- Loading state / Replace when universal laoder is available -->
+			<!-- Loading state / Replace when universal loader is available -->
 			<div class="flex flex-col items-center justify-center gap-3 py-12">
-				<div class="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin"></div>
-				<p class="text-fg-muted text-sm">Loading focus areas...</p>
+				<Spinner message="Loading focus areas..." />
 			</div>
 		{:else if hasError}
-			<!-- Error state / replace when universal error component is available -->
-			<div
-				class="flex flex-col items-center justify-center gap-3 py-12 p-4 rounded-lg bg-surface-card border border-border"
-			>
-				<p class="text-fg font-semibold">Something went wrong</p>
-				<p class="text-fg-muted text-sm text-center">{errorMessage}</p>
-			</div>
+			<!-- Error state using StateDisplay -->
+			<StateDisplay
+				title="Failed to load focus areas data"
+				message={errorMessage}
+				buttonLabel="Retry"
+				onButtonClick={loadFocusAreas}
+				variant="error"
+			/>
 		{:else if data}
-			<!-- Content sections -->
-			
+
 			<!-- Questions Solved Summary -->
 			<QuestionsSolvedSummary
 				solvedCount={data.summary.totalSolved}
@@ -63,7 +69,7 @@
 			{/if}
 
 			<!-- Two-column layout (desktop) - Knowledge Gaps, Mistake Log, Learning Tips -->
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+			<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 				<!-- Left column: Knowledge Gaps (takes 2/3 width) -->
 				<div class="md:col-span-2">
 					{#if data.knowledgeGaps && data.knowledgeGaps.length > 0}
@@ -77,14 +83,18 @@
 					<MistakeLog onclick={() => console.log('Navigate to mistake log')} />
 
 					<!-- Learning Tip -->
+					 <!-- {#if data.learningTips && data.learningTips.length > 0} -->
 					<LearningTip tips={data.learningTips} />
+					<!-- {/if} -->
 				</div>
 			</div>
 		{:else}
 			<!-- Empty state -->
-			<div class="flex flex-col items-center justify-center gap-3 py-12">
-				<p class="text-fg-muted">No data available</p>
-			</div>
+			<StateDisplay
+				title="No data available"
+				message="There's no focus area data to display right now."
+				variant="info"
+			/>
 		{/if}
 	</div>
 </div>
