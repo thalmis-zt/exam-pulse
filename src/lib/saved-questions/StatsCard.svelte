@@ -5,9 +5,6 @@
 		value = 0,
 		variant = 'default', // default | info | success | danger
 		size = 'md', // sm | md | lg
-		active = false,
-		disabled = false,
-		onClick = () => {},
 		children
 	} = $props();
 
@@ -40,19 +37,14 @@
 	const sizeClass = $derived(sizeStyles[size] ?? sizeStyles.md);
 </script>
 
-<button
-	type="button"
+<div
 	class="
 		flex flex-col md:flex-row md:items-center md:gap-3
 		{sizeClass.container}
 		rounded-md
 		{variantClass}
 		shadow-sm
-		transition-all duration-fast ease-standard
-		{disabled ? 'opacity-50 cursor-not-allowed' : ''}
 	"
-	onclick={!disabled ? onClick : undefined}
-	aria-pressed={active}
 >
 	<!-- Icon -->
 	{#if Icon}
@@ -76,4 +68,4 @@
 		<!-- Optional Slot -->
 		{@render children?.()}
 	</div>
-</button>
+</div>
