@@ -83,7 +83,8 @@
 <Modal
 	open={open}
 	title={modalTitle}
-	size="md"
+	titleTone="danger"
+	size="lg"
 	showClose={!loading}
 	closeOnBackdropClick={!loading}
 	closeOnEscape={!loading}
@@ -146,7 +147,7 @@
 
 	{#snippet footer()}
 		<div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-			<Button btnType="dangerLight" disabled={loading} onclick={handleCancel}>
+			<Button btnType="neutral" disabled={loading} onclick={handleCancel}>
 				Cancel
 			</Button>
 			<Button btnType="danger" disabled={!canDelete || loading} onclick={handleDelete}>
