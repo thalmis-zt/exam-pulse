@@ -9,12 +9,12 @@
 <section class="flex flex-col gap-3 lg:gap-4">
 	<!-- Desktop header with View All button (only if more than 3 boosters) -->
 	<div class="hidden lg:block">
-		<SectionHeader title="Score Boosters" subtitle="Master your strong topics" showAll={boosters.length > 3} onViewAll={() => (showAll = !showAll)} />
+		<SectionHeader title="Score Boosters" subtitle="Master your strong topics" showAll={boosters.length > 3} onViewAll={() => (showAll = !showAll)} variant='md' />
 	</div>
 
 	<!-- Mobile header (no View All button) -->
 	<div class="lg:hidden">
-		<SectionHeader title="Score Boosters" subtitle="Master your strong topics" />
+		<SectionHeader title="Score Boosters" subtitle="Master your strong topics" variant='md' />
 	</div>
 
 	<!-- Mobile: Horizontal scrollable container (all boosters) -->
@@ -42,7 +42,7 @@
 		<!-- Desktop: Grid layout (toggle with View All) -->
 		<div class="hidden lg:block">
 			{#if showAll}
-				<div class="grid grid-cols-3 lg:grid-cols-4 gap-4">
+				<div class="grid grid-cols-3 xl:grid-cols-4 gap-4">
 					{#each boosters as booster (booster.id)}
 						<BoosterCard
 							subject={booster.subject}
@@ -56,7 +56,7 @@
 					{/each}
 				</div>
 			{:else}
-				<div class="grid grid-cols-3 lg:grid-cols-4 gap-4">
+				<div class="grid grid-cols-3 xl:grid-cols-4 gap-4">
 					{#each boosters.slice(0, 4) as booster (booster.id)}
 						<BoosterCard
 							subject={booster.subject}
@@ -72,6 +72,6 @@
 			{/if}
 		</div>
 	{:else}
-		<p class="text-fg-muted text-sm py-4">No boosters available</p>
+		<p class="text-fg-muted text-sm py-4 px-4 rounded-lg bg-surface-card/50">No Boosters available</p>
 	{/if}
 </section>
