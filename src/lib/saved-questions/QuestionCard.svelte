@@ -102,7 +102,7 @@
 	</div>
 
 	<!-- Answer Options (A, B, C, D) -->
-	<div class="flex flex-col gap-2 pl-6">
+	<div class="flex flex-col gap-2 pl-0 sm:pl-6">
 		{#each question.options as option (option.label)}
 			<button
 				class="border-info-surface duration-fast ease-standard flex items-center gap-3 rounded-lg border px-3 py-2 transition-all {getOptionButtonClass(

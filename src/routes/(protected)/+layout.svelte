@@ -21,7 +21,7 @@
 	<main
 		class="flex-1 flex flex-col w-full {isQuizAttempt
 			? 'min-w-0 pb-24'
-			: 'px-6 pt-6 pb-24 max-w-6xl mx-auto'}"
+			: 'px-4 sm:px-6 pt-6 pb-24 max-w-6xl mx-auto'}"
 	>
 		{@render children?.()}
 		<BottomNav />
