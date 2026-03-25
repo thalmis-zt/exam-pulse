@@ -1,0 +1,60 @@
+<script>
+	import { Minus } from '@lucide/svelte';
+
+	let {
+		isEnabled = $bindable(false),
+		deductionAmount = $bindable(0.25),
+		onToggle = () => {}
+	} = $props();
+
+	// Handle input changes to ensure it stays a number
+	function handleInputChange(e) {
+		const value = parseFloat(e.target.value);
+		deductionAmount = isNaN(value) ? 0 : value;
+	}
+
+	function handleToggle(e) {
+		isEnabled = e.currentTarget.checked;
+		onToggle(isEnabled);
+	}
+</script>
+
+<div class="space-y-2">
+	<div
+		class="bg-surface-card border-stroke flex items-center justify-between gap-4 rounded-md border p-4"
+	>
+		<div class="flex items-center gap-3">
+			<div class="bg-danger-surface text-danger rounded-full p-2">
+				<Minus size={12} />
+			</div>
+			<div>
+				<span class="text-fg text-2xs mb-1 block font-medium tracking-wider">Negative Marking</span>
+
+				<!-- <p class="text-fg text-sm font-semibold">Deduct Marks</p> -->
+				<div class="flex items-center gap-1">
+					<span class="text-fg-muted text-xs">-</span>
+					<input
+						type="number"
+						step="0.25"
+						min="0"
+						value={deductionAmount}
+						oninput={handleInputChange}
+						class="text-fg-muted focus:ring-primary border-stroke hover:border-fg-muted w-12 rounded border-b bg-transparent px-0.5 text-xs font-medium transition-colors focus:ring-1 focus:outline-none"
+					/>
+					<span class="text-fg-muted text-xs">per wrong answer</span>
+				</div>
+			</div>
+		</div>
+
+		<!-- Use toggle component when resuable components are merged  -->
+		<label class="relative inline-flex cursor-pointer items-center">
+			<input type="checkbox" checked={isEnabled} onchange={handleToggle} class="peer sr-only" />
+			<div
+				class="h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-blue-600"
+			></div>
+			<div
+				class="absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5"
+			></div>
+		</label>
+	</div>
+</div>

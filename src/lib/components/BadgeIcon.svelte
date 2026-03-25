@@ -1,5 +1,5 @@
 <script>
-	let { label, icon, variant = 'primary', shape = 'circle', size = 'md', class: className = '' } = $props();
+	let { label, icon, variant = 'primary', shape = 'circle', size = 'md', class: className = '', showLabel = true } = $props();
 
 	const variantClasses = {
 		primary: 'bg-primary-light text-primary',
@@ -19,21 +19,31 @@
 		lg: { container: 'size-14', text: 'text-base', iconClass: '[&_svg]:size-7' }
 	};
 
-	const config = $derived(sizeConfig[size] ?? sizeConfig.md);
+	const styles = $derived.by(() => {
+		const sizeSettings = sizeConfig[size] ?? sizeConfig.md;
+		const variantStyle = variantClasses[variant] ?? variantClasses.primary;
+		const shapeStyle = shapeClasses[shape] ?? shapeClasses.circle;
+
+		return {
+			container: `flex items-center justify-center shrink-0 ${sizeSettings.container} ${shapeStyle} ${variantStyle} ${className}`.trim(),
+			iconWrapper: `shrink-0 ${sizeSettings.iconClass}`,
+			label: `text-center font-medium text-fg ${sizeSettings.text} leading-tight truncate max-w-full`
+		};
+	});
 </script>
 
 <div class="flex flex-col items-center gap-2 min-w-0">
 	<!-- Icon container -->
-	<div
-		class="flex items-center justify-center shrink-0 {config.container} {shapeClasses[shape]} {variantClasses[variant] ?? variantClasses.primary} {className}"
-	>
+	<div class={styles.container}>
 		{#if icon}
-			<span class="shrink-0 {config.iconClass}">{@render icon()}</span>
+			<span class={styles.iconWrapper}>{@render icon()}</span>
 		{/if}
 	</div>
 
 	<!-- Label -->
-	<p class="text-center font-medium text-fg {config.text} leading-tight truncate max-w-full">
-		{label}
-	</p>
+	{#if showLabel}
+		<p class={styles.label}>
+			{label}
+		</p>
+	{/if}
 </div>

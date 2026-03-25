@@ -1,115 +1,107 @@
 <script>
-	import { AlertTriangle, X } from '@lucide/svelte';
 
+
+	import { X } from '@lucide/svelte';
+	import IconButton from '$lib/components/IconButton.svelte';
 	let {
 		open = false,
+		onclose,
 		title = '',
-		/** 'danger' shows a warning icon and destructive-colored title */
-		titleTone = 'default',
-		size = 'md',
 		showClose = true,
 		closeOnBackdropClick = true,
 		closeOnEscape = true,
-		onclose,
 		children,
-		footer
+		footer,
+		size = 'md',
+		class: className = ''
 	} = $props();
-
-	const isDangerTitle = $derived(titleTone === 'danger');
 
 	const sizeClasses = {
 		sm: 'max-w-sm',
 		md: 'max-w-md',
-		lg: 'max-w-lg'
+		lg: 'max-w-lg',
+		xl: 'max-w-xl'
 	};
 
-	const sizeClass = $derived(sizeClasses[size] ?? sizeClasses.md);
-
-	function handleBackdropClick(e) {
-		if (e.target === e.currentTarget && closeOnBackdropClick) {
-			onclose?.();
-		}
-	}
-
-	function handleKeydown(e) {
-		if (e.key === 'Escape' && closeOnEscape) {
-			e.preventDefault();
-			onclose?.();
-		}
-	}
+	let dialogRef = $state(null);
 
 	$effect(() => {
-		if (typeof window === 'undefined') return;
-		if (!open) return;
-		const handler = handleKeydown;
-		window.addEventListener('keydown', handler);
-		return () => window.removeEventListener('keydown', handler);
+		const dialog = dialogRef;
+		if (!dialog) return;
+		if (open) {
+			dialog.showModal();
+		} else {
+			dialog.close();
+		}
 	});
+
+	function handleClose() {
+		onclose?.();
+	}
+
+	function handleCancel(e) {
+		if (!closeOnEscape) {
+			e.preventDefault();
+		} else {
+			onclose?.();
+		}
+	}
+
+	function handleClick(e) {
+		if (closeOnBackdropClick && e.target === dialogRef) {
+			onclose?.();
+		}
+	}
 </script>
 
-{#if open}
+<dialog
+	bind:this={dialogRef}
+	class="
+		m-auto overflow-visible bg-transparent p-4 outline-none
+		backdrop:bg-fg/40 backdrop:transition-opacity
+	"
+	aria-labelledby={title ? 'modal-title' : undefined}
+	oncancel={handleCancel}
+	onclick={handleClick}
+>
 	<div
-		role="dialog"
-		aria-modal="true"
-		aria-labelledby="modal-title"
-		class="fixed inset-0 z-50 flex items-center justify-center p-4"
+		class="
+			bg-surface-modal border-stroke relative flex max-h-[90vh] w-full
+			flex-col overflow-visible rounded-xl border p-6 shadow-lg
+			{sizeClasses[size]}
+			{className}
+		"
 	>
-		<!-- Backdrop -->
-		<button
-			type="button"
-			aria-label="Close modal"
-			class="fixed inset-0 bg-fg/50 backdrop-blur-sm"
-			onclick={handleBackdropClick}
-		></button>
-
-		<!-- Modal panel -->
-		<div
-			class="
-				relative z-10 w-full overflow-hidden rounded-xl
-				bg-surface-modal shadow-lg
-				{sizeClass}
-			"
-		>
-			<!-- Header -->
-			<div class="flex items-start justify-between gap-4 border-b border-stroke px-6 py-4">
-				<div class="flex min-w-0 flex-1 items-center gap-3">
-					{#if isDangerTitle}
-						<span
-							class="bg-danger-surface text-danger flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-							aria-hidden="true"
-						>
-							<AlertTriangle size={20} strokeWidth={2} />
-						</span>
-					{/if}
-					<h2
-						id="modal-title"
-						class="text-lg font-semibold {isDangerTitle ? 'text-danger' : 'text-fg'}"
-					>
-						{title}
-					</h2>
-				</div>
-				{#if showClose}
-					<button
-						type="button"
-						aria-label="Close"
-						class="text-fg-muted hover:text-fg -mr-2 rounded p-2 transition-colors"
-						onclick={() => onclose?.()}
-					>
-						<X size={20} />
-					</button>
-				{/if}
-			</div>
-
-			<!-- Body -->
-			<div class="px-6 py-4">
-				{@render children?.()}
-			</div>
-
-			{#if footer}
-				<div class="border-t border-stroke px-6 py-4">
-					{@render footer()}
-				</div>
+		<!-- Header -->
+		<div class="mb-4 flex items-center justify-between gap-2">
+			{#if title}
+				<h2 id="modal-title" class="text-fg text-lg font-semibold">{title}</h2>
+			{:else}
+				<span id="modal-title" class="sr-only">Modal</span>
+			{/if}
+			{#if showClose}
+				<IconButton
+					icon={X}
+					ariaLabel="Close"
+					variant="ghost-subtle"
+					size="md"
+					shape="square"
+					onclick={handleClose}
+				/>
 			{/if}
 		</div>
+
+		<div class="text-fg min-h-0 flex-1 overflow-visible">
+			{#if children}
+				{@render children()}
+			{/if}
+		</div>
+
+		<!-- Footer -->
+		{#if footer}
+			<div class="mt-4 flex shrink-0 items-center justify-end gap-2 border-t border-stroke pt-4">
+				{@render footer()}
+			</div>
+		{/if}
 	</div>
-{/if}
+</dialog>

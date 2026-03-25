@@ -1,0 +1,11 @@
+/*
+ * Breakpoints
+ * -----------
+ * Custom and default Tailwind breakpoints for responsive design.
+ * Placed inside @theme so Tailwind v4 registers them as utilities.
+ */
+
+@theme {
+  /* ── Custom breakpoints ────────────────────────────────────── */
+  --breakpoint-450px:   450px;    /* Extra small devices */
+}

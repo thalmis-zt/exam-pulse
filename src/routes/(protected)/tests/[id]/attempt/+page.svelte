@@ -1,1 +1,6 @@
-<!-- Data: active test session for [id] — question list with options, current question index, timer, flagged/skipped state per question, and auto-save progress -->
+<script>
+	import { page } from '$app/stores';
+	import QuizAttemptPage from '$lib/quiz-attempt/QuizAttemptPage.svelte';
+</script>
+
+<QuizAttemptPage testId={$page.params.id} />

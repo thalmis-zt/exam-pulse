@@ -1,5 +1,4 @@
 <script>
-
 	import { ChevronDown, X, Check } from '@lucide/svelte';
 
 	let {
@@ -12,6 +11,7 @@
 		loading = false,
 		validationErrors = '',
 		type = '',
+		icon,
 		onSelect,
 		onClear
 	} = $props();
@@ -31,6 +31,7 @@
 
 	$effect(() => {
 		if (typeof window === 'undefined') return;
+		if (!showDropdown) return;
 		document.addEventListener('click', handleClickOutside);
 		return () => document.removeEventListener('click', handleClickOutside);
 	});
@@ -58,9 +59,7 @@
 
 <div class="w-full">
 	{#if title}
-		<p
-			class="text-fg mb-1 block text-xs font-medium capitalize leading-5 sm:text-xs"
-		>
+		<p class="text-fg mb-2 block text-sm font-medium leading-5">
 			{title}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
 		</p>
 	{/if}
@@ -71,8 +70,8 @@
 				type="button"
 				class="
 					flex w-full items-center justify-between gap-2
-					border border-stroke rounded-full
-					bg-surface-card px-3 py-2
+					border border-stroke rounded-lg
+					bg-surface-card px-3 py-2.5
 					shadow-sm
 					transition duration-(--motion-fast) ease-(--ease-standard)
 					text-sm text-fg outline-none
@@ -89,8 +88,13 @@
 				{disabled}
 				onclick={() => !disabled && (showDropdown = !showDropdown)}
 			>
-				<span class="min-w-0 truncate">
-					{value ? getOptionLabel(value) : placeholder}
+				<span class="flex min-w-0 flex-1 items-center gap-2">
+					{#if icon}
+						<span class="shrink-0 text-fg-muted [&_svg]:size-4">{@render icon()}</span>
+					{/if}
+					<span class="min-w-0 truncate">
+						{value ? getOptionLabel(value) : placeholder}
+					</span>
 				</span>
 
 				<!-- Right side: loading | clear | chevron -->
@@ -125,7 +129,7 @@
 			<p class="text-danger mt-1 text-xs">{validationErrors}</p>
 		{/if}
 
-		<!-- Dropdown panel -->
+		{#if showDropdown}
 		<div
 			class="
 				absolute right-0 z-40 mt-2 max-h-52 w-full
@@ -138,15 +142,14 @@
 			aria-labelledby="select-button"
 			tabindex="-1"
 		>
-			{#if showDropdown}
-				<div class="py-1" role="group">
+			<div class="py-1" role="group">
 					{#if loading}
 						<div class="text-fg-muted px-4 py-3 text-sm italic">
 							Loading...
 						</div>
 					{:else if options?.length > 0}
 						{#each options as option, index (option?.id ?? index)}
-							{@const isSelected = value && (value === option || value?.id === option?.id || getOptionLabel(value) === getOptionLabel(option))}
+							{@const isSelected = value && value?.id === option?.id}
 							<button
 								type="button"
 								role="option"
@@ -170,7 +173,7 @@
 						</div>
 					{/if}
 				</div>
-			{/if}
 		</div>
+		{/if}
 	</div>
 </div>
