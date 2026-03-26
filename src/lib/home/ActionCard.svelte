@@ -34,7 +34,7 @@
 	<!-- Content (positioned above decoration) -->
 	<div class="relative z-10 flex h-full w-full flex-col items-start justify-between">
 		<!-- Icon -->
-		<div class="mb-3 text-white opacity-90">
+		<div class="mb-3 text-canvas-base-fixed opacity-90">
 			{#if icon}
 				{@render icon()}
 			{/if}
@@ -42,15 +42,15 @@
 
 		<!-- Text -->
 		<div class="mb-4">
-			<p class="text-xl leading-tight font-bold text-white">{title}</p>
-			<p class="mt-0.5 text-xs text-white/75">{subtitle}</p>
+			<p class="text-xl leading-tight font-bold text-canvas-base-fixed">{title}</p>
+			<p class="mt-0.5 text-xs text-canvas-base-fixed/75">{subtitle}</p>
 		</div>
 
 		<!-- Button -->
 		<Button
 			btnType="custom"
 			type="button"
-			customClass="w-full text-white bg-white/20 border-white/30 hover:bg-white/30 py-1.5 rounded-md"
+			customClass="w-full text-canvas-base-fixed bg-canvas-base-fixed/20 border-canvas-base-fixed/30 hover:bg-canvas-base-fixed/30 py-1.5 rounded-md"
 			{onclick}
 		>
 			{label}
