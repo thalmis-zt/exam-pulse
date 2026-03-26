@@ -4,12 +4,15 @@
 	import TextInput from '$lib/components/TextInput.svelte';
 	import PasswordInput from '$lib/components/PasswordInput.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Error from '$lib/components/Error.svelte';
 
 	let email = $state('');
 	let password = $state('');
 
 	let emailError = $state('');
 	let passwordError = $state('');
+	let formError = $state('');
+	let loading = $state(false);
 
 	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -35,18 +38,49 @@
 		return true;
 	}
 
-	function handleSubmit(e) {
+	function messageFromErrorBody(data) {
+		if (!data || typeof data !== 'object') return 'Login failed';
+		if ('detail' in data && typeof data.detail === 'string') return data.detail;
+		if ('error' in data && typeof data.error === 'string') return data.error;
+		return 'Login failed';
+	}
+
+	async function handleSubmit(e) {
 		e.preventDefault();
 		emailError = '';
 		passwordError = '';
+		formError = '';
 
 		const emailValid = validateEmail();
 		const passwordValid = validatePassword();
 
 		if (!emailValid || !passwordValid) return;
 
-		// No backend: redirect to home
-		goto('/home');
+		loading = true;
+		try {
+			const res = await fetch('/apis/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify({
+					username: email.trim(),
+					password
+				})
+			});
+
+			const errData = await res.json().catch(() => ({}));
+
+			if (res.ok) {
+				goto('/home');
+				return;
+			}
+
+			formError = messageFromErrorBody(errData);
+		} catch {
+			formError = 'Network error. Please try again.';
+		} finally {
+			loading = false;
+		}
 	}
 </script>
 
@@ -66,10 +100,14 @@
 		<!-- Form Card -->
 		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
 			<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
+				{#if formError}
+					<Error title={formError} showClose={false} />
+				{/if}
 				<TextInput
 					label="Email"
 					type="email"
 					placeholder="Enter your email"
+					autocomplete="email"
 					bind:value={email}
 					error={emailError}
 					required
@@ -81,9 +119,13 @@
 							Password
 							<span class="text-danger" aria-hidden="true">*</span>
 						</label>
-						<a href="" class="text-primary text-sm font-medium hover:underline">
+						<Button
+							type="button"
+							btnType="custom"
+							customClass="text-primary h-auto min-h-0 cursor-pointer bg-transparent p-0 text-sm font-medium hover:underline border-0 shadow-none"
+						>
 							Forgot password?
-						</a>
+						</Button>
 					</div>
 					<PasswordInput
 						id="login-password"
@@ -95,8 +137,13 @@
 					/>
 				</div>
 
-				<Button type="submit" btnType="primary" customClass="w-full py-3 font-semibold rounded-xl">
-					Sign In
+				<Button
+					type="submit"
+					btnType="primary"
+					customClass="w-full py-3 font-semibold rounded-xl"
+					disabled={loading}
+				>
+					{loading ? 'Signing in…' : 'Sign In'}
 				</Button>
 			</form>
 
