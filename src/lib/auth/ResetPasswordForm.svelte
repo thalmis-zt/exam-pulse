@@ -1,0 +1,233 @@
+<script>
+	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
+	import { Zap } from '@lucide/svelte';
+	import Button from '$lib/components/Button.svelte';
+	import PasswordInput from '$lib/components/PasswordInput.svelte';
+	import Error from '$lib/components/Error.svelte';
+	import { onMount } from 'svelte';
+
+	const OTP_LENGTH = 6;
+	const MIN_PASSWORD_LENGTH = 6;
+
+	let otpValues = $state(Array(OTP_LENGTH).fill(''));
+	let otpContainerRef = $state(null);
+	let newPassword = $state('');
+	let confirmPassword = $state('');
+	let passwordError = $state('');
+	let confirmPasswordError = $state('');
+	let formError = $state('');
+	let loading = $state(false);
+	let displayEmail = $state('');
+
+	function messageFromErrorBody(data) {
+		if (!data || typeof data !== 'object') return 'Reset failed';
+		if ('detail' in data && typeof data.detail === 'string') return data.detail;
+		if ('error' in data && typeof data.error === 'string') return data.error;
+		if (Array.isArray(data.detail) && data.detail[0] && typeof data.detail[0] === 'object') {
+			const msgs = data.detail
+				.map((x) => (x && typeof x === 'object' && 'msg' in x ? String(x.msg) : ''))
+				.filter(Boolean);
+			if (msgs.length) return msgs.join(' ');
+		}
+		return 'Reset failed';
+	}
+
+	function validatePasswordFields() {
+		passwordError = '';
+		confirmPasswordError = '';
+		if (!newPassword) {
+			passwordError = 'Password is required';
+			return false;
+		}
+		if (newPassword.length < MIN_PASSWORD_LENGTH) {
+			passwordError = `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+			return false;
+		}
+		if (!confirmPassword) {
+			confirmPasswordError = 'Please confirm your password';
+			return false;
+		}
+		if (newPassword !== confirmPassword) {
+			confirmPasswordError = 'Passwords do not match';
+			return false;
+		}
+		return true;
+	}
+
+	onMount(() => {
+		if (!browser) return;
+		const email = sessionStorage.getItem('forgotPasswordEmail');
+		if (!email) {
+			goto('/forgot-password');
+			return;
+		}
+		displayEmail = email;
+		otpContainerRef?.querySelector('input')?.focus();
+	});
+
+	function handleInput(index, e) {
+		const v = e.target.value;
+		if (v.length === 0) {
+			otpValues = otpValues.map((x, i) => (i === index ? '' : x));
+			if (index > 0) otpContainerRef?.querySelectorAll('input')[index - 1]?.focus();
+			return;
+		}
+		const digit = v.replace(/\D/g, '').slice(-1);
+		otpValues = otpValues.map((x, i) => (i === index ? digit : x));
+		if (index < OTP_LENGTH - 1 && digit) {
+			otpContainerRef?.querySelectorAll('input')[index + 1]?.focus();
+		}
+	}
+
+	function handleKeydown(index, e) {
+		if (e.key === 'Backspace' && !otpValues[index] && index > 0) {
+			otpContainerRef?.querySelectorAll('input')[index - 1]?.focus();
+		}
+	}
+
+	function handlePaste(e) {
+		e.preventDefault();
+		const pasted = e.clipboardData?.getData('text')?.replace(/\D/g, '').slice(0, OTP_LENGTH) ?? '';
+		const chars = pasted.split('');
+		otpValues = otpValues.map((_, i) => chars[i] ?? '');
+		const nextEmpty = otpValues.findIndex((x) => !x);
+		const focusIndex = nextEmpty === -1 ? OTP_LENGTH - 1 : nextEmpty;
+		otpContainerRef?.querySelectorAll('input')[focusIndex]?.focus();
+	}
+
+	async function handleSubmit() {
+		const code = otpValues.join('');
+		if (code.length !== OTP_LENGTH) return;
+
+		const tempToken = browser ? sessionStorage.getItem('forgotPasswordTempToken') : null;
+		if (!tempToken) {
+			formError = 'Session expired. Start again from forgot password.';
+			return;
+		}
+
+		passwordError = '';
+		confirmPasswordError = '';
+		if (!validatePasswordFields()) return;
+
+		formError = '';
+		loading = true;
+		try {
+			const res = await fetch('/apis/auth/reset-password', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					temp_token: tempToken,
+					otp: code,
+					new_password: newPassword
+				})
+			});
+
+			const data = await res.json().catch(() => ({}));
+
+			if (res.ok) {
+				sessionStorage.removeItem('forgotPasswordTempToken');
+				sessionStorage.removeItem('forgotPasswordEmail');
+				sessionStorage.removeItem('forgotPasswordExpiresIn');
+				goto('/login?reset=success');
+				return;
+			}
+
+			formError = messageFromErrorBody(data);
+		} catch {
+			formError = 'Network error. Please try again.';
+		} finally {
+			loading = false;
+		}
+	}
+
+	const otpComplete = $derived(otpValues.every((v) => v));
+	const canSubmit = $derived(otpComplete && newPassword && confirmPassword);
+</script>
+
+<div class="bg-canvas flex min-h-screen items-center justify-center px-4 py-12">
+	<div class="w-full max-w-md">
+		<div class="mb-8 flex flex-col items-center text-center">
+			<a href="/" class="mb-4 flex items-center gap-2 no-underline">
+				<div class="bg-primary flex size-10 items-center justify-center rounded-xl">
+					<Zap size={22} color="white" fill="white" />
+				</div>
+				<span class="text-fg text-xl font-bold tracking-tight">Exam Buddy</span>
+			</a>
+			<p class="text-fg-muted text-sm">Set a new password</p>
+		</div>
+
+		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
+			<p class="text-fg-muted mb-6 text-center text-sm">
+				Enter the 6-digit code sent to
+				{#if displayEmail}
+					<span class="text-fg font-medium">{displayEmail}</span>
+				{:else}
+					your email
+				{/if}
+				, then choose your new password.
+			</p>
+
+			{#if formError}
+				<div class="mb-4">
+					<Error title={formError} showClose={false} />
+				</div>
+			{/if}
+
+			<p id="otp-label" class="text-fg mb-3 block text-sm font-semibold">Enter OTP</p>
+			<div
+				bind:this={otpContainerRef}
+				class="mb-6 flex gap-2"
+				role="group"
+				aria-labelledby="otp-label"
+			>
+				{#each otpValues as _, i}
+					<input
+						type="text"
+						inputmode="numeric"
+						maxlength="1"
+						autocomplete="one-time-code"
+						class="border-stroke focus:border-primary bg-canvas text-fg size-12 rounded-lg border text-center text-lg font-semibold outline-none transition duration-(--motion-fast) focus:ring-2 focus:ring-primary/20"
+						value={otpValues[i]}
+						oninput={(e) => handleInput(i, e)}
+						onkeydown={(e) => handleKeydown(i, e)}
+						onpaste={i === 0 ? handlePaste : undefined}
+					/>
+				{/each}
+			</div>
+
+			<div class="mb-6 flex flex-col gap-5">
+				<PasswordInput
+					label="New password"
+					placeholder="Enter new password"
+					bind:value={newPassword}
+					error={passwordError}
+					required
+				/>
+				<PasswordInput
+					label="Confirm new password"
+					placeholder="Confirm new password"
+					bind:value={confirmPassword}
+					error={confirmPasswordError}
+					required
+				/>
+			</div>
+
+			<Button
+				type="button"
+				btnType="primary"
+				customClass="w-full py-3 font-semibold rounded-xl"
+				disabled={!canSubmit || loading}
+				onclick={handleSubmit}
+			>
+				{loading ? 'Updating password…' : 'Reset password'}
+			</Button>
+
+			<p class="text-fg-muted mt-6 text-center text-sm">
+				<a href="/forgot-password" class="text-primary font-medium hover:underline">Request a new code</a>
+				<span class="text-fg-muted"> · </span>
+				<a href="/login" class="text-primary font-medium hover:underline">Back to sign in</a>
+			</p>
+		</div>
+	</div>
+</div>
