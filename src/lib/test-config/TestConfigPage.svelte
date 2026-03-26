@@ -1,11 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
-	import {
-		getTestConfigData,
-		startMockTest
-	} from '$lib/test-config/mock/testConfig.service.js';
+	import { getTestConfigData, startMockTest } from '$lib/test-config/mock/testConfig.service.js';
 	import ConfigurationCard from '$lib/test-config/ConfigurationCard.svelte';
 	import GuidelinesCard from '$lib/test-config/GuidelinesCard.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import StateDisplay from '$lib/components/StateDisplay.svelte';
+	import SectionHeader from '$lib/components/SectionHeader.svelte';
 
 	let subjects = $state([]);
 	let difficultyLevels = $state([]);
@@ -18,7 +18,7 @@
 	let isStartingTest = $state(false);
 	let startTestError = $state('');
 
-// ---------------------------- Start Test Handler --------------------------------
+	// ---------------------------- Start Test Handler --------------------------------
 
 	async function handleStartTest(config) {
 		isStartingTest = true;
@@ -40,7 +40,12 @@
 	}
 
 	// -------------------------- Life Cycle ---------------------------------
-		onMount(async () => {
+
+	async function loadConfig() {
+		isLoading = true;
+		hasError = false;
+		errorMessage = '';
+
 		try {
 			const config = await getTestConfigData();
 			subjects = config.subjects;
@@ -53,48 +58,34 @@
 			errorMessage = error?.message || 'Failed to load test configuration. Please try again.';
 			isLoading = false;
 		}
+	}
+
+	onMount(async () => {
+		await loadConfig();
 	});
 </script>
 
-<!-- Use generic Loader and Error Components once the reusable components are merged -->
-<div class="transition duration-motion-normal ease-ease-standard">
-	<div class="">
+<div class="duration-motion-normal ease-ease-standard transition">
+	<div class="flex flex-col gap-6">
+		<SectionHeader
+			title="Test Configuration"
+			subtitle="Configure your practice test for targeted exam preparation"
+		/>
 		<div>
 			{#if isLoading}
 				<!-- Loading state -->
 				<div class="flex flex-col items-center justify-center gap-3 py-12">
-					<div class="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin"></div>
-					<p class="text-fg-muted text-sm">Loading test configuration...</p>
+					<Spinner message="Loading test configuration..." />
 				</div>
 			{:else if hasError}
 				<!-- Error state -->
-				<div
-					class="flex flex-col items-center justify-center gap-3 py-12 p-4 rounded-lg bg-surface-card border border-border"
-				>
-					<p class="text-fg font-semibold">Something went wrong</p>
-					<p class="text-fg-muted text-sm text-center">{errorMessage}</p>
-					<button
-						onclick={async () => {
-							isLoading = true;
-							hasError = false;
-							errorMessage = '';
-							try {
-								const config = await getTestConfigData();
-								subjects = config.subjects;
-								difficultyLevels = config.difficultyLevels;
-								examGuidelines = config.examGuidelines;
-								isLoading = false;
-							} catch (error) {
-								hasError = true;
-								errorMessage = error?.message || 'Failed to load test configuration.';
-								isLoading = false;
-							}
-						}}
-						class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover transition duration-motion-normal ease-ease-standard"
-					>
-						Retry
-					</button>
-				</div>
+				<StateDisplay
+					title="Something went wrong"
+					message={errorMessage}
+					buttonLabel="Retry"
+					onButtonClick={loadConfig}
+					variant="error"
+				/>
 			{:else}
 				<!-- Content -->
 				<div class="flex flex-col gap-4">
@@ -108,7 +99,9 @@
 
 					<!-- Use inline notification here once reusable components are ready -->
 					{#if startTestError}
-						<div class="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
+						<div
+							class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300"
+						>
 							{startTestError}
 						</div>
 					{/if}

@@ -1,9 +1,11 @@
 <script>
-	import { Zap } from '@lucide/svelte';
 	import { getTopicsBySubject } from '$lib/test-config/mock/testConfig.service.js';
+	import { Loader2 } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
-	import NumberStepper from '$lib/components/NumberStepper.svelte';
-	import SectionHeader from '$lib/components/SectionHeader.svelte';
+	import StepperInput from '$lib/components/StepperInput.svelte';
+	import Dropdown from '$lib/components/Dropdown.svelte';
+	import Tabs from '$lib/components/Tabs.svelte';
+	import Error from '$lib/components/Error.svelte';
 	import SubjectCard from '$lib/test-config/SubjectCard.svelte';
 	import NegativeMarkingCard from '$lib/test-config/NegativeMarkingCard.svelte';
 
@@ -13,10 +15,6 @@
 		onStartTest = () => {},
 		isLoading = false
 	} = $props();
-
-	$effect(() => {
-		console.log('subjects', subjects);
-	});
 
 	let selectedSubject = $state(null);
 	let selectedTopic = $state(null);
@@ -30,7 +28,7 @@
 	let formError = $state('');
 
 	const MIN_QUESTIONS = 5;
-	const MAX_QUESTIONS = 100;
+	const MAX_QUESTIONS = 200;
 
 	// Watch for subject changes and load topics
 	$effect(async () => {
@@ -70,7 +68,7 @@
 
 		const config = {
 			subjectId: selectedSubject,
-			topicId: selectedTopic,
+			topicId: selectedTopic?.id ?? selectedTopic,
 			difficultyId: selectedDifficulty,
 			questionCount,
 			enableNegativeMarking,
@@ -85,20 +83,8 @@
 	}
 </script>
 
-<!-- Configuration Card -->
 <div class="bg-surface-card border-stroke rounded-md border p-4 shadow-sm md:p-6">
-	<div class="mb-4 flex items-start gap-2">
-		<div class=" bg-info-surface text-info rounded-md p-2">
-			<Zap size={14} />
-		</div>
-		<SectionHeader
-			title="Test Configuration"
-			subtitle="Configure your practice test for targeted exam preparation"
-		/>
-	</div>
-	<!-- Form -->
 	<form class="space-y-6" onsubmit={(e) => e.preventDefault()}>
-		<!-- Subject Selection -->
 		<SubjectCard
 			{subjects}
 			bind:selectedSubject
@@ -108,65 +94,39 @@
 		/>
 
 		<!-- Topic, Difficulty Level, and Questions Row -->
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-			<!-- Topic Selection, Replace with dropdown reusable compoenent -->
-			<div class="space-y-2">
-				<label
-					for="topic-select"
-					class="text-fg text-2xs mb-2 inline-block font-medium tracking-wider"
-					>Topic / Chapter *</label
-				>
-				<select
-					id="topic-select"
-					bind:value={selectedTopic}
-					disabled={!selectedSubject || isLoadingTopics}
-					class="border-stroke bg-surface-card text-fg focus:border-primary duration-motion-normal ease-ease-standard w-full rounded-lg border px-4 py-1.5 text-sm transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-				>
-					<option value={null}>
-						{isLoadingTopics ? 'Loading topics...' : 'Select a topic'}
-					</option>
-					{#each availableTopics as topic (topic.id)}
-						<option value={topic.id}>{topic.name}</option>
-					{/each}
-				</select>
-			</div>
+		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+			<Dropdown
+				title="Topic / Chapter"
+				bind:value={selectedTopic}
+				options={availableTopics}
+				placeholder="Select a topic"
+				disabled={!selectedSubject || isLoadingTopics}
+				loading={isLoadingTopics}
+				required={true}
+			/>
 
-			<!-- Difficulty Level replace with tabs component -->
-			<div class="space-y-2">
-				<span class="text-fg text-2xs mb-2 inline-block font-medium tracking-wider">
-					Difficulty Level *
-				</span>
-
-				<!-- Segmented control container -->
-				<div class="bg-stroke/80 flex rounded-full p-1">
-					{#each difficultyLevels as level (level.id)}
-						<button
-							type="button"
-							onclick={() => (selectedDifficulty = level.id)}
-							class={`text-2xs flex-1 rounded-full px-2 py-1 font-medium transition
-							${
-								selectedDifficulty === level.id
-									? 'text-primary bg-white shadow-sm'
-									: 'text-fg-muted hover:text-fg'
-							}`}
-							aria-pressed={selectedDifficulty === level.id}
-							title={level.description}
-						>
-							{level.label}
-						</button>
-					{/each}
-				</div>
-			</div>
-
-			<!-- Number of Questions replace with number stepper reusable component -->
-			<NumberStepper
-				value={questionCount}
+			<StepperInput
+				bind:value={questionCount}
 				min={MIN_QUESTIONS}
 				max={MAX_QUESTIONS}
-				label="Number of Questions *"
-				suffix="Items"
-				onchange={handleQuestionCountChange}
+				label="Number of Questions"
+				unit="Questions"
+				required={true}
+				onChange={handleQuestionCountChange}
 			/>
+
+			<!-- Difficulty Level replace with tabs component -->
+			<div>
+				<span class="text-fg mb-2 block text-xs leading-5 font-medium">
+					Difficulty Level <span class="text-danger ml-0.5">*</span>
+				</span>
+				<Tabs
+					options={difficultyLevels.map((level) => ({ label: level.label, value: level.id }))}
+					selected={selectedDifficulty}
+					onSelect={(value) => (selectedDifficulty = value)}
+					size="md"
+				/>
+			</div>
 		</div>
 
 		<!-- Negative Marking -->
@@ -182,11 +142,7 @@
 
 		<!-- Error Message -->
 		{#if formError}
-			<div
-				class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300"
-			>
-				{formError}
-			</div>
+			<Error title="Error" subtitle={formError} showClose={false} />
 		{/if}
 
 		<!-- Start Test Button -->
@@ -197,7 +153,10 @@
 				onclick={handleStartTest}
 				disabled={isLoading || isLoadingTopics}
 			>
-				{isLoading ? 'Starting Mock Test...' : 'Start Mock Test'}
+				{#if isLoading}
+					<Loader2 size={18} class="animate-spin" />
+				{/if}
+				Start Mock Test
 			</Button>
 		</div>
 	</form>

@@ -59,7 +59,7 @@
 
 <div class="w-full">
 	{#if title}
-		<p class="text-fg mb-2 block text-sm font-medium leading-5">
+		<p class="text-fg mb-2 block text-xs font-medium leading-5">
 			{title}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
 		</p>
 	{/if}

@@ -1,5 +1,6 @@
 <script>
 	import { Minus } from '@lucide/svelte';
+	import Toggle from '$lib/components/Toggle.svelte';
 
 	let {
 		isEnabled = $bindable(false),
@@ -7,15 +8,9 @@
 		onToggle = () => {}
 	} = $props();
 
-	// Handle input changes to ensure it stays a number
 	function handleInputChange(e) {
 		const value = parseFloat(e.target.value);
 		deductionAmount = isNaN(value) ? 0 : value;
-	}
-
-	function handleToggle(e) {
-		isEnabled = e.currentTarget.checked;
-		onToggle(isEnabled);
 	}
 </script>
 
@@ -28,7 +23,7 @@
 				<Minus size={12} />
 			</div>
 			<div>
-				<span class="text-fg text-2xs mb-1 block font-medium tracking-wider">Negative Marking</span>
+				<span class="text-fg mb-2 block text-xs font-medium leading-5">Negative Marking</span>
 
 				<!-- <p class="text-fg text-sm font-semibold">Deduct Marks</p> -->
 				<div class="flex items-center gap-1">
@@ -46,15 +41,12 @@
 			</div>
 		</div>
 
-		<!-- Use toggle component when resuable components are merged  -->
-		<label class="relative inline-flex cursor-pointer items-center">
-			<input type="checkbox" checked={isEnabled} onchange={handleToggle} class="peer sr-only" />
-			<div
-				class="h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-blue-600"
-			></div>
-			<div
-				class="absolute top-1 left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5"
-			></div>
-		</label>
+		<Toggle
+			bind:checked={isEnabled}
+			onToggle={onToggle}
+			size="md"
+			variant="primary"
+			ariaLabel="Enable negative marking"
+		/>
 	</div>
 </div>

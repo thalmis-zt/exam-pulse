@@ -10,7 +10,8 @@
 		label = '',
 		unit = '',
 		disabled = false,
-		onChange
+		onChange,
+		required = false
 	} = $props();
 
 	let inputStr = $state('');
@@ -71,8 +72,8 @@
 
 <div class="w-full">
 	{#if label}
-		<p class="text-fg mb-1 block text-xs font-medium capitalize leading-5 sm:text-xs">
-			{label}
+	<p class="text-fg mb-2 block text-xs font-medium leading-5">
+			{label}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
 		</p>
 	{/if}
 
