@@ -1,6 +1,7 @@
 <script>
 	import { Clock, ClipboardList, Users, Play } from '@lucide/svelte';
-	import XpBadge from './XpBadge.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import Badge from '$lib/components/Badge.svelte';
 
 	/**
 	 * @typedef {Object} Props
@@ -30,49 +31,44 @@
 	flex flex-col gap-4
 	py-5 px-6
 	bg-surface-card
-	border border-stroke rounded-xl
+	border border-stroke rounded-md
 	shadow-sm
 	transition duration-(--motion-fast) ease-(--ease-standard)
-	hover:shadow-md hover:border-primary
+	hover:shadow-sm hover:border-primary
 ">
 	<!-- Top row: title + xp badge -->
 	<div class="flex items-start justify-between gap-4">
 		<div class="flex flex-col gap-1">
-			<h3 class="m-0 text-lg font-bold leading-snug text-fg">{title}</h3>
+			<h3 class="m-0 text-base font-bold leading-snug text-fg">{title}</h3>
 			{#if description}
             <p class="m-0 text-sm text-fg-muted">{description}</p>
             {/if}
 		</div>
-		<XpBadge {xp} />
+		<Badge label={xp} variant="success" size="sm" />
 	</div>
 
 	<!-- Bottom row: meta stats + play button -->
 	<div class="flex items-center justify-between gap-4">
 		<div class="flex items-center gap-4 flex-wrap">
-			<span class="inline-flex items-center gap-2 text-sm text-fg-muted">
+			<span class="inline-flex items-center gap-2 text-xs text-fg-muted">
 				<Clock size={16} />{duration}
 			</span>
-			<span class="inline-flex items-center gap-2 text-sm text-fg-muted">
+			<span class="inline-flex items-center gap-2 text-xs text-fg-muted">
 				<ClipboardList size={16} />{questions}
 			</span>
-			<span class="inline-flex items-center gap-2 text-sm text-fg-muted">
+			<span class="inline-flex items-center gap-2 text-xs text-fg-muted">
 				<Users size={16} />{users}
 			</span>
 		</div>
 
-		<button
-			class="
-				shrink-0 inline-flex items-center justify-center
-				size-6
-				bg-transparent border-2 border-primary rounded-full
-				text-primary cursor-pointer
-				transition duration-(--motion-fast) ease-(--ease-standard)
-				hover:bg-primary hover:text-white
-			"
-			onclick={onclick}
-			aria-label="Start test"
+		<Button
+			btnType="custom"
+			type="button"
+			customClass="shrink-0 inline-flex items-center justify-center size-6 bg-transparent border-2 border-primary rounded-full text-primary hover:bg-primary hover:text-canvas-base-fixed"
+			{onclick}
+			ariaLabel="Start test"
 		>
 			<Play size={12} />
-		</button>
+		</Button>
 	</div>
 </article>
