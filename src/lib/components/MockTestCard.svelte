@@ -49,7 +49,7 @@
 
 	<!-- Bottom row: meta stats + play button -->
 	<div class="flex items-center justify-between gap-4">
-		<div class="flex items-center gap-4 flex-wrap">
+		<div class="flex items-center gap-2 sm:gap-4 flex-wrap">
 			<span class="inline-flex items-center gap-2 text-xs text-fg-muted">
 				<Clock size={16} />{duration}
 			</span>
