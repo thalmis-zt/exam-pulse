@@ -3,7 +3,6 @@
 	import Badge from '$lib/components/Badge.svelte';
 	import BadgeIcon from '$lib/components/BadgeIcon.svelte';
 
-	/** @type {{ achievement: import('./mock/profile.schema.js').Achievement, onclick?: () => void }} */
 	let { achievement, onclick } = $props();
 
 	const iconMap = { Zap, Target, Star, Trophy, Moon };
@@ -49,5 +48,5 @@
 	</BadgeIcon>
 
 	<!-- Status chip via Badge -->
-	<Badge label={badgeLabel} variant={badgeVariant} size="sm" />
+	<Badge label={badgeLabel} variant={badgeVariant} size="xs" />
 </button>
