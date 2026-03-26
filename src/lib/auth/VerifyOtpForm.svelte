@@ -1,22 +1,41 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import { Zap } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Error from '$lib/components/Error.svelte';
 	import { onMount } from 'svelte';
 
 	const OTP_LENGTH = 6;
-	const RESEND_COOLDOWN_SECONDS = 5;
 
 	let otpValues = $state(Array(OTP_LENGTH).fill(''));
 	let otpContainerRef = $state(null);
-	let resendCooldown = $state(0);
-	let cooldownInterval = $state(null);
+	let formError = $state('');
+	let loading = $state(false);
+	let displayEmail = $state('');
+
+	function messageFromErrorBody(data) {
+		if (!data || typeof data !== 'object') return 'Verification failed';
+		if ('detail' in data && typeof data.detail === 'string') return data.detail;
+		if ('error' in data && typeof data.error === 'string') return data.error;
+		if (Array.isArray(data.detail) && data.detail[0] && typeof data.detail[0] === 'object') {
+			const msgs = data.detail
+				.map((x) => (x && typeof x === 'object' && 'msg' in x ? String(x.msg) : ''))
+				.filter(Boolean);
+			if (msgs.length) return msgs.join(' ');
+		}
+		return 'Verification failed';
+	}
 
 	onMount(() => {
+		if (!browser) return;
+		const token = sessionStorage.getItem('registrationTempToken');
+		if (!token) {
+			goto('/register');
+			return;
+		}
+		displayEmail = sessionStorage.getItem('pendingVerificationEmail') ?? '';
 		otpContainerRef?.querySelector('input')?.focus();
-		return () => {
-			if (cooldownInterval) clearInterval(cooldownInterval);
-		};
 	});
 
 	function handleInput(index, e) {
@@ -49,23 +68,41 @@
 		otpContainerRef?.querySelectorAll('input')[focusIndex]?.focus();
 	}
 
-	function handleVerify() {
+	async function handleVerify() {
 		const code = otpValues.join('');
 		if (code.length !== OTP_LENGTH) return;
-		// No backend: any 6 digits is success
-		goto('/login');
-	}
 
-	function handleResend() {
-		if (resendCooldown > 0) return;
-		resendCooldown = RESEND_COOLDOWN_SECONDS;
-		cooldownInterval = setInterval(() => {
-			resendCooldown -= 1;
-			if (resendCooldown <= 0) {
-				clearInterval(cooldownInterval);
-				cooldownInterval = null;
+		const tempToken = browser ? sessionStorage.getItem('registrationTempToken') : null;
+		if (!tempToken) {
+			formError = 'Session expired. Please register again.';
+			return;
+		}
+
+		formError = '';
+		loading = true;
+		try {
+			const res = await fetch('/apis/register/verify', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ temp_token: tempToken, otp: code })
+			});
+
+			const data = await res.json().catch(() => ({}));
+
+			if (res.ok) {
+				sessionStorage.removeItem('registrationTempToken');
+				sessionStorage.removeItem('pendingVerificationEmail');
+				sessionStorage.removeItem('registrationExpiresIn');
+				goto('/login');
+				return;
 			}
-		}, 1000);
+
+			formError = messageFromErrorBody(data);
+		} catch {
+			formError = 'Network error. Please try again.';
+		} finally {
+			loading = false;
+		}
 	}
 
 	const otpComplete = $derived(otpValues.every((v) => v));
@@ -87,8 +124,19 @@
 		<!-- OTP Card -->
 		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
 			<p class="text-fg-muted mb-6 text-center text-sm">
-				We've sent a 6-digit code to your email. Enter it below to verify your account.
+				We've sent a 6-digit code to
+				{#if displayEmail}
+					<span class="text-fg font-medium">{displayEmail}</span>
+				{:else}
+					your email
+				{/if}. Enter it below to verify your account.
 			</p>
+
+			{#if formError}
+				<div class="mb-4">
+					<Error title={formError} showClose={false} />
+				</div>
+			{/if}
 
 			<p id="otp-label" class="text-fg mb-3 block text-sm font-semibold">Enter OTP</p>
 			<div
@@ -116,27 +164,15 @@
 				type="button"
 				btnType="primary"
 				customClass="w-full py-3 font-semibold rounded-xl"
-				disabled={!otpComplete}
+				disabled={!otpComplete || loading}
 				onclick={handleVerify}
 			>
-				Verify OTP
+				{loading ? 'Verifying…' : 'Verify OTP'}
 			</Button>
 
-			<div class="border-stroke mt-6 border-t pt-6">
-				<p class="text-fg-muted text-center text-sm">Didn't receive the code?</p>
-				<button
-					type="button"
-					class="text-primary hover:underline mt-1 w-full text-center text-sm font-medium disabled:cursor-not-allowed disabled:text-fg-muted disabled:no-underline"
-					disabled={resendCooldown > 0}
-					onclick={handleResend}
-				>
-					{#if resendCooldown > 0}
-						Resend OTP in {resendCooldown}s
-					{:else}
-						Resend OTP
-					{/if}
-				</button>
-			</div>
+			<p class="text-fg-muted mt-6 text-center text-sm">
+				<a href="/register" class="text-primary font-medium hover:underline">Back to registration</a>
+			</p>
 		</div>
 	</div>
 </div>
