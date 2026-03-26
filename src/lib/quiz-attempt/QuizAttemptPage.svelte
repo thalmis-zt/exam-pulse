@@ -8,6 +8,8 @@
 	import QuizNavigationDrawer from '$lib/quiz-attempt/QuizNavigationDrawer.svelte';
 	import QuestionContent from '$lib/quiz-attempt/QuestionContent.svelte';
 	import QuizActionFooter from '$lib/quiz-attempt/QuizActionFooter.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import Error from '$lib/components/Error.svelte';
 
 	let { testId } = $props();
 
@@ -54,12 +56,14 @@
 			: []
 	);
 
-	onMount(async () => {
+	async function loadQuizAttempt() {
+		isLoading = true;
+		hasError = false;
+		errorMessage = '';
 		try {
 			data = await getQuizAttemptData(testId);
 			if (data) {
 				answers = { ...data.answers };
-				// Initialize marked from mock statuses
 				const marked = data.questions
 					.filter((q) => data.questionStatuses[q.id] === 'marked')
 					.map((q) => q.id);
@@ -72,6 +76,10 @@
 		} finally {
 			isLoading = false;
 		}
+	}
+
+	onMount(() => {
+		loadQuizAttempt();
 	});
 
 	function handleSelectOption(label) {
@@ -130,18 +138,18 @@
 
 <div class="flex min-h-screen flex-col  transition duration-motion-normal ease-ease-standard">
 	{#if isLoading}
-		<div class="flex flex-col items-center justify-center gap-3 py-12">
-			<div
-				class="border-stroke border-t-primary h-8 w-8 animate-spin rounded-full border-4"
-			></div>
-			<p class="text-fg-muted text-sm">Loading quiz...</p>
+		<div class="flex flex-col items-center justify-center py-12">
+			<Spinner message="Loading quiz..." />
 		</div>
 	{:else if hasError}
-		<div
-			class="bg-surface-card border-stroke flex flex-col items-center justify-center gap-3 rounded-lg border p-4 py-12"
-		>
-			<p class="text-fg font-semibold">Something went wrong</p>
-			<p class="text-fg-muted text-center text-sm">{errorMessage}</p>
+		<div class="px-4 py-4 lg:px-8">
+			<Error
+				title="Something went wrong"
+				subtitle={errorMessage}
+				showClose={false}
+				action={{ text: 'Retry', handler: loadQuizAttempt }}
+				class="w-full"
+			/>
 		</div>
 	{:else if data}
 		<!-- Sidebar (full height) + Main content layout -->
