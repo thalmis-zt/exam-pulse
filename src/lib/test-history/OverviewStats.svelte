@@ -32,7 +32,7 @@
 </script>
 
 <!-- Stats Cards Grid -->
-<div class="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-2">
+<div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
 	{#each statsDisplay as stat (stat.label)}
 		<StatsCard label={stat.label} icon={stat.icon} value={stat.value} variant="info" />
 	{/each}
