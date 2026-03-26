@@ -1,12 +1,15 @@
 <script>
+	import { Trash2 } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Error from '$lib/components/Error.svelte';
+	import TextInput from '$lib/components/TextInput.svelte';
 	let {
 		open = false,
 		onclose,
 		entity = null,
 		entityName = 'item',
+		entityType = 'item',
 		fields = [],
 		titleOverride = '',
 		details,
@@ -30,7 +33,8 @@
 	const modalTitle = $derived.by(() => {
 		const custom = (titleOverride ?? '').trim();
 		if (custom) return custom;
-		return `Are you sure you want to delete ${entity?.[fields[0]?.key] ?? entityName}?`;
+		const displayName = entity?.[fields[0]?.key] ?? entityName;
+		return `About to delete the ${entityType} '${displayName}'`;
 	});
 
 	$effect(() => {
@@ -87,13 +91,15 @@
 <Modal
 	open={open}
 	title={modalTitle}
-	titleTone="danger"
 	size="lg"
 	showClose={!loading}
 	closeOnBackdropClick={!loading}
 	closeOnEscape={!loading}
 	onclose={handleCancel}
 >
+	{#snippet titleIcon()}
+		<Trash2 />
+	{/snippet}
 	{#snippet children()}
 		{#if entity}
 			<div class="space-y-6">
@@ -112,13 +118,15 @@
 				{#if details}
 					{@render details()}
 				{:else if fields.length}
-					<div class="rounded-xl border border-stroke bg-surface-card p-4">
+					<div class="rounded-md border border-stroke bg-fg-muted/10 p-4">
 						<h4 class="text-fg mb-3 text-sm font-semibold">{entityName} details</h4>
 						<dl class="grid gap-y-2">
 							{#each fields as field}
-								<div class="flex items-center gap-x-2">
-									<dt class="text-fg-muted text-sm font-medium">{field.label}:</dt>
-									<dd class="text-fg text-sm font-medium">{entity[field.key] ?? '—'}</dd>
+								<div class="flex items-start gap-x-2">
+									<dt class="text-fg-muted shrink-0 text-sm font-medium">{field.label}:</dt>
+									<dd class="text-fg min-w-0 flex-1 wrap-break-word text-sm font-medium">
+										{entity[field.key] ?? '—'}
+									</dd>
 								</div>
 							{/each}
 						</dl>
@@ -126,27 +134,12 @@
 				{/if}
 
 				<!-- Confirmation input -->
-				<div class="space-y-2">
-					<label for="delete-confirm-input" class="text-fg block text-sm font-semibold">
-						{displayConfirmationLabel}
-					</label>
-					<input
-						id="delete-confirm-input"
-						type="text"
-						bind:value={confirmationText}
-						onkeydown={handleKeydown}
-						placeholder={confirmationValue}
-						disabled={loading}
-						autocomplete="off"
-						class="
-							border-stroke bg-surface-card text-fg
-							block w-full rounded-xl border px-4 py-3 text-sm
-							placeholder:text-fg-muted
-							focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary
-							disabled:bg-canvas disabled:text-fg-muted disabled:cursor-not-allowed
-						"
-					/>
-				</div>
+				<TextInput
+					id="delete-confirm-input"
+					label={displayConfirmationLabel}
+					placeholder={confirmationValue}
+					bind:value={confirmationText}
+				/>
 			</div>
 		{/if}
 	{/snippet}
