@@ -42,13 +42,13 @@
 	const singleId = $derived(`${fallbackId}-single`);
 
 	const styles = $derived.by(() => {
-		const base = 'w-full rounded-lg border bg-transparent px-3 py-2.5 text-sm text-fg font-poppins transition duration-(--motion-fast) ease-(--ease-standard) outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50';
+		const base = 'w-full rounded-lg border bg-transparent px-3 py-3 text-sm text-fg font-poppins transition duration-(--motion-fast) ease-(--ease-standard) outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50';
 		const state = hasError
 			? 'border-danger focus:ring-danger/20 focus:border-danger'
 			: 'border-stroke focus:ring-primary/20 focus:border-primary';
 		return {
 			input: `${base} ${state}`.trim(),
-			label: 'text-sm font-medium text-fg',
+			label: 'text-xs font-medium text-fg',
 			subLabel: 'text-xs text-fg-muted font-poppins',
 			error: 'text-xs text-danger font-poppins',
 		};

@@ -21,7 +21,7 @@
 		const base = 'rounded-full px-4 py-2 text-sm font-medium transition duration-(--motion-fast) ease-(--ease-standard)';
 		return {
 			container: `flex flex-col gap-3 ${className}`.trim(),
-			label: 'text-sm font-medium text-fg',
+			label: 'text-xs font-medium text-fg',
 			button: (isActive) => `${base} ${isActive ? 'bg-primary text-white' : 'bg-stroke/80 text-fg-muted hover:bg-stroke hover:text-fg'}`,
 			suffix: 'text-xs text-fg-muted'
 		};
