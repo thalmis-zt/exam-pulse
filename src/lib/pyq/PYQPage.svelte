@@ -88,7 +88,7 @@
 	const filteredSections = $derived(data?.subjectSections ?? []);
 </script>
 
-<div class="flex flex-col gap-6 min-h-screen">
+<div class="flex flex-col gap-6 min-h-screen min-w-0">
 	<!-- Header -->
 	<SectionHeader
 		title="Previous Year Questions"
@@ -136,7 +136,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="mt-4 flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+			<div
+				class="mt-4 flex min-w-0 gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+			>
 				{#each data.yearCards ?? [] as card (card.id)}
 					<PYQYearCard {card} onPractice={() => handlePracticeYear(card)} />
 				{/each}
@@ -171,20 +173,20 @@
 
 		<!-- Can't find what you're looking for? -->
 		<section
-			class="rounded-xl border border-stroke bg-surface-card p-6 flex flex-col sm:flex-row items-center gap-4"
+			class="w-full min-w-0 rounded-xl border border-stroke bg-surface-card p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4"
 		>
-			<div class="flex items-center gap-3 flex-1">
-				<div class="bg-info/10 p-3 rounded-full">
+			<div class="flex min-w-0 w-full flex-1 items-start gap-3 sm:items-center">
+				<div class="shrink-0 bg-info/10 p-3 rounded-full">
 					<HelpCircle size={24} class="text-info" />
 				</div>
-				<div>
-					<h4 class="text-fg font-semibold">Can't find what you're looking for?</h4>
-					<p class="text-fg-muted text-sm">
+				<div class="min-w-0 flex-1">
+					<h4 class="text-fg font-semibold wrap-break-word">Can't find what you're looking for?</h4>
+					<p class="text-fg-muted text-sm wrap-break-word">
 						We're constantly updating our database. Request content and we'll add it soon.
 					</p>
 				</div>
 			</div>
-			<Button btnType="primaryLight">
+			<Button btnType="primaryLight" customClass="w-full shrink-0 sm:w-auto">
 				Request Content
 				<ArrowRight size={14} />
 			</Button>

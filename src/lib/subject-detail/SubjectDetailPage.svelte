@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { Calculator, Beaker, Atom } from '@lucide/svelte';
 	import Error from '$lib/components/Error.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
 	import IconHeading from '$lib/components/IconHeading.svelte';
 	import { getSubjectDetail } from '$lib/subject-detail/mock/subject-detail.service.js';
 	import SubjectRecommendedMocksSection from '$lib/subject-detail/SubjectRecommendedMocksSection.svelte';
@@ -55,8 +56,8 @@
 </script>
 
 {#if isLoading}
-	<div class="flex flex-col items-center justify-center gap-3 py-16 text-fg-muted">
-		<span class="text-sm">Loading subject…</span>
+	<div class="flex flex-col items-center justify-center py-16">
+		<Spinner message="Loading subject…" />
 	</div>
 {:else if hasError}
 	<Error title="Something went wrong" subtitle={errorMessage} showClose={false} />

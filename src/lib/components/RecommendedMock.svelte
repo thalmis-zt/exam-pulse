@@ -57,7 +57,7 @@
 	<!-- Top: badge + title -->
 	<div class="flex flex-col gap-3 mb-2">
 		<span
-			class="text-canvas-base-fixed/80 self-start rounded-full bg-white/20 px-3 py-1 text-xs font-medium"
+			class="text-canvas-base-fixed/80 self-start rounded-full bg-canvas-base-fixed/20 px-3 py-1 text-xs font-medium"
 		>
 			Recommended
 		</span>
@@ -83,7 +83,7 @@
 	<Button
 		btnType="custom"
 		type="button"
-		customClass="shrink-0 cursor-pointer rounded-md bg-white px-5 py-2 text-sm font-bold hover:opacity-90 active:scale-95"
+		customClass="shrink-0 cursor-pointer rounded-md bg-canvas-base-fixed px-5 py-2 text-sm font-bold hover:opacity-90 active:scale-95"
 		style="color: {btnTextColor[variant]}"
 		{onclick}
 	>
