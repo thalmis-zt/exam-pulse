@@ -6,7 +6,7 @@
 </script>
 
 <section class="flex flex-col gap-3 md:gap-4">
-	<SectionHeader title="Knowledge Gaps" />
+	<SectionHeader title="Knowledge Gaps" variant="md"/>
 
 	<!-- 1 column mobile, 1 column tablet, 3 desktop -->
 	{#if gaps.length > 0}
@@ -26,6 +26,6 @@
 			{/each}
 		</div>
 	{:else}
-		<p class="text-fg-muted text-sm py-4">No knowledge gaps</p>
+		<p class="text-fg-muted text-sm py-4 px-4 rounded-lg bg-surface-card/50">No knowledge gaps</p>
 	{/if}
 </section>

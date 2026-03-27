@@ -32,9 +32,7 @@
 <!-- Subject Selection -->
 
 	<div>
-		<p class="text-fg mb-2 block text-sm font-medium leading-5">
-			Subject<span class="text-danger ml-0.5">*</span>
-		</p>
+		<span class="text-fg mb-2 block text-xs font-medium leading-5">Subject <span class="text-danger ml-0.5">*</span></span>
 		<div class="flex gap-2 overflow-x-auto snap-x snap-mandatory md:flex-wrap md:justify-start md:overflow-visible pb-2 md:pb-0">
 			{#each subjects as subject, index (subject.id)}
 				<button

@@ -1,11 +1,11 @@
 <script>
-	import { Zap, BookOpen } from '@lucide/svelte';
 	import { getTopicsBySubject } from '$lib/test-config/mock/testConfig.service.js';
+	import { Loader2 } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
-	import Dropdown from '$lib/components/Dropdown.svelte';
 	import StepperInput from '$lib/components/StepperInput.svelte';
-	import SectionHeader from '$lib/components/SectionHeader.svelte';
+	import Dropdown from '$lib/components/Dropdown.svelte';
 	import Tabs from '$lib/components/Tabs.svelte';
+	import Error from '$lib/components/Error.svelte';
 	import SubjectCard from '$lib/test-config/SubjectCard.svelte';
 	import NegativeMarkingCard from '$lib/test-config/NegativeMarkingCard.svelte';
 
@@ -29,7 +29,7 @@
 	let formError = $state('');
 
 	const MIN_QUESTIONS = 5;
-	const MAX_QUESTIONS = 100;
+	const MAX_QUESTIONS = 200;
 
 	const difficultyTabOptions = $derived(
 		difficultyLevels.map((l) => ({ value: l.id, label: l.label }))
@@ -73,7 +73,7 @@
 
 		const config = {
 			subjectId: selectedSubject,
-			topicId: selectedTopicOption.id,
+			topicId: selectedTopic?.id ?? selectedTopic,
 			difficultyId: selectedDifficulty,
 			questionCount,
 			enableNegativeMarking,
@@ -84,20 +84,8 @@
 	}
 </script>
 
-<!-- Configuration Card -->
 <div class="bg-surface-card border-stroke rounded-md border p-4 shadow-sm md:p-6">
-	<div class="mb-4 flex items-start gap-2">
-		<div class=" bg-info-surface text-info rounded-md p-2">
-			<Zap size={14} />
-		</div>
-		<SectionHeader
-			title="Test Configuration"
-			subtitle="Configure your practice test for targeted exam preparation"
-		/>
-	</div>
-	<!-- Form -->
 	<form class="space-y-6" onsubmit={(e) => e.preventDefault()}>
-		<!-- Subject Selection -->
 		<SubjectCard
 			{subjects}
 			bind:selectedSubject
@@ -107,47 +95,39 @@
 		/>
 
 		<!-- Topic, Difficulty Level, and Questions Row -->
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
 			<Dropdown
 				title="Topic / Chapter"
-				required
+				bind:value={selectedTopic}
 				options={availableTopics}
-				bind:value={selectedTopicOption}
-				placeholder={!selectedSubject
-					? 'Select a subject first'
-					: isLoadingTopics
-						? 'Loading topics...'
-						: 'Select a topic'}
+				placeholder="Select a topic"
 				disabled={!selectedSubject || isLoadingTopics}
 				loading={isLoadingTopics}
-				onSelect={() => {
-					formError = '';
-				}}
-			>
-				{#snippet icon()}<BookOpen size={16} />{/snippet}
-			</Dropdown>
-
-			<Tabs
-				title="Difficulty Level"
-				required
-				size="sm"
-				options={difficultyTabOptions}
-				selected={selectedDifficulty}
-				onSelect={(id) => {
-					selectedDifficulty = id;
-					formError = '';
-				}}
+				required={true}
 			/>
 
 			<StepperInput
-				title="Number of Questions"
-				required
 				bind:value={questionCount}
 				min={MIN_QUESTIONS}
 				max={MAX_QUESTIONS}
-				step={1}
-				unit="Items"
+				label="Number of Questions"
+				unit="Questions"
+				required={true}
+				onChange={handleQuestionCountChange}
 			/>
+
+			<!-- Difficulty Level replace with tabs component -->
+			<div>
+				<span class="text-fg mb-2 block text-xs leading-5 font-medium">
+					Difficulty Level <span class="text-danger ml-0.5">*</span>
+				</span>
+				<Tabs
+					options={difficultyLevels.map((level) => ({ label: level.label, value: level.id }))}
+					selected={selectedDifficulty}
+					onSelect={(value) => (selectedDifficulty = value)}
+					size="md"
+				/>
+			</div>
 		</div>
 
 		<!-- Negative Marking -->
@@ -163,11 +143,7 @@
 
 		<!-- Error Message -->
 		{#if formError}
-			<div
-				class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300"
-			>
-				{formError}
-			</div>
+			<Error title="Error" subtitle={formError} showClose={false} />
 		{/if}
 
 		<!-- Start Test Button -->
@@ -178,7 +154,10 @@
 				onclick={handleStartTest}
 				disabled={isLoading || isLoadingTopics}
 			>
-				{isLoading ? 'Starting Mock Test...' : 'Start Mock Test'}
+				{#if isLoading}
+					<Loader2 size={18} class="animate-spin" />
+				{/if}
+				Start Mock Test
 			</Button>
 		</div>
 	</form>

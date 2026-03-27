@@ -8,15 +8,9 @@
 		onToggle = () => {}
 	} = $props();
 
-	// Handle input changes to ensure it stays a number
 	function handleInputChange(e) {
 		const value = parseFloat(e.target.value);
 		deductionAmount = isNaN(value) ? 0 : value;
-	}
-
-	function handleToggle(e) {
-		isEnabled = e.currentTarget.checked;
-		onToggle(isEnabled);
 	}
 </script>
 
@@ -29,7 +23,7 @@
 				<Minus size={12} />
 			</div>
 			<div>
-				<span class="text-fg text-2xs mb-1 block font-medium tracking-wider">Negative Marking</span>
+				<span class="text-fg mb-2 block text-xs font-medium leading-5">Negative Marking</span>
 
 				<!-- <p class="text-fg text-sm font-semibold">Deduct Marks</p> -->
 				<div class="flex items-center gap-1">
@@ -49,10 +43,10 @@
 
 		<Toggle
 			bind:checked={isEnabled}
-			onToggle={(next) => onToggle(next)}
-			ariaLabel="Enable negative marking"
+			onToggle={onToggle}
 			size="md"
-			variant="secondary"
+			variant="primary"
+			ariaLabel="Enable negative marking"
 		/>
 	</div>
 </div>

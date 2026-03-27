@@ -13,6 +13,7 @@
 		unit = '',
 		disabled = false,
 		onChange,
+		required = false
 		class: className = ''
 	} = $props();
 
@@ -75,10 +76,10 @@
 	}
 </script>
 
-<div class="w-full min-w-0 {className}">
-	{#if headingText}
-		<p id={titleId} class="text-fg mb-2 block text-sm font-medium leading-5">
-			{headingText}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
+<div class="w-full">
+	{#if label}
+	<p class="text-fg mb-2 block text-xs font-medium leading-5">
+			{label}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
 		</p>
 	{/if}
 

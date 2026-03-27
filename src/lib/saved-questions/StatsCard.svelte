@@ -5,9 +5,6 @@
 		value = 0,
 		variant = 'default', // default | info | success | danger
 		size = 'md', // sm | md | lg
-		active = false,
-		disabled = false,
-		onClick = () => {},
 		children
 	} = $props();
 
@@ -25,14 +22,14 @@
 			value: 'text-sm'
 		},
 		md: {
-			container: 'p-4 gap-2',
-			icon: 'w-10 h-10',
-			value: 'text-base'
+			container: 'p-3 sm:p-4 gap-2',
+			icon: 'w-8 h-8 sm:w-10 sm:h-10',
+			value: 'text-sm sm:text-base'
 		},
 		lg: {
-			container: 'p-5 gap-3',
-			icon: 'w-12 h-12',
-			value: 'text-lg'
+			container: 'p-4 sm:p-5 gap-3',
+			icon: 'w-10 sm:w-12 h-10 sm:h-12',
+			value: 'text-base sm:text-lg'
 		}
 	};
 
@@ -40,19 +37,14 @@
 	const sizeClass = $derived(sizeStyles[size] ?? sizeStyles.md);
 </script>
 
-<button
-	type="button"
+<div
 	class="
 		flex flex-col md:flex-row md:items-center md:gap-3
 		{sizeClass.container}
 		rounded-md
 		{variantClass}
 		shadow-sm
-		transition-all duration-fast ease-standard
-		{disabled ? 'opacity-50 cursor-not-allowed' : ''}
 	"
-	onclick={!disabled ? onClick : undefined}
-	aria-pressed={active}
 >
 	<!-- Icon -->
 	{#if Icon}
@@ -64,7 +56,7 @@
 	<!-- Content -->
 	<div class="flex flex-col items-start">
 		<!-- Label -->
-		<span class="text-2xs font-semibold text-fg-muted font-inter uppercase tracking-wide">
+		<span class="text-2xs font-semibold text-fg-muted font-inter uppercase tracking-wide break-word">
 			{label}
 		</span>
 
@@ -76,4 +68,4 @@
 		<!-- Optional Slot -->
 		{@render children?.()}
 	</div>
-</button>
+</div>

@@ -20,7 +20,7 @@
 	const inputSizes = { sm: 'text-xs', md: 'text-sm', lg: 'text-base' };
 
 	const baseClasses =
-		'border border-stroke bg-surface-card rounded-full shadow-sm transition duration-(--motion-fast) ease-(--ease-standard) focus-within:border-primary focus-within:ring-1 focus-within:ring-primary';
+		'border border-stroke bg-surface-card rounded-md shadow-sm transition duration-(--motion-fast) ease-(--ease-standard) focus-within:border-primary focus-within:ring-1 focus-within:ring-primary';
 	const variantClass = $derived(containerClasses[variant] ?? containerClasses.md);
 
 	/** @type {ReturnType<typeof setTimeout> | null} */

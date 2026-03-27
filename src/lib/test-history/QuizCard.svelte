@@ -1,6 +1,7 @@
 <script>
 	import { RotateCcw, Eye, Clock } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Badge from '$lib/components/Badge.svelte';
 
 	let {
 		test = {},
@@ -28,13 +29,6 @@
 		maxScore: test.maxScore ?? 0
 	});
 
-	const difficultyColors = {
-		easy: 'bg-success-surface text-success',
-		medium: 'bg-warning-surface text-warning',
-		hard: 'bg-danger-surface text-danger',
-		unknown: 'bg-surface-card text-fg'
-	};
-
 	// Reactively format date with error handling
 	const formattedDate = $derived.by(() => {
 		if (!normalizedTest.date) return '';
@@ -56,13 +50,27 @@
 		: 0);
 
 	const statusBadges = {
-		completed: { label: 'Completed', color: 'bg-success-surface text-success' },
-		'in-progress': { label: 'In Progress', color: 'bg-warning-surface text-warning' },
-		abandoned: { label: 'Abandoned', color: 'bg-danger-surface text-danger' },
-		unknown: { label: 'N/A', color: 'bg-surface-card text-fg' }
+		completed: { label: 'Completed' },
+		'in-progress': { label: 'In Progress' },
+		abandoned: { label: 'Abandoned' },
+		unknown: { label: 'N/A' }
 	};
 
 	const statusBadge = $derived(statusBadges[normalizedTest.status] || statusBadges.unknown);
+
+	const statusVariantMap = {
+		completed: 'success',
+		'in-progress': 'warning',
+		abandoned: 'danger',
+		unknown: 'default'
+	};
+
+	const difficultyVariantMap = {
+		easy: 'success',
+		medium: 'warning',
+		hard: 'danger',
+		unknown: 'default'
+	};
 
 	const statsData = $derived([
 		{
@@ -129,13 +137,19 @@
 
 		<!-- Right: Status and Difficulty Badges -->
 		<div class="flex flex-1 justify-between gap-2 shrink-0">
-			<span class="text-2xs rounded-full px-3 py-1 font-semibold whitespace-nowrap inline-flex items-center h-6 {statusBadge.color}">
-				{statusBadge.label}
-			</span>
-			{#if normalizedTest.difficulty}
-				<span class="text-2xs rounded-full px-3 py-1 font-semibold inline-flex items-center h-6 {difficultyColors[normalizedTest.difficulty]}">
-					{normalizedTest.difficulty.charAt(0).toUpperCase() + normalizedTest.difficulty.slice(1)}
-				</span>
+			<Badge 
+				label={statusBadge.label} 
+				variant={statusVariantMap[normalizedTest.status] || 'default'}
+				size="sm"
+				hasBorder={false}
+			/>
+			{#if normalizedTest.difficulty && normalizedTest.difficulty !== 'unknown'}
+				<Badge 
+					label={normalizedTest.difficulty.charAt(0).toUpperCase() + normalizedTest.difficulty.slice(1)} 
+					variant={difficultyVariantMap[normalizedTest.difficulty] || 'default'}
+					size="sm"
+					hasBorder={false}
+				/>
 			{/if}
 		</div>
 	</div>

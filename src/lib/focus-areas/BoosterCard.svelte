@@ -29,7 +29,7 @@
         customClass="w-full justify-center"
 		on:click={onclick}
 	>
-		<Zap size={14} class="text-fg" />
+		<Zap size={14} class="text-canvas-base" />
 		<span>Advanced Practice</span>
 	</Button>
 

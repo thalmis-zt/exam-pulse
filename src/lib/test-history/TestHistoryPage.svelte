@@ -10,16 +10,11 @@
 	import SearchAndFilters from '$lib/test-history/SearchAndFilters.svelte';
 	import QuizCard from '$lib/test-history/QuizCard.svelte';
 	import ProTip from '$lib/test-history/ProTip.svelte';
-	import LoaderUI from '$lib/test-history/LoaderUI.svelte';
-	import ErrorUI from '$lib/test-history/ErrorUI.svelte';
-	import EmptyState from '$lib/test-history/EmptyState.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import StateDisplay from '$lib/components/StateDisplay.svelte';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
-
-	// Pre-loaded data from +page.js
-	let data = $props();
 
 	// Loading & Error
 	let isInitialLoading = $state(true);
@@ -37,27 +32,19 @@
 	let hasMore = $state(false);
 
 	let searchQuery = $state('');
-	let selectedSubject = $state(null);
-	let selectedDifficulty = $state(null);
-	let selectedTimeRange = $state(null);
+	let selectedSubject = $state(null); 
+	let selectedDifficulty = $state(null); 
+	let selectedTimeRange = $state(null); 
 
-	let actionLoadingId = $state(null); // To track loading state of individual test actions (review/retry)
+	let actionLoadingId = $state(null);
 	let searchTimeout = $state(null);
 
 	const PAGE_SIZE = 10;
 	const SEARCH_DEBOUNCE_MS = 300;
 
-	// Derived: check if any filters are applied
-	const hasAppliedFilters = $derived(
-		searchQuery.trim() !== '' ||
-		selectedSubject !== null ||
-		selectedDifficulty !== null ||
-		selectedTimeRange !== null
-	);
-
 	const filterOptions = {
-		subjects: ['Physics', 'Chemistry', 'Biology', 'Maths'],
-		difficulties: ['Easy', 'Medium', 'Hard'],
+		subjects: ['Physics', 'Chemistry', 'Biology', 'Maths'].map(s => ({ label: s, value: s })),
+		difficulties: ['Easy', 'Medium', 'Hard'].map(d => ({ label: d, value: d.toLowerCase() })),
 		timeRanges: [
 			{ value: '1month', label: '1 Month' },
 			{ value: '3months', label: '3 Months' },
@@ -83,11 +70,10 @@
 		}
 
 		try {
-			// Build filters object (same structure for all operations)
 			const filters = {
-				subject: selectedSubject,
-				difficulty: selectedDifficulty,
-				timeRange: selectedTimeRange,
+				subject: selectedSubject?.value ?? null,
+				difficulty: selectedDifficulty?.value ?? null,
+				timeRange: selectedTimeRange?.value ?? null,
 				searchQuery: searchQuery.trim() || undefined
 			};
 
@@ -160,11 +146,9 @@
 		errorMessage = '';
 		currentPage = 1;
 
-		await Promise.all([
-			fetchTestsPage(1, true),
-			fetchStats(),
-			fetchProTips()
-		]);
+		await fetchTestsPage(1, true);
+		await fetchStats();
+		await fetchProTips();
 	}
 
 	// ---------------------- Filter & Search Event Handlers -------------------------
@@ -193,7 +177,7 @@
 	}
 
 	function handleFilterChange(filters) {
-		// Apply filter changes from the object
+		// Filters come as full option objects from FilterPanel
 		if (filters.subject !== undefined) {
 			selectedSubject = filters.subject;
 		}
@@ -214,11 +198,12 @@
 
 	// ---------------------------- Test Actions ----------------------------
 	async function handleReview(testId) {
-	console.log('clicked on review');
+		console.log('Review test:', testId);
 	}
 
 	async function handleRetry(testId) {
-		goto('/retry-test/' + testId);
+		console.log('Retry test:', testId);
+		// TODO: Navigate to retry test page
 	}
 
 	function handleStartTest() {
@@ -229,39 +214,11 @@
 	// ---------------------------- Lifecycle --------------------------------------
 	onMount(async () => {
 		if(!browser) return; // Ensure this runs only in the browser
-		// Check each data source separately
-		const hasTestHistoryError = data?.testHistory?.error || !data?.testHistory ;
-		const hasStatsError = data?.stats?.error || !data?.stats ;
-		const hasProTipsError = data?.proTips?.error || !data?.proTips ;
+		
+		await fetchTestsPage(1, true);
+		await fetchStats();
+		await fetchProTips();
 
-		// Load test history - use pre-loaded or fetch
-		if (!hasTestHistoryError) {
-			tests = data.testHistory.data || [];
-			totalCount = data.testHistory.totalCount || 0;
-			currentPage = data.testHistory.page || 1;
-			hasMore = data.testHistory.hasMore || false;
-		} else {
-			// Fetch test history if pre-loaded data has error
-			await fetchTestsPage(1, true);
-		}
-
-		// Load stats - use pre-loaded or fetch separately
-		if (!hasStatsError) {
-			stats = data.stats || {};
-		} else {
-			// Fetch stats separately if pre-loaded data has error
-			await fetchStats();
-		}
-
-		// Load pro tips - use pre-loaded or fetch separately
-		if (!hasProTipsError) {
-			proTips = data.proTips || [];
-		} else {
-			// Fetch pro tips separately if pre-loaded data has error
-			await fetchProTips();
-		}
-
-		// Set initial loading state to false
 		isInitialLoading = false;
 	});
 </script>
@@ -274,83 +231,89 @@
 
 		<!-- Initial Loading State -->
 		{#if isInitialLoading}
-			<LoaderUI message="Loading test history..." />
-	{:else if totalCount === 0 && !hasAppliedFilters}
-		<!-- Empty State: Only show when truly no data and no filters applied -->
-			<EmptyState onStartTest={handleStartTest} />
-		{:else}
-			<!-- Stats Cards (Always Visible) -->
-			<OverviewStats {stats} />
-
-			<!-- Search and Filters Section (Always Visible) -->
-			<div>
-				<div class="mb-2">
-					<SectionHeader title="Recent Tests" />
-				</div>
-				<SearchAndFilters
-					{searchQuery}
-					{selectedSubject}
-					{selectedDifficulty}
-					{selectedTimeRange}
-					subjects={filterOptions.subjects}
-					difficulties={filterOptions.difficulties}
-					timeRanges={filterOptions.timeRanges}
-					onSearch={handleSearch}
-					onFilterChange={handleFilterChange}
-				/>
+			<div class="flex flex-col items-center justify-center gap-3 py-12">
+				<Spinner message="Loading test history..." />
 			</div>
+		{:else}
+			<!-- Stats Cards -->
+			<OverviewStats {stats} />
 
 			<!-- Main Content (Two Column on Desktop, Single on Mobile) -->
 			<div class="grid grid-cols-1 gap-6 lg:grid-cols-4">
 				<!-- Main Feed (Desktop: 3 columns, Mobile: full width) -->
 				<div class="flex flex-col gap-4 lg:col-span-3">
+					<SectionHeader title="Recent Tests" subtitle="Review your test performance" variant="md" />
+
+					<!-- Search Bar -->
+					<SearchAndFilters
+						{selectedSubject}
+						{selectedDifficulty}
+						{selectedTimeRange}
+						subjects={filterOptions.subjects}
+						difficulties={filterOptions.difficulties}
+						timeRanges={filterOptions.timeRanges}
+						onSearch={handleSearch}
+						onFilterChange={handleFilterChange}
+					/>
+
 					<!-- Loading State (Filter/Search) -->
 					{#if isLoading}
-						<LoaderUI message="Loading quizzes..." />
-					{:else}
-						<!-- Error Alert (only when not loading) -->
-						{#if hasError}
-							<ErrorUI
-								message={errorMessage}
-								onRetry={retryFetchAll}
-								isDismissible={true}
-								onDismiss={() => {
-									hasError = false;
-									errorMessage = '';
-								}}
-							/>
-						{/if}
-
-						<!-- Tests List -->
-						<div class="flex flex-col gap-4">
-							{#each tests as test (test.id)}
-								<QuizCard
-									{test}
-									isLoading={actionLoadingId === test.id}
-									onReview={handleReview}
-									onRetry={handleRetry}
-								/>
-							{/each}
+						<div class="flex flex-col items-center justify-center gap-3 py-12">
+							<Spinner message="Loading tests..." />
 						</div>
+					{:else if hasError}
+						<!-- Error State -->
+						<StateDisplay
+							title="No Results Found"
+							message={errorMessage}
+							buttonLabel="Retry"
+							onButtonClick={retryFetchAll}
+							variant="error"
+						/>
+					{:else}
+						<!-- Check for empty results -->
+						{#if tests.length === 0}
+							<StateDisplay
+								title="No test history yet"
+								message="Start a new test to see your performance history here."
+								buttonLabel="Start Test"
+								onButtonClick={handleStartTest}
+								variant="empty"
+							/>
+						{:else}
+							<!-- Tests List -->
+							<div class="flex flex-col gap-4">
+								{#each tests as test (test.id)}
+									<QuizCard
+										{test}
+										isLoading={actionLoadingId === test.id}
+										onReview={handleReview}
+										onRetry={handleRetry}
+									/>
+								{/each}
+							</div>
 
-						<!-- Load More Button -->
-						{#if hasMore}
-							<Button btnType="primaryLight" onclick={loadMore} disabled={isLoadingMore}>
-								{#if isLoadingMore}
-									Loading...
-								{:else}
-									Load More Tests ({tests.length} of {totalCount})
-								{/if}
-							</Button>
+							<!-- Load More Button -->
+							{#if hasMore}
+								<Button btnType="primaryLight" onclick={loadMore} disabled={isLoadingMore}>
+									{#if isLoadingMore}
+										Loading...
+									{:else}
+										Load More Tests ({tests.length} of {totalCount})
+									{/if}
+								</Button>
+							{/if}
+
+							<!-- Results Info -->
+							<p class="text-fg-muted font-poppins text-center text-xs md:text-sm">
+								Showing {tests.length} of {totalCount} quizzes
+							</p>
 						{/if}
-						<p class="text-fg-muted font-poppins text-center text-xs md:text-sm">
-							Showing {tests.length} of {totalCount} quizzes
-						</p>
 					{/if}
 				</div>
 
-				<!-- Right Panel (Desktop Only) - Always Visible -->
-				<div class="flex flex-col gap-4">
+				<!-- Right Panel (Desktop Only) -->
+				<div class="flex flex-col gap-4 md:gap-6">
 					{#each proTips as tip (tip.id)}
 						<ProTip title={tip.title} subtitle={tip.subtitle} icon={tip.icon} />
 					{/each}

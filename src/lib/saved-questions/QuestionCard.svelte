@@ -1,25 +1,26 @@
 <script>
 	import { BookOpen, Check, X, ChevronDown, Trash2, RotateCcw, Info, Eye } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Badge from '$lib/components/Badge.svelte';
+	import DeleteConfirmationModal from '$lib/components/DeleteConfirmationModal.svelte';
 
 	let { question, onDelete, onAttempt } = $props();
 
 	let showSolution = $state(false);
 	let selectedOption = $state(null);
+	let showDeleteModal = $state(false);
 	let isDeleting = $state(false);
 
-	// Determine difficulty color
-	const difficultyColor = {
-		Easy: 'text-success bg-success/20',
-		Medium: 'text-warning bg-warning/20',
-		Hard: 'text-danger bg-danger/20'
+	const difficultyVariant = {
+		Easy: 'success',
+		Medium: 'warning',
+		Hard: 'danger'
 	};
 
-	// Metadata pills config
 	const metadata = $derived([
-		{ label: question.subject, class: 'bg-primary/10 text-primary text-2xs' },
-		{ label: question.topic, class: 'bg-fg-muted/10 text-fg-muted text-xs' },
-		{ label: question.difficulty, class: `${difficultyColor[question.difficulty]} text-xs` }
+		{ label: question.subject, variant: 'primary', size: 'sm' },
+		{ label: question.topic, variant: 'warning', size: 'sm' },
+		{ label: question.difficulty, variant: difficultyVariant[question.difficulty], size: 'sm' }
 	]);
 
 	function toggleSolution() {
@@ -34,15 +35,25 @@
 	}
 
 	function handleDelete() {
-		if (confirm('Are you sure you want to delete this question?')) {
-			isDeleting = true;
+		showDeleteModal = true;
+	}
+
+	async function handleConfirmDelete() {
+		isDeleting = true;
+		try {
 			if (onDelete) {
-				onDelete(question.id);
+				await onDelete(question.id);
 			}
+		} finally {
+			isDeleting = false;
 		}
 	}
 
-	// Determine option button classes
+	function handleCancelDelete() {
+		showDeleteModal = false;
+		isDeleting = false;
+	}
+
 	function getOptionButtonClass(option) {
 		if (selectedOption === option.label) {
 			if (option.label === question.correctOptionLabel) {
@@ -56,21 +67,18 @@
 </script>
 
 <div
-	class="bg-surface-card duration-fast ease-standard flex flex-col gap-3 rounded-lg shadow-sm transition-shadow hover:shadow-md p-4 md:p-5"
+	class="bg-surface-card duration-fast ease-standard flex flex-col gap-3 rounded-md shadow-sm transition-shadow hover:shadow-md p-4 md:p-5"
 >
 	<!-- Metadata Header with Pills -->
 	<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-		<!-- Pills: Subject, Topic, Difficulty Replace with pills reusable component -->
+		<!-- Badges: Subject, Topic, Difficulty -->
 		<div class="flex flex-wrap items-center gap-2">
 		{#each metadata as item (item.label)}
-			<span class="text-2xs rounded-full px-3 py-1 font-semibold {item.class}">
-				{item.label}
-			</span>
+			<Badge label={item.label} variant={item.variant} size={item.size} hasBorder={false} />
 		{/each}
 	</div>
-	</div>
 
-	<!-- Delete Button -->
+		<!-- Delete Button -->
 	<Button
 		btnType="custom"
 		customClass="text-danger hover:bg-danger/10 flex items-center gap-1.5 self-end rounded px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
@@ -81,6 +89,9 @@
 		<Trash2 size={14} />
 		<span class="text-xs font-semibold">Delete</span>
 	</Button>
+	</div>
+
+
 
 	<!-- Question Text -->
 	<div class="flex items-center gap-3">
@@ -91,7 +102,7 @@
 	</div>
 
 	<!-- Answer Options (A, B, C, D) -->
-	<div class="flex flex-col gap-2 pl-6">
+	<div class="flex flex-col gap-2 pl-0 sm:pl-6">
 		{#each question.options as option (option.label)}
 			<button
 				class="border-info-surface duration-fast ease-standard flex items-center gap-3 rounded-lg border px-3 py-2 transition-all {getOptionButtonClass(
@@ -146,11 +157,7 @@
 				{#if question.tags && question.tags.length > 0}
 					<div class="border-info/20 mt-3 flex flex-wrap gap-2 border-t pt-3">
 						{#each question.tags as tag (tag)}
-							<span
-								class="bg-primary/15 text-primary rounded-full px-2.5 py-1.5 text-2xs font-semibold"
-							>
-								{tag}
-							</span>
+							<Badge label={tag} variant="primary" size="sm" hasBorder={true} />
 						{/each}
 					</div>
 				{/if}
@@ -183,3 +190,19 @@
 		</p>
 	{/if}
 </div>
+
+<!-- Delete Confirmation Modal -->
+<DeleteConfirmationModal
+	open={showDeleteModal}
+	entity={question}
+	entityName="question"
+	fields={[
+		{ key: 'text', label: 'Question' },
+		{ key: 'subject', label: 'Subject' },
+		{ key: 'difficulty', label: 'Difficulty' }
+	]}
+	confirmationValue="DELETE"
+	onconfirm={handleConfirmDelete}
+	oncancel={handleCancelDelete}
+	onclose={() => (showDeleteModal = false)}
+/>
