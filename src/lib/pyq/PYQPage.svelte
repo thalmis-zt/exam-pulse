@@ -10,7 +10,7 @@
 	import PYQYearCard from '$lib/pyq/PYQYearCard.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import StateDisplay from '$lib/components/StateDisplay.svelte';
 
 	let data = $state(null);
 	let isLoading = $state(true);
@@ -86,6 +86,20 @@
 	}
 
 	const filteredSections = $derived(data?.subjectSections ?? []);
+
+	const isPyqEmpty = $derived(
+		!!data &&
+			(data.yearCards?.length ?? 0) === 0 &&
+			!(data.subjectSections ?? []).some((s) => s.topics.length > 0)
+	);
+
+	function resetFiltersAndLoad() {
+		examTypeSelected = ['All'];
+		activeExamType = 'All';
+		selectedYear = null;
+		selectedYearValue = null;
+		loadData();
+	}
 </script>
 
 <div class="flex flex-col gap-6 min-h-screen">
@@ -96,18 +110,27 @@
 	/>
 
 	{#if isLoading}
-		<div class="flex flex-col items-center justify-center py-12">
+		<div class="flex flex-col items-center justify-center gap-3 py-12">
 			<Spinner message="Loading Previous Year Questions..." />
 		</div>
 	{:else if hasError}
-		<Error
-			title="Something went wrong"
-			subtitle={errorMessage}
-			showClose={false}
-			action={{ text: 'Retry', handler: loadData }}
-			class="w-full"
+		<StateDisplay
+			title="Failed to load PYQ data"
+			message={errorMessage}
+			buttonLabel="Retry"
+			onButtonClick={loadData}
+			variant="error"
 		/>
 	{:else if data}
+		{#if isPyqEmpty}
+			<StateDisplay
+				title="No Previous Year Questions found"
+				message="Nothing matches your current filters. Try resetting or choose a different exam type or year."
+				buttonLabel="Reset filters"
+				onButtonClick={resetFiltersAndLoad}
+				variant="info"
+			/>
+		{:else}
 		<!-- Year-Wise Mock Tests -->
 		<section>
 			<div class="flex flex-wrap items-center justify-between gap-3">
@@ -189,5 +212,6 @@
 				<ArrowRight size={14} />
 			</Button>
 		</section>
+		{/if}
 	{/if}
 </div>
