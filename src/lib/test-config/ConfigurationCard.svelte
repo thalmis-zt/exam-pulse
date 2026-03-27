@@ -17,7 +17,8 @@
 	} = $props();
 
 	let selectedSubject = $state(null);
-	let selectedTopic = $state(null);
+	/** @type {import('$lib/test-config/mock/testConfig.schema.js').Topic | null} */
+	let selectedTopicOption = $state(null);
 	let selectedDifficulty = $state(null);
 	let questionCount = $state(25);
 	let enableNegativeMarking = $state(false);
@@ -30,13 +31,17 @@
 	const MIN_QUESTIONS = 5;
 	const MAX_QUESTIONS = 200;
 
+	const difficultyTabOptions = $derived(
+		difficultyLevels.map((l) => ({ value: l.id, label: l.label }))
+	);
+
 	// Watch for subject changes and load topics
 	$effect(async () => {
 		if (selectedSubject) {
 			isLoadingTopics = true;
 			try {
 				availableTopics = await getTopicsBySubject(selectedSubject);
-				selectedTopic = null; // Reset topic when subject changes
+				selectedTopicOption = null; // Reset topic when subject changes
 				formError = '';
 			} catch (error) {
 				console.error('Failed to load topics:', error);
@@ -55,7 +60,7 @@
 			formError = 'Please select a subject';
 			return;
 		}
-		if (!selectedTopic) {
+		if (!selectedTopicOption) {
 			formError = 'Please select a topic';
 			return;
 		}
@@ -76,10 +81,6 @@
 		};
 
 		onStartTest(config);
-	}
-
-	function handleQuestionCountChange(newValue) {
-		questionCount = newValue;
 	}
 </script>
 

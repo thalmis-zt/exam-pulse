@@ -8,6 +8,8 @@
 	import SubjectDeepDive from '$lib/quiz-summary/SubjectDeepDive.svelte';
 	import RecommendedMocksSection from '$lib/quiz-summary/RecommendedMocksSection.svelte';
 	import RankProgressBanner from '$lib/quiz-summary/RankProgressBanner.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import Error from '$lib/components/Error.svelte';
 
 	let { testId } = $props();
 	let data = $state(null);
@@ -15,7 +17,10 @@
 	let hasError = $state(false);
 	let errorMessage = $state('');
 
-	onMount(async () => {
+	async function loadQuizSummary() {
+		isLoading = true;
+		hasError = false;
+		errorMessage = '';
 		try {
 			data = await getQuizSummaryData(testId);
 		} catch (error) {
@@ -25,6 +30,10 @@
 		} finally {
 			isLoading = false;
 		}
+	}
+
+	onMount(() => {
+		loadQuizSummary();
 	});
 </script>
 
@@ -33,18 +42,18 @@
 		<SectionHeader title="Quiz Results" subtitle="Review your performance and insights" />
 
 		{#if isLoading}
-			<div class="flex flex-col items-center justify-center gap-3 py-12 min-h-[200px]">
-				<div
-					class="border-stroke border-t-primary h-8 w-8 animate-spin rounded-full border-4"
-				></div>
-				<p class="text-fg-muted text-sm">Loading quiz summary...</p>
+			<div class="flex min-h-[200px] flex-col items-center justify-center py-12">
+				<Spinner message="Loading quiz summary..." />
 			</div>
 		{:else if hasError}
-			<div
-				class="bg-surface-card border-stroke flex flex-col items-center justify-center gap-3 rounded-lg border p-4 py-12"
-			>
-				<p class="text-fg font-semibold">Something went wrong</p>
-				<p class="text-fg-muted text-center text-sm">{errorMessage}</p>
+			<div class="w-full px-4 sm:px-6">
+				<Error
+					title="Something went wrong"
+					subtitle={errorMessage}
+					showClose={false}
+					action={{ text: 'Retry', handler: loadQuizSummary }}
+					class="w-full"
+				/>
 			</div>
 		{:else if data}
 			<QuizResultsBanner

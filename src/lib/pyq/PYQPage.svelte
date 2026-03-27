@@ -9,6 +9,8 @@
 	import PYQTopicCard from '$lib/pyq/PYQTopicCard.svelte';
 	import PYQYearCard from '$lib/pyq/PYQYearCard.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import Error from '$lib/components/Error.svelte';
 
 	let data = $state(null);
 	let isLoading = $state(true);
@@ -94,20 +96,17 @@
 	/>
 
 	{#if isLoading}
-		<div class="flex flex-col items-center justify-center gap-3 py-12">
-			<div
-				class="w-8 h-8 border-4 border-stroke border-t-primary rounded-full animate-spin"
-			></div>
-			<p class="text-fg-muted text-sm">Loading PYQ...</p>
+		<div class="flex flex-col items-center justify-center py-12">
+			<Spinner message="Loading Previous Year Questions..." />
 		</div>
 	{:else if hasError}
-		<div
-			class="flex flex-col items-center justify-center gap-3 py-12 p-4 rounded-xl bg-surface-card border border-stroke"
-		>
-			<p class="text-fg font-semibold">Something went wrong</p>
-			<p class="text-fg-muted text-sm text-center">{errorMessage}</p>
-			<Button btnType="primary" onclick={loadData}>Retry</Button>
-		</div>
+		<Error
+			title="Something went wrong"
+			subtitle={errorMessage}
+			showClose={false}
+			action={{ text: 'Retry', handler: loadData }}
+			class="w-full"
+		/>
 	{:else if data}
 		<!-- Year-Wise Mock Tests -->
 		<section>
