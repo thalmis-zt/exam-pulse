@@ -1,5 +1,6 @@
 <script>
 	import { Clock, Zap } from '@lucide/svelte';
+	import Button from '$lib/components/Button.svelte';
 
 	/**
 	 * @typedef {Object} Props
@@ -47,10 +48,10 @@
 	class="
 		flex h-full min-h-44
 		flex-col
-		justify-between overflow-hidden rounded-2xl
+		justify-between overflow-hidden rounded-md
 		px-5 py-5
 		transition duration-(--motion-fast) ease-(--ease-standard)
-		hover:shadow-xl
+		hover:shadow-md
 	"
 >
 	<!-- Top: badge + title -->
@@ -60,7 +61,7 @@
 		>
 			Recommended
 		</span>
-		<h3 class="text-canvas-base-fixed m-0 text-xl leading-snug font-bold">
+		<h3 class="text-canvas-base-fixed m-0 text-base leading-snug font-bold">
 			{title}
 		</h3>
 	</div>
@@ -68,28 +69,24 @@
 	<!-- Bottom: meta stats + start button -->
 	<div class="flex items-center justify-between gap-4 mb-2 ">
 		<div class="flex items-center gap-5">
-			<span class="text-canvas-base-fixed/90 inline-flex items-center gap-1.5 text-sm">
+			<span class="text-canvas-base-fixed/90 inline-flex items-center gap-1.5 text-xs">
 				<Clock size={15} />{duration}
 			</span>
 			<span
-				class="text-canvas-base-fixed/90 inline-flex items-center gap-1.5 text-sm font-semibold"
+				class="text-canvas-base-fixed/90 inline-flex items-center gap-1.5 text-xs font-semibold"
 			>
 				<Zap size={15} style="color: {zapColor}; fill: {zapColor}" />
 				{xp} XP
 			</span>
 		</div>
 	</div>
-	<button
+	<Button
+		btnType="custom"
+		type="button"
+		customClass="shrink-0 cursor-pointer rounded-md bg-white px-5 py-2 text-sm font-bold hover:opacity-90 active:scale-95"
 		style="color: {btnTextColor[variant]}"
-		class="
-				shrink-0 cursor-pointer rounded-xl
-				bg-white px-5
-				py-2 text-sm font-bold
-				transition duration-(--motion-fast) ease-(--ease-standard)
-				hover:opacity-90 active:scale-95
-			"
 		{onclick}
 	>
 		Start
-	</button>
+	</Button>
 </article>

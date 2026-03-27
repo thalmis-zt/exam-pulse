@@ -3,6 +3,7 @@
 	import RecommendedMock from '$lib/components/RecommendedMock.svelte';
 	import MockTestCard from '$lib/components/MockTestCard.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Badge from '$lib/components/Badge.svelte';
 
 	/* ── Mock data (replace with server load data) ─────────── */
 	const recommended = [
@@ -71,7 +72,7 @@
 	let activeLevel = $state('All');
 </script>
 
-<div class="flex min-h-screen flex-col gap-8">
+<div class="flex flex-col gap-8">
 	<!-- ── Recommended For You ─────────────────────────────── -->
 	<section >
 		<SectionHeader
@@ -113,22 +114,18 @@
 	<section>
 		<!-- Header row: count + level filter -->
 		<div class="flex flex-wrap items-center justify-between gap-3">
-			<h2 class="text-fg-muted text-sm font-bold tracking-widest uppercase">
+			<h2 class="text-fg-muted text-xs font-bold tracking-widest uppercase">
 				All Mock Exams ({allMocks.length})
 			</h2>
 			<div class="text-fg-muted flex items-center gap-2 text-xs font-medium">
 				<span>LEVEL:</span>
 				{#each levels as lvl}
-					<button
+					<Badge
+						label={lvl}
+						size="sm"
+						isActive={activeLevel === lvl}
 						onclick={() => (activeLevel = lvl)}
-						class="
-							cursor-pointer rounded-full border-none px-2.5 py-1
-							transition duration-(--motion-fast)
-							{activeLevel === lvl ? 'bg-primary text-canvas-base-fixed' : 'text-fg-muted hover:text-fg bg-transparent'}
-						"
-					>
-						{lvl}
-					</button>
+z					/>
 				{/each}
 			</div>
 		</div>
@@ -136,23 +133,17 @@
 		<!-- Subject tabs -->
 		<div class="mt-4 flex flex-wrap gap-2">
 			{#each subjects as subj}
-				<button
+				<Badge
+					label={subj}
+					hasBorder={true}
+					isActive={activeSubject === subj}
 					onclick={() => (activeSubject = subj)}
-					class="
-						cursor-pointer rounded-full border px-4 py-1.5 text-sm
-						font-medium transition duration-(--motion-fast)
-						{activeSubject === subj
-						? 'bg-primary border-primary text-canvas-base-fixed'
-						: 'text-fg border-stroke hover:border-primary hover:text-primary bg-transparent'}
-					"
-				>
-					{subj}
-				</button>
+				/>
 			{/each}
 		</div>
 
 		<!-- Cards grid -->
-		<div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+		<div class="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
 			{#each allMocks as mock}
 				<MockTestCard
 					title={mock.title}
@@ -167,18 +158,6 @@
 
 		<!-- View All button -->
 		<div class="mt-6 flex justify-center">
-			<!-- <button
-				class="
-				border-primary text-primary hover:bg-primary
-				cursor-pointer rounded-xl
-				border bg-transparent px-10
-				py-3 text-sm
-				font-semibold transition duration-(--motion-fast)
-				ease-(--ease-standard) hover:text-white
-			"
-			>
-				View All Mock Tests
-			</button> -->
             <Button btnType="primaryLight">
                 View All Mock Tests
             </Button>

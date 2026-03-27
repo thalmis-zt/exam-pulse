@@ -14,6 +14,6 @@
 	{#if icon}
 		<span class="text-fg-muted mb-1 [&_svg]:size-4">{@render icon()}</span>
 	{/if}
-	<span class="text-lg font-bold text-fg">{value}</span>
-	<span class="text-xs text-fg-muted uppercase tracking-wide">{label}</span>
+	<span class="text-sm font-bold text-fg">{value}</span>
+	<span class="text-2xs text-fg-muted uppercase tracking-wide">{label}</span>
 </div>

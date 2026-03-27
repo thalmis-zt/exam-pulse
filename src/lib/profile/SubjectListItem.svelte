@@ -1,7 +1,6 @@
 <script>
 	import { BookOpen, ChevronRight } from '@lucide/svelte';
 
-	/** @type {{ subject: import('./mock/profile.schema.js').SubjectItem }} */
 	let { subject } = $props();
 </script>
 
@@ -16,8 +15,8 @@
 
 	<!-- Text -->
 	<div class="flex flex-col gap-0.5 flex-1 min-w-0">
-		<span class="text-base font-semibold text-fg truncate">{subject.name}</span>
-		<span class="text-sm text-fg-muted">{subject.grade} • {subject.lessons} Lessons</span>
+		<span class="text-sm font-semibold text-fg truncate">{subject.name}</span>
+		<span class="text-xs text-fg-muted">{subject.grade} • {subject.lessons} Lessons</span>
 	</div>
 
 	<!-- Chevron -->

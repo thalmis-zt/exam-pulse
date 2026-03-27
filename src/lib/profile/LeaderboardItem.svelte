@@ -1,7 +1,4 @@
 <script>
-	import { Star } from '@lucide/svelte';
-
-	/** @type {{ entry: import('./mock/profile.schema.js').LeaderboardEntry }} */
 	let { entry } = $props();
 
 	const initials = $derived(
@@ -15,14 +12,14 @@
 </script>
 
 <div
-	class="flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors
+	class="flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors
 		{entry.isCurrentUser
-		? 'bg-primary-light border border-primary/30'
+		? 'bg-primary-light border-primary/30 border'
 		: 'bg-canvas-base hover:bg-stroke/40'}"
 >
 	<!-- Rank -->
 	<span
-		class="text-sm font-bold shrink-0 w-5 text-center {entry.isCurrentUser
+		class="w-5 shrink-0 text-center text-sm font-semibold {entry.isCurrentUser
 			? 'text-primary'
 			: 'text-fg-muted'}"
 	>
@@ -31,34 +28,24 @@
 
 	<!-- Avatar -->
 	<div
-		class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold select-none
+		class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold select-none
 			{entry.isCurrentUser ? 'bg-primary text-canvas-base-fixed' : 'bg-stroke text-fg'}"
 	>
 		{#if entry.avatar}
-			<img src={entry.avatar} alt={entry.name} class="w-full h-full rounded-full object-cover" />
+			<img src={entry.avatar} alt={entry.name} class="h-full w-full rounded-full object-cover" />
 		{:else}
 			{initials}
 		{/if}
 	</div>
 
 	<!-- Name + XP -->
-	<div class="flex flex-col gap-0 flex-1 min-w-0">
-		<span
-			class="text-sm font-semibold truncate {entry.isCurrentUser ? 'text-primary' : 'text-fg'}"
-		>
+	<div class="flex min-w-0 flex-1 flex-col gap-0">
+		<span class="truncate text-sm font-semibold {entry.isCurrentUser ? 'text-primary' : 'text-fg'}">
 			{entry.name}
 			{#if entry.isCurrentUser}
-				<span class="text-xs font-normal text-fg-muted">(You)</span>
+				<span class="text-fg-muted text-xs font-normal">(You)</span>
 			{/if}
 		</span>
-		<span class="text-xs text-fg-muted">{entry.xp.toLocaleString()} XP</span>
+		<span class="text-fg-muted text-xs">{entry.xp.toLocaleString()} XP</span>
 	</div>
-
-	<!-- Star bookmark -->
-	<button
-		class="shrink-0 text-fg-muted hover:text-warning transition-colors bg-transparent border-none cursor-pointer p-1"
-		aria-label="Bookmark {entry.name}"
-	>
-		<Star size={15} />
-	</button>
 </div>

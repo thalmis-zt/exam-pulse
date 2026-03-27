@@ -6,7 +6,8 @@
 	 * @property {string} [avatarSrc] - URL to avatar image; falls back to initials
 	 */
 
-	/** @type {Props} */
+	import Badge from '$lib/components/Badge.svelte';
+
 	let { name, rank, avatarSrc } = $props();
 
 	const initials = $derived(
@@ -19,7 +20,7 @@
 	);
 </script>
 
-<div class="flex items-center justify-between px-5 py-4 bg-surface-card rounded-xl shadow-sm">
+<div class="flex flex-col 450px:flex-row items-start 450px:items-center gap-3 justify-between px-2 sm:px-5 py-4 bg-surface-card-subtle rounded-md shadow-sm">
 	<!-- Avatar + greeting -->
 	<div class="flex items-center gap-3">
 		{#if avatarSrc}
@@ -38,14 +39,15 @@
 
 		<div class="flex flex-col gap-0.5">
 			<p class="text-xs text-fg-muted leading-none font-sans">Welcome back,</p>
-			<h2 class="text-lg font-bold text-fg leading-tight font-poppins">{name}</h2>
+			<h2 class="text-base font-bold text-fg leading-tight font-poppins">{name}</h2>
 		</div>
 	</div>
 
 	<!-- Rank pill -->
-	<span
-		class="shrink-0 px-3 py-1 rounded-full border border-primary text-primary text-xs font-semibold whitespace-nowrap"
-	>
-		Rank #{rank.toLocaleString()}
-	</span>
+	<Badge
+		label="Rank #{rank.toLocaleString()}"
+		variant="primary"
+		size="sm"
+		hasBorder={true}
+	/>
 </div>

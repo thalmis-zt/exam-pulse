@@ -9,20 +9,16 @@
 	 * @property {() => void} [onclick]
 	 */
 
-	/** @type {Props} */
+	import Button from '$lib/components/Button.svelte';
+	import { ChevronRight } from '@lucide/svelte';
+
 	let { subject, testCount, icon, iconBg = 'bg-info-surface', iconColor = 'text-primary', onclick } = $props();
 </script>
 
-<button
-	class="
-		flex flex-col items-center justify-center gap-3
-		md:flex-row md:justify-between md:items-center
-		flex-1 min-w-0 py-5 px-3 md:px-4 md:py-4
-		bg-surface-card border border-stroke rounded-xl
-		cursor-pointer text-center md:text-left
-		transition duration-(--motion-fast) ease-(--ease-standard)
-		hover:border-primary hover:shadow-sm
-	"
+<Button
+	btnType="custom"
+	type="button"
+	customClass="flex flex-col items-center justify-center gap-3 md:flex-row md:justify-between md:items-center flex-1 min-w-0 py-5 px-3 md:px-4 md:py-4 bg-surface-card border border-stroke rounded-md text-center md:text-left hover:border-primary hover:shadow-sm"
 	{onclick}
 >
 	<!-- Icon + text group -->
@@ -41,15 +37,5 @@
 		</div>
 	</div>
 
-	<!-- Chevron (md+ only) -->
-	<svg
-		class="hidden md:block size-4 text-fg-muted shrink-0"
-		xmlns="http://www.w3.org/2000/svg"
-		fill="none"
-		viewBox="0 0 24 24"
-		stroke-width="2"
-		stroke="currentColor"
-	>
-		<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-	</svg>
-</button>
+	<ChevronRight class="hidden md:block size-4 text-fg-muted shrink-0" />
+</Button>
