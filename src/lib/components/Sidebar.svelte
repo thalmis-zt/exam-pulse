@@ -20,13 +20,16 @@
 		BookOpen,
 		PenLine,
 		ClipboardList,
-		FileText,
-		Star,
 		Target,
 		CircleUser,
 		ChevronLeft,
 		ChevronRight,
-		User
+		User,
+		Brain,
+		Bookmark,
+		TrendingDown,
+		Newspaper,
+		Clock
 	} from '@lucide/svelte';
 	import { page } from '$app/stores';
 	import SidebarItem from './SidebarItem.svelte';
@@ -42,18 +45,21 @@
 				label: 'Tests',
 				icon: BookOpen,
 				children: [
-					{ label: 'Practice', href: '/tests/create', icon: PenLine },
+					{ label: 'Practice', href: '/test-config', icon: PenLine },
 					{ label: 'Mock Tests', href: '/mock-tests', icon: ClipboardList },
-					{ label: 'PYQ Papers', href: '/pyq', icon: FileText }
+					{ label: 'PYQ Papers', href: '/pyq', icon: Newspaper },
+					{ label: 'History', href: '/test-history', icon: Clock }
 				]
 			},
-			{ label: 'Saved', href: '/saved-questions', icon: Star },
+			{
+				label: 'Questions',
+				icon: Brain,
+				children: [
+					{ label: 'Saved Questions', href: '/saved-questions', icon: Bookmark },
+					{ label: 'Mistake Logs', href: '/mistake-log', icon: TrendingDown }
+				]
+			},
 			{ label: 'Focus Areas', href: '/focus-areas', icon: Target },
-			{ label: 'Test History', href: '/test-history', icon: Target },
-			{ label: 'Mistake Logs', href: '/mistake-log', icon: Target },
-			{ label: 'Test Config', href: '/test-config', icon: Target },
-			{ label: 'Test Attempt', href: '/tests/2/attempt', icon: Target },
-			{ label: 'Test Result', href: '/tests/2/result', icon: Target },
 		]
 	} = $props();
 

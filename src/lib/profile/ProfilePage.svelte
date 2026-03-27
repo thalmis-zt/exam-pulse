@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { getProfileData } from '$lib/profile/mock/profile.service.js';
 	import { TrendingUp } from '@lucide/svelte';
 	import ProfileHeroCard from '$lib/profile/ProfileHeroCard.svelte';
@@ -19,6 +20,11 @@
 	let isLoading = $state(true);
 	let hasError = $state(false);
 	let errorMessage = $state('');
+
+	const handleSubjectClick = (subject) => {
+		const name = subject.name.toLowerCase().replace(/\s+/g, '-');
+		goto(`/subjects/${name}`);
+	};
 
 	onMount(async () => {
 		try {
@@ -76,7 +82,7 @@
 						<SectionHeader title="My Subjects" showAll onViewAll={() => {}} variant="sm" />
 						<div class="flex flex-col gap-2">
 							{#each data.subjects as subject (subject.id)}
-								<SubjectListItem {subject} />
+							<SubjectListItem {subject} onclick={() => handleSubjectClick(subject)} />
 							{/each}
 						</div>
 					</section>
