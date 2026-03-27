@@ -1,5 +1,6 @@
 <script>
 	import { BarChart3, Check, X, CircleDot, Medal, TrendingUp, Users } from '@lucide/svelte';
+	import IconHeading from '$lib/components/IconHeading.svelte';
 	import PerformanceMetricCard from '$lib/quiz-summary/PerformanceMetricCard.svelte';
 
 	/**
@@ -28,16 +29,9 @@
 </script>
 
 <section class="flex flex-col gap-4">
-	<!-- Header -->
-	<div class="flex items-center gap-2">
-		<div
-			class="flex items-center justify-center size-8 rounded-lg bg-info-surface text-primary shrink-0"
-			aria-hidden="true"
-		>
-			<BarChart3 size={20} />
-		</div>
-		<h2 class="text-base font-bold text-fg m-0">Performance Overview</h2>
-	</div>
+	<IconHeading title="Performance Overview" size="md">
+		{#snippet icon()}<BarChart3 size={20} />{/snippet}
+	</IconHeading>
 
 	<!-- Metrics grid: 2x3 on mobile, 3x2 on larger screens -->
 	<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">

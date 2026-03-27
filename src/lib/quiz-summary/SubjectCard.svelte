@@ -1,7 +1,7 @@
 <script>
 	import { Clock, BarChart3, Target } from '@lucide/svelte';
 	import Badge from '$lib/components/Badge.svelte';
-	import BadgeIcon from '$lib/components/BadgeIcon.svelte';
+	import IconHeading from '$lib/components/IconHeading.svelte';
 
 	const iconMap = { BarChart3, Target };
 
@@ -25,21 +25,16 @@
 		shadow-sm
 	"
 >
-	<!-- Header: BadgeIcon, subject name, time badge -->
+	<!-- Header: IconHeading + time badge -->
 	<div class="flex items-center justify-between gap-3 min-w-0">
-		<div class="flex items-center gap-2 min-w-0">
+		<div class="min-w-0 flex-1 overflow-hidden">
 			{#if IconComponent}
-				<BadgeIcon
-					label={subjectName}
-					variant="primary"
-					shape="square"
-					size="sm"
-					showLabel={false}
-				>
-					{#snippet icon()}<IconComponent size={20} />{/snippet}
-				</BadgeIcon>
+				<IconHeading title={subjectName} size="sm" class="min-w-0 [&_h2]:truncate">
+					{#snippet icon()}<IconComponent size={16} />{/snippet}
+				</IconHeading>
+			{:else}
+				<h3 class="m-0 truncate text-sm font-bold text-fg">{subjectName}</h3>
 			{/if}
-			<h3 class="text-base font-bold text-fg truncate m-0">{subjectName}</h3>
 		</div>
 		<Badge label={timeFormatted} variant="danger" size="sm">
 			{#snippet icon()}<Clock size={14} />{/snippet}
