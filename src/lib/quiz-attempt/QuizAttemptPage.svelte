@@ -152,10 +152,10 @@
 			/>
 		</div>
 	{:else if data}
-		<!-- Sidebar (full height) + Main content layout -->
-		<div class="flex min-h-screen w-full flex-1 flex-col lg:flex-row">
-			<!-- Desktop: Quiz navigation sidebar - full viewport height -->
-			<div class="hidden lg:flex lg:min-h-screen lg:shrink-0">
+		<!-- Sidebar + main: row from sm; below sm, question nav is the drawer only. -->
+		<div class="flex min-h-screen w-full flex-1 flex-col sm:flex-row">
+			<!-- Quiz navigation sidebar: tablet/desktop; hidden on xs (grid opens drawer) -->
+			<div class="hidden sm:flex sm:min-h-screen sm:shrink-0">
 				<QuizNavigationSidebar
 					questions={questionsWithStatus}
 					currentIndex={currentQuestionIndex}

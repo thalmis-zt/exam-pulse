@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation';
 	import { Zap, FileText, Target } from '@lucide/svelte';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import UserGreetingCard from '$lib/home/UserGreetingCard.svelte';
@@ -52,10 +53,22 @@
 
 	<!-- Action cards -->
 	<div class="450px:grid-cols-2 grid grid-cols-1 gap-3">
-		<ActionCard title="Practice" subtitle="Customized Questions" label="Start" variant="primary">
+		<ActionCard
+			title="Practice"
+			subtitle="Customized Questions"
+			label="Start"
+			variant="primary"
+			onclick={() => goto('/test-config')}
+		>
 			{#snippet icon()}<Zap size={28} />{/snippet}
 		</ActionCard>
-		<ActionCard title="Mock Tests" subtitle="Full Length Exams" label="Start" variant="success">
+		<ActionCard
+			title="Mock Tests"
+			subtitle="Full Length Exams"
+			label="Start"
+			variant="success"
+			onclick={() => goto('/mock-tests')}
+		>
 			{#snippet icon()}<FileText size={28} />{/snippet}
 		</ActionCard>
 	</div>
@@ -73,7 +86,7 @@
 			<QuickActionCard title="Quick Quiz" description="5-min challenge">
 				{#snippet icon()}<Zap size={22} />{/snippet}
 			</QuickActionCard>
-			<QuickActionCard title="PYQ Papers" description="PYQ Practice">
+			<QuickActionCard title="PYQ Papers" description="PYQ Practice" onclick={() => goto('/pyq')}>
 				{#snippet icon()}<Zap size={22} />{/snippet}
 			</QuickActionCard>
 			<QuickActionCard title="Daily Dare" description="Streak Challenge">
@@ -99,6 +112,7 @@
 				testCount={24}
 				iconBg="bg-subject-mathematics-surface"
 				iconColor="text-subject-mathematics"
+				onclick={()=>goto('/subjects/mathematics')} // Example onclick to navigate to focus areas page
 			>
 				{#snippet icon()}<FileText size={20} />{/snippet}
 			</SubjectFocusCard>
@@ -107,6 +121,7 @@
 				testCount={18}
 				iconBg="bg-subject-chemistry-surface"
 				iconColor="text-subject-chemistry"
+				onclick={()=>goto('/subjects/chemistry')} // Example onclick to navigate to focus areas page
 			>
 				{#snippet icon()}<Target size={20} />{/snippet}
 			</SubjectFocusCard>
@@ -115,6 +130,7 @@
 				testCount={12}
 				iconBg="bg-subject-physics-surface"
 				iconColor="text-subject-physics"
+				onclick={()=>goto('/subjects/physics')} // Example onclick to navigate to focus areas page
 			>
 				{#snippet icon()}<Zap size={20} />{/snippet}
 			</SubjectFocusCard>
@@ -140,6 +156,7 @@
 					questions={mock.questions}
 					users={mock.users}
 					xp={mock.xp}
+					onclick={() => goto(`/tests/${mock.id}/attempt`)} // Example onclick to navigate to mock tests page
 				/>
 			{/each}
 		</div>

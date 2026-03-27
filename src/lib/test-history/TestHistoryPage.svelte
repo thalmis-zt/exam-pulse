@@ -15,6 +15,7 @@
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 
 	// Loading & Error
 	let isInitialLoading = $state(true);
@@ -199,6 +200,7 @@
 	// ---------------------------- Test Actions ----------------------------
 	async function handleReview(testId) {
 		console.log('Review test:', testId);
+		goto(`/tests/${testId}/result`); // Navigate to review page
 	}
 
 	async function handleRetry(testId) {

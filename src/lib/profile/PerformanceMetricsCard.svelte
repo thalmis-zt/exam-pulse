@@ -4,6 +4,7 @@
 	import StatTile from '$lib/profile/StatTile.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
+	import { goto } from '$app/navigation';
 
 	let { stats, metrics } = $props();
 </script>
@@ -20,7 +21,7 @@
 			<StatTile value="{stats.accuracy}%" label="Accuracy" />
 			<StatTile value={stats.totalQuizzes} label="Total Quizzes" />
 			<div class="flex items-end pb-1">
-				<Button btnType="primaryLight" onclick={() => {}}>
+				<Button btnType="primaryLight" onclick={() => {goto('/test-history')}}>
 					<History size={14} />
 					History
 				</Button>
@@ -29,15 +30,15 @@
 
 		<div class="border-stroke border-t"></div>
 
-		<!-- Best Subject / Weakest Topic -->
+		<!-- Best Subject / Weakest Subject -->
 		<div class="grid grid-cols-2 gap-3">
 			<div class="flex flex-col gap-0.5">
 				<span class="text-fg-muted text-2xs tracking-wide uppercase">Best Subject</span>
 				<span class="text-fg text-sm font-semibold">{metrics.bestSubject}</span>
 			</div>
 			<div class="flex flex-col gap-0.5">
-				<span class="text-fg-muted text-2xs tracking-wide uppercase">Weakest Topic</span>
-				<span class="text-fg text-sm font-semibold">{metrics.weakestTopic}</span>
+				<span class="text-fg-muted text-2xs tracking-wide uppercase">Weakest Subject</span>
+				<span class="text-fg text-sm font-semibold">{metrics.weakestSubject || 'N/A'}</span>
 			</div>
 		</div>
 

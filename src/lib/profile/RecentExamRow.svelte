@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation';
 	import Badge from '$lib/components/Badge.svelte';
 
 	let { exam } = $props();
@@ -15,7 +16,7 @@
 <button
 	class="w-full flex items-center gap-3 px-3 py-3 rounded-md bg-canvas-base text-left hover:bg-stroke/40 transition-colors cursor-pointer border-none"
 	aria-label={exam.title}
-	onclick={() => {}}
+	onclick={() => {goto(`/tests/${exam.id}/result`)}}
 >
 	<!-- Score pill -->
 	<!-- <div
