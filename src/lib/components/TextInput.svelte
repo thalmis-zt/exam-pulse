@@ -39,14 +39,14 @@
 	const describedBy = $derived([error && `${inputId}-error`, hint && `${inputId}-hint`].filter(Boolean).join(' ') || undefined);
 
 	const styles = $derived.by(() => {
-		const base = 'flex items-center gap-2 rounded-lg border bg-transparent px-2 py-1.5 transition duration-(--motion-fast) ease-(--ease-standard)';
+		const base = 'flex items-center gap-2 rounded-lg border bg-transparent px-3 py-1 transition duration-(--motion-fast) ease-(--ease-standard)';
 		const state = hasError
 			? 'border-danger focus-within:ring-2 focus-within:ring-danger/20 focus-within:border-danger'
 			: 'border-stroke focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary';
 		const disabledStyle = disabled ? 'opacity-50 cursor-not-allowed' : '';
 		return {
 			container: `${base} ${state} ${disabledStyle}`.trim(),
-			label: 'text-sm font-medium text-fg',
+			label: 'text-xs font-medium text-fg',
 			iconWrapper: 'shrink-0 text-fg-muted [&_svg]:size-4',
 			input: 'min-w-0 flex-1 bg-transparent text-sm text-fg font-poppins outline-none border-none ring-0 focus:ring-0 focus:border-none placeholder:text-fg-muted disabled:cursor-not-allowed',
 			error: 'text-xs text-danger font-poppins',

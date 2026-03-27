@@ -12,9 +12,9 @@
 	} = $props();
 
 	const containerClasses = {
-		sm: 'min-h-9 gap-1 px-2 py-1',
-		md: 'min-h-10 gap-1.5 px-2.5 py-1.5',
-		lg: 'min-h-12 gap-2 px-3 py-2'
+		sm: 'min-h-9 gap-1 px-3 py-1',
+		md: 'min-h-10 gap-1.5 px-3 py-1',
+		lg: 'min-h-12 gap-2 px-3 py-1'
 	};
 	const iconSizes = { sm: 'size-3', md: 'size-4', lg: 'size-5' };
 	const inputSizes = { sm: 'text-xs', md: 'text-sm', lg: 'text-base' };
@@ -47,7 +47,7 @@
 		{className}
 	"
 >
-	<Search class="{iconSizes[variant] ?? iconSizes.md} shrink-0 text-fg-muted ml-2" />
+	<Search class="{iconSizes[variant] ?? iconSizes.md} shrink-0 text-fg-muted" />
 
 	<input
 		type="text"

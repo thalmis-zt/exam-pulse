@@ -10,7 +10,7 @@
 		const base = 'relative flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition duration-(--motion-fast) ease-(--ease-standard)';
 		return {
 			container: `flex flex-col gap-4 ${className}`.trim(),
-			label: 'text-sm font-medium text-fg',
+			label: 'text-xs font-medium text-fg',
 			card: (isActive) => `${base} ${isActive ? 'border-primary bg-primary-light/50' : 'border-stroke bg-surface-card hover:border-primary/50'}`,
 			checkmark: 'absolute right-3 top-3 flex size-6 items-center justify-center rounded-full bg-primary text-white',
 			icon: 'text-primary [&_svg]:size-6'

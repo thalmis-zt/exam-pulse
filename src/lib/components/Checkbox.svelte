@@ -40,7 +40,7 @@
 			transition duration-(--motion-fast) ease-(--ease-standard)
 		"
 	/>
-	<span class="text-sm text-fg">
+	<span class="text-xs text-fg">
 		{label}
 		{#if linkText}
 			{#if onLinkClick}

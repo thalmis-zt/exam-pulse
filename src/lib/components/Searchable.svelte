@@ -1,6 +1,6 @@
 <script>
 
-	import { Search, X, Check } from '@lucide/svelte';
+	import { Search, X, Check, ChevronDown } from '@lucide/svelte';
 	import { tick } from 'svelte';
 	let {
 		options = [],
@@ -171,20 +171,17 @@
 
 <div class="w-full">
 	{#if title}
-		<p
-			class="text-fg mb-1 block text-xs font-medium capitalize leading-5 sm:text-xs"
-		>
+		<p class="text-fg mb-2 block text-xs font-medium leading-5">
 			{title}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
 		</p>
 	{/if}
 
 	<div class="relative w-full" bind:this={dropDownRef}>
-		<!-- Input container - SearchBar  -->
 		<div
 			class="
-				flex items-center gap-1
-				border border-stroke rounded-full
-				bg-surface-card px-2 py-0.5
+				flex w-full items-center gap-2
+				border border-stroke rounded-lg
+				bg-surface-card px-3 py-1
 				shadow-sm
 				transition duration-(--motion-fast) ease-(--ease-standard)
 				text-sm text-fg
@@ -195,7 +192,7 @@
 				{validationErrors ? 'border-danger ring-1 ring-danger' : ''}
 			"
 		>
-			<Search class="size-4 ml-4 shrink-0 text-fg-muted" />
+			<Search class="size-4 shrink-0 text-fg-muted" />
 
 			<input
 				bind:this={inputRef}
@@ -221,7 +218,7 @@
 			/>
 
 			<!-- Right: loading | clear | chevron -->
-			<span class="flex shrink-0 items-center">
+			<span class="pointer-events-none ml-1 flex shrink-0 items-center gap-0.5">
 				{#if loading}
 					<span
 						class="size-4 animate-spin rounded-full border-2 border-primary border-t-transparent"
@@ -231,13 +228,19 @@
 					<span
 						role="button"
 						tabindex="0"
-						class="cursor-pointer rounded p-0.5 text-fg-muted hover:bg-canvas hover:text-fg"
+						class="pointer-events-auto cursor-pointer rounded p-0.5 text-fg-muted hover:bg-canvas hover:text-fg"
 						onclick={(e) => { e.stopPropagation(); handleClear(e); }}
 						onkeydown={(e) => { e.key === 'Enter' && handleClear(e); }}
 						aria-label="Clear selection"
 					>
 						<X size={16} />
 					</span>
+				{:else if !validationErrors}
+					<ChevronDown
+						size={16}
+						class="text-fg-muted transition-transform duration-(--motion-fast) {showDropdown ? 'rotate-180' : ''}"
+						aria-hidden="true"
+					/>
 				{/if}
 			</span>
 		</div>

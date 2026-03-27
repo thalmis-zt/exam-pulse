@@ -71,7 +71,7 @@
 				class="
 					flex w-full items-center justify-between gap-2
 					border border-stroke rounded-lg
-					bg-surface-card px-3 py-2.5
+					bg-surface-card px-3 py-3
 					shadow-sm
 					transition duration-(--motion-fast) ease-(--ease-standard)
 					text-sm text-fg outline-none
@@ -117,7 +117,7 @@
 						</span>
 					{:else if !validationErrors}
 						<ChevronDown
-							size={18}
+							size={16}
 							class="text-fg-muted transition-transform duration-(--motion-fast) {showDropdown ? 'rotate-180' : ''}"
 						/>
 					{/if}

@@ -25,7 +25,7 @@
 		const base = 'inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition duration-(--motion-fast) ease-(--ease-standard)';
 		return {
 			container: `flex flex-col gap-4 ${className}`.trim(),
-			label: 'text-sm font-medium text-fg',
+			label: 'text-xs font-medium text-fg',
 			chip: (isActive) => `${base} ${isActive ? 'border-primary bg-primary-light text-primary' : 'border-stroke bg-surface-card text-fg hover:border-primary/50'}`,
 			hint: 'text-xs text-fg-muted'
 		};

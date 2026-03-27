@@ -28,7 +28,7 @@
 
 	const containerStyles = $derived.by(() => {
 		const base =
-			'flex items-center gap-2 rounded-lg border bg-transparent px-2 py-1.5 pr-10 transition duration-(--motion-fast) ease-(--ease-standard)';
+			'flex items-center gap-2 rounded-lg border bg-transparent px-3 py-1 pr-10 transition duration-(--motion-fast) ease-(--ease-standard)';
 		const state = hasError
 			? 'border-danger focus-within:ring-2 focus-within:ring-danger/20 focus-within:border-danger'
 			: 'border-stroke focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary';
@@ -39,7 +39,7 @@
 
 <div class="flex flex-col gap-2 {className}">
 	{#if label}
-		<label for={inputId} class="text-sm font-medium text-fg">
+		<label for={inputId} class="text-xs font-medium text-fg">
 			{label}
 			{#if required}<span class="text-danger" aria-hidden="true">*</span>{/if}
 		</label>
