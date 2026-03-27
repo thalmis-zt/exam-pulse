@@ -6,6 +6,8 @@
 	} from '$lib/test-config/mock/testConfig.service.js';
 	import ConfigurationCard from '$lib/test-config/ConfigurationCard.svelte';
 	import GuidelinesCard from '$lib/test-config/GuidelinesCard.svelte';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import Error from '$lib/components/Error.svelte';
 
 	let subjects = $state([]);
 	let difficultyLevels = $state([]);
@@ -39,61 +41,45 @@
 		}
 	}
 
-	// -------------------------- Life Cycle ---------------------------------
-		onMount(async () => {
+	async function loadTestConfig() {
+		isLoading = true;
+		hasError = false;
+		errorMessage = '';
 		try {
 			const config = await getTestConfigData();
 			subjects = config.subjects;
 			difficultyLevels = config.difficultyLevels;
 			examGuidelines = config.examGuidelines;
-			isLoading = false;
 		} catch (error) {
 			console.error('Failed to load test configuration:', error);
 			hasError = true;
 			errorMessage = error?.message || 'Failed to load test configuration. Please try again.';
+		} finally {
 			isLoading = false;
 		}
+	}
+
+	onMount(() => {
+		loadTestConfig();
 	});
 </script>
 
-<!-- Use generic Loader and Error Components once the reusable components are merged -->
 <div class="transition duration-motion-normal ease-ease-standard">
 	<div class="">
 		<div>
 			{#if isLoading}
-				<!-- Loading state -->
-				<div class="flex flex-col items-center justify-center gap-3 py-12">
-					<div class="w-8 h-8 border-4 border-border border-t-primary rounded-full animate-spin"></div>
-					<p class="text-fg-muted text-sm">Loading test configuration...</p>
+				<div class="flex flex-col items-center justify-center py-12">
+					<Spinner message="Loading test configuration..." />
 				</div>
 			{:else if hasError}
-				<!-- Error state -->
-				<div
-					class="flex flex-col items-center justify-center gap-3 py-12 p-4 rounded-lg bg-surface-card border border-border"
-				>
-					<p class="text-fg font-semibold">Something went wrong</p>
-					<p class="text-fg-muted text-sm text-center">{errorMessage}</p>
-					<button
-						onclick={async () => {
-							isLoading = true;
-							hasError = false;
-							errorMessage = '';
-							try {
-								const config = await getTestConfigData();
-								subjects = config.subjects;
-								difficultyLevels = config.difficultyLevels;
-								examGuidelines = config.examGuidelines;
-								isLoading = false;
-							} catch (error) {
-								hasError = true;
-								errorMessage = error?.message || 'Failed to load test configuration.';
-								isLoading = false;
-							}
-						}}
-						class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover transition duration-motion-normal ease-ease-standard"
-					>
-						Retry
-					</button>
+				<div class="w-full px-4 sm:px-6">
+					<Error
+						title="Something went wrong"
+						subtitle={errorMessage}
+						showClose={false}
+						action={{ text: 'Retry', handler: loadTestConfig }}
+						class="w-full"
+					/>
 				</div>
 			{:else}
 				<!-- Content -->

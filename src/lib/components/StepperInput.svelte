@@ -7,11 +7,17 @@
 		min = 0,
 		max = 99,
 		step = 1,
+		title = '',
+		required = false,
 		label = '',
 		unit = '',
 		disabled = false,
-		onChange
+		onChange,
+		class: className = ''
 	} = $props();
+
+	const titleId = `stepper-label-${crypto.randomUUID()}`;
+	const headingText = $derived((title || label).trim());
 
 	let inputStr = $state('');
 	let isFocused = $state(false);
@@ -69,14 +75,16 @@
 	}
 </script>
 
-<div class="w-full">
-	{#if label}
-		<p class="text-fg mb-1 block text-xs font-medium capitalize leading-5 sm:text-xs">
-			{label}
+<div class="w-full min-w-0 {className}">
+	{#if headingText}
+		<p id={titleId} class="text-fg mb-2 block text-sm font-medium leading-5">
+			{headingText}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
 		</p>
 	{/if}
 
 	<div
+		role="group"
+		aria-labelledby={headingText ? titleId : undefined}
 		class="
 			flex items-center
 			rounded-full border border-stroke
@@ -109,7 +117,7 @@
 				inputmode="numeric"
 				pattern="[0-9]*"
 				class="
-					text-fg w-14 border-none bg-transparent p-0 text-center text-base font-semibold
+					text-fg w-14 border-none bg-transparent p-0 text-center text-sm font-semibold
 					outline-none focus:outline-none focus:ring-0 focus:border-none focus:shadow-none
 					[&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none
 				"

@@ -1,9 +1,11 @@
 <script>
-	import { Zap } from '@lucide/svelte';
+	import { Zap, BookOpen } from '@lucide/svelte';
 	import { getTopicsBySubject } from '$lib/test-config/mock/testConfig.service.js';
 	import Button from '$lib/components/Button.svelte';
-	import NumberStepper from '$lib/components/NumberStepper.svelte';
+	import Dropdown from '$lib/components/Dropdown.svelte';
+	import StepperInput from '$lib/components/StepperInput.svelte';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
+	import Tabs from '$lib/components/Tabs.svelte';
 	import SubjectCard from '$lib/test-config/SubjectCard.svelte';
 	import NegativeMarkingCard from '$lib/test-config/NegativeMarkingCard.svelte';
 
@@ -14,12 +16,9 @@
 		isLoading = false
 	} = $props();
 
-	$effect(() => {
-		console.log('subjects', subjects);
-	});
-
 	let selectedSubject = $state(null);
-	let selectedTopic = $state(null);
+	/** @type {import('$lib/test-config/mock/testConfig.schema.js').Topic | null} */
+	let selectedTopicOption = $state(null);
 	let selectedDifficulty = $state(null);
 	let questionCount = $state(25);
 	let enableNegativeMarking = $state(false);
@@ -32,13 +31,17 @@
 	const MIN_QUESTIONS = 5;
 	const MAX_QUESTIONS = 100;
 
+	const difficultyTabOptions = $derived(
+		difficultyLevels.map((l) => ({ value: l.id, label: l.label }))
+	);
+
 	// Watch for subject changes and load topics
 	$effect(async () => {
 		if (selectedSubject) {
 			isLoadingTopics = true;
 			try {
 				availableTopics = await getTopicsBySubject(selectedSubject);
-				selectedTopic = null; // Reset topic when subject changes
+				selectedTopicOption = null; // Reset topic when subject changes
 				formError = '';
 			} catch (error) {
 				console.error('Failed to load topics:', error);
@@ -57,7 +60,7 @@
 			formError = 'Please select a subject';
 			return;
 		}
-		if (!selectedTopic) {
+		if (!selectedTopicOption) {
 			formError = 'Please select a topic';
 			return;
 		}
@@ -70,7 +73,7 @@
 
 		const config = {
 			subjectId: selectedSubject,
-			topicId: selectedTopic,
+			topicId: selectedTopicOption.id,
 			difficultyId: selectedDifficulty,
 			questionCount,
 			enableNegativeMarking,
@@ -78,10 +81,6 @@
 		};
 
 		onStartTest(config);
-	}
-
-	function handleQuestionCountChange(newValue) {
-		questionCount = newValue;
 	}
 </script>
 
@@ -109,63 +108,45 @@
 
 		<!-- Topic, Difficulty Level, and Questions Row -->
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-			<!-- Topic Selection, Replace with dropdown reusable compoenent -->
-			<div class="space-y-2">
-				<label
-					for="topic-select"
-					class="text-fg text-2xs mb-2 inline-block font-medium tracking-wider"
-					>Topic / Chapter *</label
-				>
-				<select
-					id="topic-select"
-					bind:value={selectedTopic}
-					disabled={!selectedSubject || isLoadingTopics}
-					class="border-stroke bg-surface-card text-fg focus:border-primary duration-motion-normal ease-ease-standard w-full rounded-lg border px-4 py-1.5 text-sm transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-				>
-					<option value={null}>
-						{isLoadingTopics ? 'Loading topics...' : 'Select a topic'}
-					</option>
-					{#each availableTopics as topic (topic.id)}
-						<option value={topic.id}>{topic.name}</option>
-					{/each}
-				</select>
-			</div>
+			<Dropdown
+				title="Topic / Chapter"
+				required
+				options={availableTopics}
+				bind:value={selectedTopicOption}
+				placeholder={!selectedSubject
+					? 'Select a subject first'
+					: isLoadingTopics
+						? 'Loading topics...'
+						: 'Select a topic'}
+				disabled={!selectedSubject || isLoadingTopics}
+				loading={isLoadingTopics}
+				onSelect={() => {
+					formError = '';
+				}}
+			>
+				{#snippet icon()}<BookOpen size={16} />{/snippet}
+			</Dropdown>
 
-			<!-- Difficulty Level replace with tabs component -->
-			<div class="space-y-2">
-				<span class="text-fg text-2xs mb-2 inline-block font-medium tracking-wider">
-					Difficulty Level *
-				</span>
+			<Tabs
+				title="Difficulty Level"
+				required
+				size="sm"
+				options={difficultyTabOptions}
+				selected={selectedDifficulty}
+				onSelect={(id) => {
+					selectedDifficulty = id;
+					formError = '';
+				}}
+			/>
 
-				<!-- Segmented control container -->
-				<div class="bg-stroke/80 flex rounded-full p-1">
-					{#each difficultyLevels as level (level.id)}
-						<button
-							type="button"
-							onclick={() => (selectedDifficulty = level.id)}
-							class={`text-2xs flex-1 rounded-full px-2 py-1 font-medium transition
-							${
-								selectedDifficulty === level.id
-									? 'text-primary bg-white shadow-sm'
-									: 'text-fg-muted hover:text-fg'
-							}`}
-							aria-pressed={selectedDifficulty === level.id}
-							title={level.description}
-						>
-							{level.label}
-						</button>
-					{/each}
-				</div>
-			</div>
-
-			<!-- Number of Questions replace with number stepper reusable component -->
-			<NumberStepper
-				value={questionCount}
+			<StepperInput
+				title="Number of Questions"
+				required
+				bind:value={questionCount}
 				min={MIN_QUESTIONS}
 				max={MAX_QUESTIONS}
-				label="Number of Questions *"
-				suffix="Items"
-				onchange={handleQuestionCountChange}
+				step={1}
+				unit="Items"
 			/>
 		</div>
 
