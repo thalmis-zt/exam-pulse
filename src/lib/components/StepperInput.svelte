@@ -13,7 +13,6 @@
 		unit = '',
 		disabled = false,
 		onChange,
-		required = false
 		class: className = ''
 	} = $props();
 

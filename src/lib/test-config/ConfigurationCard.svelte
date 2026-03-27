@@ -17,7 +17,7 @@
 	} = $props();
 
 	let selectedSubject = $state(null);
-	/** @type {import('$lib/test-config/mock/testConfig.schema.js').Topic | null} */
+
 	let selectedTopicOption = $state(null);
 	let selectedDifficulty = $state(null);
 	let questionCount = $state(25);
@@ -73,7 +73,7 @@
 
 		const config = {
 			subjectId: selectedSubject,
-			topicId: selectedTopic?.id ?? selectedTopic,
+			topicId: selectedTopicOption?.id ?? selectedTopicOption,
 			difficultyId: selectedDifficulty,
 			questionCount,
 			enableNegativeMarking,
@@ -98,7 +98,7 @@
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
 			<Dropdown
 				title="Topic / Chapter"
-				bind:value={selectedTopic}
+				bind:value={selectedTopicOption}
 				options={availableTopics}
 				placeholder="Select a topic"
 				disabled={!selectedSubject || isLoadingTopics}
@@ -113,7 +113,6 @@
 				label="Number of Questions"
 				unit="Questions"
 				required={true}
-				onChange={handleQuestionCountChange}
 			/>
 
 			<!-- Difficulty Level replace with tabs component -->
