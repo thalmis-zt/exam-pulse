@@ -51,11 +51,11 @@
 			subjects = config.subjects;
 			difficultyLevels = config.difficultyLevels;
 			examGuidelines = config.examGuidelines;
-			isLoading = false;
 		} catch (error) {
 			console.error('Failed to load test configuration:', error);
 			hasError = true;
 			errorMessage = error?.message || 'Failed to load test configuration. Please try again.';
+		} finally {
 			isLoading = false;
 		}
 	}
