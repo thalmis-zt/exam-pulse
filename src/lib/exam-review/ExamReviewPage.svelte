@@ -2,15 +2,15 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import {
-		ArrowLeft,
 		ChevronDown,
 		ChevronLeft,
 		ChevronRight,
 		Clock,
 		ClipboardList,
+		Eye,
 		Filter,
+		LayoutGrid,
 		LayoutList,
-		SquareStack,
 		Calendar,
 		X
 	} from '@lucide/svelte';
@@ -18,12 +18,14 @@
 	import ExamReviewQuestionBlock from '$lib/exam-review/ExamReviewQuestionBlock.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import IconButton from '$lib/components/IconButton.svelte';
+	import Tabs from '$lib/components/Tabs.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import Error from '$lib/components/Error.svelte';
-	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import FilterPanel from '$lib/components/FilterPanel.svelte';
 	import Badge from '$lib/components/Badge.svelte';
+	import QuizNavigationSidebar from '$lib/quiz-attempt/QuizNavigationSidebar.svelte';
+	import QuizNavigationDrawer from '$lib/quiz-attempt/QuizNavigationDrawer.svelte';
 
 	/** @type {readonly { id: string, label: string, value: 'all' | 'correct' | 'incorrect' | 'unanswered' }[]} */
 	const RESULT_FILTER_OPTIONS = [
@@ -58,6 +60,8 @@
 
 	/** @type {Record<string, boolean>} */
 	let revealedByQuestionId = $state({});
+
+	let navDrawerOpen = $state(false);
 
 	/**
 	 * @param {import('$lib/quiz-attempt/mock/quiz-attempt.schema.js').Question} q
@@ -142,6 +146,24 @@
 		RESULT_FILTER_OPTIONS.find((o) => o.value === outcomeFilter)?.label ?? 'All'
 	);
 
+	/** Full exam grid for nav: maps review outcomes to grid status styles */
+	const questionsForNavGrid = $derived.by(() => {
+		if (!data) return [];
+		const curId = viewMode === 'single' ? currentQuestion?.id : null;
+		return data.questions.map((q) => {
+			const oc = outcomeForQuestion(q, data);
+			let status =
+				oc === 'correct' ? 'answered' : oc === 'incorrect' ? 'wrong' : 'not-visited';
+			if (curId && q.id === curId) status = 'current';
+			return { id: q.id, index: q.index, status };
+		});
+	});
+
+	/** 1-based question # for grid “current”; 0 = none highlighted */
+	const navGridCurrentIndex = $derived(
+		viewMode === 'single' ? (currentQuestion?.index ?? 0) : 0
+	);
+
 	$effect(() => {
 		if (showFilters) {
 			const opt =
@@ -216,82 +238,109 @@
 		outcomeFilter = 'all';
 	}
 
+	function handleNavSelectQuestion(questionId) {
+		const idx = data?.questions.findIndex((q) => q.id === questionId) ?? -1;
+		if (idx < 0 || !data) return;
+		viewMode = 'single';
+		currentIndex = idx;
+		showFilters = false;
+	}
+
+	function exitReviewToResults() {
+		goto(`/tests/${examAttemptId}/result`);
+		navDrawerOpen = false;
+	}
+
 	onMount(load);
 </script>
 
-<div class="flex flex-col gap-6">
-	<button
-		type="button"
-		class="inline-flex w-fit cursor-pointer items-center gap-2 rounded-sm border-none bg-transparent p-0 text-sm font-medium text-primary hover:underline"
-		onclick={() => goto(`/tests/${examAttemptId}/result`)}
-	>
-		<ArrowLeft size={16} aria-hidden="true" />
-		Back to results
-	</button>
-
+<div class="flex min-h-0 flex-1 flex-col">
 	{#if isLoading}
-		<div class="flex min-h-[200px] flex-col items-center justify-center py-12">
+		<div class="flex min-h-[200px] flex-1 flex-col items-center justify-center px-4 py-12 sm:px-6">
 			<Spinner message="Loading review..." />
 		</div>
 	{:else if hasError}
-		<Error
-			title="Unable to load review"
-			subtitle={errorMessage}
-			showClose={false}
-			action={{ text: 'Retry', handler: load }}
-			class="w-full"
-		/>
+		<div class="px-4 pt-6 sm:px-6">
+			<Error
+				title="Unable to load review"
+				subtitle={errorMessage}
+				showClose={false}
+				action={{ text: 'Retry', handler: load }}
+				class="w-full"
+			/>
+		</div>
 	{:else if data}
-		<SectionHeader
-			title={data.title}
-			subtitle={data.section ? data.section : 'Review your answers'}
-		/>
+		<div
+			class="flex min-h-0 w-full flex-1 flex-col sm:flex-row sm:items-stretch sm:gap-0"
+		>
+			<div class="hidden min-h-0 self-stretch sm:flex">
+				<QuizNavigationSidebar
+					variant="review"
+					showFooterLinks={true}
+					showInstructions={false}
+					exitLabel="Back to results"
+					onQuitAttempt={exitReviewToResults}
+					questions={questionsForNavGrid}
+					currentIndex={navGridCurrentIndex}
+					onSelectQuestion={handleNavSelectQuestion}
+					title="Review navigation"
+					legendVariant="review"
+					reviewCounts={{
+						correct: data.correctCount,
+						wrong: data.wrongCount,
+						unanswered: data.unansweredCount
+					}}
+				/>
+			</div>
 
-		<!-- Exam metadata -->
-		<div class="flex flex-wrap items-center gap-2" role="list" aria-label="Exam summary">
-			<Badge label="Correct: {data.correctCount}" variant="success" size="sm" />
-			<Badge label="Wrong: {data.wrongCount}" variant="danger" size="sm" />
-			<Badge label="Unanswered: {data.unansweredCount}" variant="default" size="sm" />
-			<Badge label="Duration: {durationLabel}" variant="default" size="sm">
-				{#snippet icon()}<Clock size={14} aria-hidden="true" />{/snippet}
-			</Badge>
-			{#if completedLabel}
-				<Badge label="Completed: {completedLabel}" variant="default" size="sm">
-					{#snippet icon()}<Calendar size={14} aria-hidden="true" />{/snippet}
-				</Badge>
-			{/if}
-			<Badge label="{data.totalQuestions} questions" variant="primary" size="sm">
-				{#snippet icon()}<ClipboardList size={14} aria-hidden="true" />{/snippet}
-			</Badge>
-		</div>
-
-		<!-- View mode -->
-		<div class="flex flex-wrap items-center gap-2">
-			<Button
-				btnType={viewMode === 'single' ? 'primary' : 'ghost'}
-				type="button"
-				onclick={() => {
-					viewMode = 'single';
-					showFilters = false;
-				}}
-				customClass="gap-2"
+			<div
+				class="flex min-h-0 min-w-0 flex-1 flex-col gap-4 px-4 pb-6 pt-4 sm:gap-5 sm:px-6 sm:pb-8 sm:pt-5"
 			>
-				<SquareStack size={16} />
-				Question by question
-			</Button>
-			<Button
-				btnType={viewMode === 'list' ? 'primary' : 'ghost'}
-				type="button"
-				onclick={() => {
-					viewMode = 'list';
-					listPage = 1;
-				}}
-				customClass="gap-2"
+		<header class="flex flex-col gap-1.5">
+			<div class="flex flex-wrap items-start justify-between gap-3">
+				<h2 class="min-w-0 flex-1 text-base font-bold text-fg sm:text-lg">{data.title}</h2>
+				<div class="flex shrink-0 items-center gap-2">
+					<IconButton
+						class="sm:hidden shrink-0"
+						icon={LayoutGrid}
+						ariaLabel="Open question navigation"
+						variant="outline"
+						size="md"
+						onclick={() => (navDrawerOpen = true)}
+					/>
+					<Tabs
+						variant="segmented"
+						class="shrink-0"
+						ariaLabel="Review view mode"
+						options={[
+							{ label: 'One-by-one', value: 'single', icon: Eye },
+							{ label: 'List view', value: 'list', icon: LayoutList }
+						]}
+						selected={viewMode}
+						onSelect={(v) => {
+							viewMode = /** @type {'single' | 'list'} */ (v);
+							if (viewMode === 'list') listPage = 1;
+							else showFilters = false;
+						}}
+					/>
+				</div>
+			</div>
+			<div
+				class="flex flex-wrap items-center gap-x-5 gap-y-0.5 text-sm text-fg-muted"
+				aria-label="Exam duration and completion time"
 			>
-				<LayoutList size={16} />
-				All questions
-			</Button>
-		</div>
+				<span class="inline-flex items-center gap-1.5">
+					<Clock size={16} class="shrink-0" aria-hidden="true" />
+					<span>{durationLabel}</span>
+				</span>
+				{#if completedLabel}
+					<span class="inline-flex items-center gap-1.5">
+						<Calendar size={16} class="shrink-0" aria-hidden="true" />
+						<span>{completedLabel}</span>
+					</span>
+				{/if}
+			</div>
+		</header>
 
 		<!-- Search & result filter: only for “All questions” -->
 		{#if viewMode === 'list'}
@@ -391,17 +440,19 @@
 			<div class="flex flex-col gap-3">
 				{#each listPageQuestions as q (q.id)}
 					{@const oc = outcomeForQuestion(q, data)}
-					{@const preview = q.text.length > 100 ? `${q.text.slice(0, 100)}…` : q.text}
 					<details
 						open
 						class="group overflow-hidden rounded-lg border border-stroke bg-surface-card shadow-sm"
 					>
 						<summary
-							class="flex cursor-pointer list-none items-center justify-between gap-3 bg-surface-card-subtle px-4 py-3 text-left [&::-webkit-details-marker]:hidden"
+							class="flex cursor-pointer list-none items-start justify-between gap-3 bg-surface-card-subtle px-4 py-3 text-left [&::-webkit-details-marker]:hidden"
 						>
-							<div class="flex min-w-0 flex-1 flex-col gap-1">
+							<div class="flex min-w-0 flex-1 flex-col gap-1.5">
+								<p class="m-0 line-clamp-3 text-sm leading-snug text-fg">
+									<span class="font-bold tabular-nums">Q{q.index}.</span>
+									{' '}{q.text}
+								</p>
 								<div class="flex flex-wrap items-center gap-2">
-									<span class="text-sm font-bold text-fg">Q{q.index}</span>
 									<Badge label={q.subject} variant="primary" size="sm" />
 									{#if oc === 'correct'}
 										<span class="text-xs font-semibold text-success">Correct</span>
@@ -411,7 +462,6 @@
 										<span class="text-xs font-medium text-fg-muted">Unanswered</span>
 									{/if}
 								</div>
-								<p class="m-0 line-clamp-2 text-xs text-fg-muted">{preview}</p>
 							</div>
 							<span
 								class="inline-flex shrink-0 text-fg-muted transition-transform duration-(--motion-fast) ease-(--ease-standard) group-open:rotate-180"
@@ -467,5 +517,26 @@
 				</div>
 			{/if}
 		{/if}
+			</div>
+		</div>
+
+		<QuizNavigationDrawer
+			open={navDrawerOpen}
+			onClose={() => (navDrawerOpen = false)}
+			showFooterLinks={true}
+			showInstructions={false}
+			exitLabel="Back to results"
+			onQuitAttempt={exitReviewToResults}
+			questions={questionsForNavGrid}
+			currentIndex={navGridCurrentIndex}
+			onSelectQuestion={handleNavSelectQuestion}
+			title="Review navigation"
+			legendVariant="review"
+			reviewCounts={{
+				correct: data.correctCount,
+				wrong: data.wrongCount,
+				unanswered: data.unansweredCount
+			}}
+		/>
 	{/if}
 </div>

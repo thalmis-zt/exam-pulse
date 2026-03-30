@@ -7,6 +7,8 @@
 		current: 'border-primary bg-primary text-canvas-base-fixed',
 		answered: 'border-secondary bg-secondary text-fg',
 		marked: 'border-flagged bg-flagged text-fg',
+		/** Incorrect answer (e.g. exam review) */
+		wrong: 'border-danger bg-danger text-canvas-base-fixed',
 		'not-visited': 'border-stroke bg-stroke/30 text-fg-muted'
 	};
 

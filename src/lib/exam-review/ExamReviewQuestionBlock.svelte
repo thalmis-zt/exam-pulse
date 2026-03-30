@@ -59,11 +59,8 @@
 			<p class="min-w-0 flex-1 text-base leading-relaxed text-fg">{question.text}</p>
 		</div>
 
-		{#if !revealed}
-			<div class="flex flex-col gap-3">
-				<p class="m-0 text-xs font-semibold uppercase tracking-wide text-fg-muted">
-					Answer choices (correct answer hidden)
-				</p>
+		<div class="flex flex-col gap-3">
+			{#if !revealed}
 				<div class="grid grid-cols-1 gap-3 sm:grid-cols-2" role="list">
 					{#each question.options as opt (opt.label)}
 						{@const isUserPick = userAnswer != null && opt.label === userAnswer}
@@ -80,26 +77,33 @@
 				{#if userAnswer == null}
 					<p class="m-0 text-sm text-fg-muted">You did not select an answer for this question.</p>
 				{/if}
-				<Button btnType="ghost" type="button" onclick={onReveal} customClass="w-full sm:w-auto self-start">
-					<Eye size={16} />
-					Reveal answer
-				</Button>
-			</div>
-		{:else}
-			<div class="grid grid-cols-1 gap-3 sm:grid-cols-2" role="list">
-				{#each question.options as opt (opt.label)}
-					{@const isCorrectOpt = opt.label === correctLabel}
-					{@const isUserPick = userAnswer != null && opt.label === userAnswer}
-					<OptionButton
-						readonly
-						label={opt.label}
-						text={opt.text}
-						reviewVariant={isCorrectOpt ? 'correct' : isUserPick && !isCorrectOpt ? 'wrongPick' : 'neutral'}
-						endLabel={isCorrectOpt ? 'Correct' : isUserPick && !isCorrectOpt ? 'Your choice' : ''}
-						endLabelTone={isCorrectOpt ? 'success' : isUserPick && !isCorrectOpt ? 'danger' : 'muted'}
-					/>
-				{/each}
-			</div>
-		{/if}
+			{:else}
+				<div class="grid grid-cols-1 gap-3 sm:grid-cols-2" role="list">
+					{#each question.options as opt (opt.label)}
+						{@const isCorrectOpt = opt.label === correctLabel}
+						{@const isUserPick = userAnswer != null && opt.label === userAnswer}
+						<OptionButton
+							readonly
+							label={opt.label}
+							text={opt.text}
+							reviewVariant={isCorrectOpt ? 'correct' : isUserPick && !isCorrectOpt ? 'wrongPick' : 'neutral'}
+							endLabel={isCorrectOpt ? 'Correct' : isUserPick && !isCorrectOpt ? 'Your choice' : ''}
+							endLabelTone={isCorrectOpt ? 'success' : isUserPick && !isCorrectOpt ? 'danger' : 'muted'}
+						/>
+					{/each}
+				</div>
+			{/if}
+			<Button
+				btnType="ghost"
+				type="button"
+				disabled={revealed}
+				onclick={onReveal}
+				customClass="w-full sm:w-auto self-start"
+				aria-pressed={revealed}
+			>
+				<Eye size={16} aria-hidden="true" />
+				{revealed ? 'Answer revealed' : 'Reveal answer'}
+			</Button>
+		</div>
 	</div>
 </div>

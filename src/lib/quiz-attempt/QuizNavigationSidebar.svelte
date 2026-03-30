@@ -9,19 +9,33 @@
 		currentIndex = 1,
 		onSelectQuestion,
 		onQuizInstructions,
-		onQuitAttempt
+		onQuitAttempt,
+		title = 'Quiz Navigation',
+		legendVariant = 'attempt',
+		instructionsLabel = 'Quiz Instructions',
+		exitLabel = 'Quit Attempt',
+		/** Tighter rail when nested next to main app sidebar (e.g. exam review) */
+		variant = 'attempt',
+		/** Instructions + exit row */
+		showFooterLinks = true,
+		/** Set false on exam review to show only “Back to results”. */
+		showInstructions = true,
+		/** Passed to `QuizStatusLegend` when `legendVariant` is `review` */
+		reviewCounts = null
 	} = $props();
 </script>
 
 <aside
-	class="flex h-full min-h-screen w-70 shrink-0 flex-col gap-4 border-r border-stroke bg-canvas-base p-6"
+	class="flex h-full shrink-0 flex-col border-r border-stroke bg-canvas-base {variant === 'review'
+		? 'min-h-0 w-[17rem] gap-3 p-4 lg:w-[18rem] lg:p-5'
+		: 'min-h-screen w-70 gap-4 p-6'}"
 	aria-label="Quiz navigation"
 >
 	<h2 class="text-xs font-bold uppercase tracking-wide text-fg-muted">
-		Quiz Navigation
+		{title}
 	</h2>
 
-	<QuizStatusLegend />
+	<QuizStatusLegend variant={legendVariant} {reviewCounts} />
 
 	<div class="min-h-0 flex-1 overflow-auto">
 		<QuestionGrid
@@ -32,8 +46,13 @@
 		/>
 	</div>
 
-	<QuizSidebarLinks
-		onQuizInstructions={onQuizInstructions}
-		onQuitAttempt={onQuitAttempt}
-	/>
+	{#if showFooterLinks}
+		<QuizSidebarLinks
+			onQuizInstructions={onQuizInstructions}
+			onQuitAttempt={onQuitAttempt}
+			{instructionsLabel}
+			{exitLabel}
+			{showInstructions}
+		/>
+	{/if}
 </aside>
