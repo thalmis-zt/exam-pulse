@@ -14,8 +14,9 @@
 	import SegmentedControl from '$lib/components/SegmentedControl.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import IconHeading from '$lib/components/IconHeading.svelte';
+	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import StateDisplay from '$lib/components/StateDisplay.svelte';
 	import {
 		STEPS,
 		INFO_CARD,
@@ -116,25 +117,29 @@
 			<div class="mb-3">
 				<Badge label="Personalize Your Journey" variant="primary" size="md" />
 			</div>
-			<h1 class="text-2xl font-bold text-fg lg:text-3xl">Complete Your Profile</h1>
-			<p class="mt-2 max-w-xl text-base text-fg-muted">
-				Tell us about your academic goals so we can tailor the perfect learning path for you.
-			</p>
+			<div
+				class="mx-auto w-full max-w-xl text-center [&_.flex.items-center.justify-between]:justify-center"
+			>
+				<SectionHeader
+					title="Complete Your Profile"
+					subtitle="Tell us about your academic goals so we can tailor the perfect learning path for you."
+				/>
+			</div>
 		</div>
 	</header>
 
 	{#if isLoading}
-		<div class="flex flex-1 flex-col items-center justify-center py-24">
+		<div class="flex flex-1 flex-col items-center justify-center gap-3 py-24">
 			<Spinner message="Loading profile..." />
 		</div>
 	{:else if hasLoadError}
-		<div class="mx-auto w-full max-w-4xl flex-1 px-4 py-8 lg:px-8">
-			<Error
-				title="Something went wrong"
-				subtitle={loadErrorMessage}
-				showClose={false}
-				action={{ text: 'Retry', handler: loadRegistrationOptions }}
-				class="w-full"
+		<div class="mx-auto flex w-full max-w-4xl flex-1 flex-col justify-center px-4 py-12 lg:px-8">
+			<StateDisplay
+				title="Failed to load profile setup"
+				message={loadErrorMessage}
+				buttonLabel="Retry"
+				onButtonClick={loadRegistrationOptions}
+				variant="error"
 			/>
 		</div>
 	{:else}

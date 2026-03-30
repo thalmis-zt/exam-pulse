@@ -1,5 +1,6 @@
 <script>
 	import { BookOpen } from '@lucide/svelte';
+	import IconHeading from '$lib/components/IconHeading.svelte';
 	import SubjectCard from '$lib/quiz-summary/SubjectCard.svelte';
 
 	/** @type {{ subjects: import('./mock/quiz-summary.schema.js').SubjectResult[] }} */
@@ -9,17 +10,10 @@
 </script>
 
 <section class="flex flex-col gap-4">
-	<!-- Header -->
 	<div class="flex items-center justify-between gap-3 flex-wrap">
-		<div class="flex items-center gap-2">
-			<div
-				class="flex items-center justify-center size-8 rounded-lg bg-info-surface text-primary shrink-0"
-				aria-hidden="true"
-			>
-				<BookOpen size={20} />
-			</div>
-			<h2 class="text-base font-bold text-fg m-0">Subject Deep Dive</h2>
-		</div>
+		<IconHeading title="Subject Deep Dive" size="md">
+			{#snippet icon()}<BookOpen size={20} />{/snippet}
+		</IconHeading>
 		<span
 			class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-info-surface text-primary border border-primary/30"
 		>

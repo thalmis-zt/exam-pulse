@@ -9,7 +9,7 @@
 	import QuestionContent from '$lib/quiz-attempt/QuestionContent.svelte';
 	import QuizActionFooter from '$lib/quiz-attempt/QuizActionFooter.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import StateDisplay from '$lib/components/StateDisplay.svelte';
 
 	let { testId } = $props();
 
@@ -138,17 +138,17 @@
 
 <div class="flex min-h-screen flex-col  transition duration-motion-normal ease-ease-standard">
 	{#if isLoading}
-		<div class="flex flex-col items-center justify-center py-12">
+		<div class="flex flex-col items-center justify-center gap-3 py-12">
 			<Spinner message="Loading quiz..." />
 		</div>
 	{:else if hasError}
-		<div class="px-4 py-4 lg:px-8">
-			<Error
-				title="Something went wrong"
-				subtitle={errorMessage}
-				showClose={false}
-				action={{ text: 'Retry', handler: loadQuizAttempt }}
-				class="w-full"
+		<div class="flex flex-col items-center justify-center px-4 py-8 lg:px-8">
+			<StateDisplay
+				title="Failed to load quiz"
+				message={errorMessage}
+				buttonLabel="Retry"
+				onButtonClick={loadQuizAttempt}
+				variant="error"
 			/>
 		</div>
 	{:else if data}
@@ -227,8 +227,14 @@
 			onQuitAttempt={handleQuitAttempt}
 		/>
 	{:else}
-		<div class="flex flex-col items-center justify-center gap-3 py-12">
-			<p class="text-fg-muted">No quiz data available.</p>
+		<div class="flex flex-col items-center justify-center px-4 py-8 lg:px-8">
+			<StateDisplay
+				title="No quiz available"
+				message="This test could not be loaded or has no questions yet."
+				buttonLabel="Retry"
+				onButtonClick={loadQuizAttempt}
+				variant="info"
+			/>
 		</div>
 	{/if}
 </div>

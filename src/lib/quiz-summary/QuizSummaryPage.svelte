@@ -9,7 +9,7 @@
 	import RecommendedMocksSection from '$lib/quiz-summary/RecommendedMocksSection.svelte';
 	import RankProgressBanner from '$lib/quiz-summary/RankProgressBanner.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import StateDisplay from '$lib/components/StateDisplay.svelte';
 
 	let { testId } = $props();
 	let data = $state(null);
@@ -42,19 +42,17 @@
 		<SectionHeader title="Quiz Results" subtitle="Review your performance and insights" />
 
 		{#if isLoading}
-			<div class="flex min-h-[200px] flex-col items-center justify-center py-12">
+			<div class="flex min-h-[200px] flex-col items-center justify-center gap-3 py-12">
 				<Spinner message="Loading quiz summary..." />
 			</div>
 		{:else if hasError}
-			<div class="w-full px-4 sm:px-6">
-				<Error
-					title="Something went wrong"
-					subtitle={errorMessage}
-					showClose={false}
-					action={{ text: 'Retry', handler: loadQuizSummary }}
-					class="w-full"
-				/>
-			</div>
+			<StateDisplay
+				title="Failed to load quiz results"
+				message={errorMessage}
+				buttonLabel="Retry"
+				onButtonClick={loadQuizSummary}
+				variant="error"
+			/>
 		{:else if data}
 			<QuizResultsBanner
 				quizTitle={data.quizResult.quizTitle}
@@ -70,9 +68,13 @@
 				<RankProgressBanner />
 			</div>
 		{:else}
-			<div class="flex flex-col items-center justify-center gap-3 py-12">
-				<p class="text-fg-muted">No data available</p>
-			</div>
+			<StateDisplay
+				title="No quiz summary available"
+				message="This result could not be found or has no data yet."
+				buttonLabel="Retry"
+				onButtonClick={loadQuizSummary}
+				variant="info"
+			/>
 		{/if}
 	</div>
 </div>
