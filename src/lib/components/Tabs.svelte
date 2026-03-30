@@ -53,7 +53,7 @@
 
 	const tablistClasses = $derived(
 		variant === 'segmented'
-			? 'inline-flex w-auto max-w-full min-w-0 items-stretch gap-0 overflow-hidden rounded-lg border border-stroke bg-surface-card shadow-sm divide-x divide-stroke p-0'
+			? 'flex w-full min-w-0 max-w-full items-stretch gap-0 overflow-hidden rounded-lg border border-stroke bg-surface-card shadow-sm divide-x divide-stroke p-0'
 			: 'flex w-full min-w-0 items-center gap-1 rounded-lg bg-stroke px-3 py-1 sm:px-6'
 	);
 
@@ -79,7 +79,7 @@
 	}
 </script>
 
-<div class="min-w-0 {variant === 'segmented' ? 'w-auto' : 'w-full'} {className}">
+<div class="min-w-0 {variant === 'segmented' ? 'w-full max-w-full' : 'w-full'} {className}">
 	{#if title}
 		<p id={titleId} class="text-fg mb-2 block text-sm font-medium leading-5">
 			{title}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
@@ -108,9 +108,14 @@
 				onfocus={() => (focusedIndex = i)}
 			>
 				{#if Icon}
-					<Icon size={16} class="shrink-0" aria-hidden="true" />
+					<Icon size={16} class="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true" />
 				{/if}
-				{option.label}
+				{#if option.shortLabel}
+					<span class="sm:hidden">{option.shortLabel}</span>
+					<span class="hidden sm:inline">{option.label}</span>
+				{:else}
+					{option.label}
+				{/if}
 			</button>
 		{/each}
 	</div>

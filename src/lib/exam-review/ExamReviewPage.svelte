@@ -24,6 +24,7 @@
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import FilterPanel from '$lib/components/FilterPanel.svelte';
 	import Badge from '$lib/components/Badge.svelte';
+	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import QuizNavigationSidebar from '$lib/quiz-attempt/QuizNavigationSidebar.svelte';
 	import QuizNavigationDrawer from '$lib/quiz-attempt/QuizNavigationDrawer.svelte';
 
@@ -296,49 +297,55 @@
 			<div
 				class="flex min-h-0 min-w-0 flex-1 flex-col gap-4 px-4 pb-6 pt-4 sm:gap-5 sm:px-6 sm:pb-8 sm:pt-5"
 			>
-		<header class="flex flex-col gap-1.5">
-			<div class="flex flex-wrap items-start justify-between gap-3">
-				<h2 class="min-w-0 flex-1 text-base font-bold text-fg sm:text-lg">{data.title}</h2>
-				<div class="flex shrink-0 items-center gap-2">
+		<header class="flex flex-col gap-2 sm:gap-1.5">
+			<div
+				class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-3"
+			>
+				<div
+					class="order-1 flex min-w-0 flex-1 items-start justify-between gap-3 sm:min-w-0"
+				>
+					<div class="min-w-0 flex-1">
+						<SectionHeader title={data.title} />
+					</div>
 					<IconButton
-						class="sm:hidden shrink-0"
+						class="shrink-0 sm:hidden"
 						icon={LayoutGrid}
 						ariaLabel="Open question navigation"
 						variant="outline"
 						size="md"
 						onclick={() => (navDrawerOpen = true)}
 					/>
-					<Tabs
-						variant="segmented"
-						class="shrink-0"
-						ariaLabel="Review view mode"
-						options={[
-							{ label: 'One-by-one', value: 'single', icon: Eye },
-							{ label: 'List view', value: 'list', icon: LayoutList }
-						]}
-						selected={viewMode}
-						onSelect={(v) => {
-							viewMode = /** @type {'single' | 'list'} */ (v);
-							if (viewMode === 'list') listPage = 1;
-							else showFilters = false;
-						}}
-					/>
 				</div>
-			</div>
-			<div
-				class="flex flex-wrap items-center gap-x-5 gap-y-0.5 text-sm text-fg-muted"
-				aria-label="Exam duration and completion time"
-			>
-				<span class="inline-flex items-center gap-1.5">
-					<Clock size={16} class="shrink-0" aria-hidden="true" />
-					<span>{durationLabel}</span>
-				</span>
-				{#if completedLabel}
+				<div
+					class="order-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-fg-muted sm:order-3 sm:basis-full sm:gap-x-5 sm:text-sm"
+					aria-label="Exam duration and completion time"
+				>
 					<span class="inline-flex items-center gap-1.5">
-						<Calendar size={16} class="shrink-0" aria-hidden="true" />
-						<span>{completedLabel}</span>
+						<Clock size={16} class="shrink-0" aria-hidden="true" />
+						<span>{durationLabel}</span>
 					</span>
-				{/if}
+					{#if completedLabel}
+						<span class="inline-flex items-center gap-1.5">
+							<Calendar size={16} class="shrink-0" aria-hidden="true" />
+							<span>{completedLabel}</span>
+						</span>
+					{/if}
+				</div>
+				<Tabs
+					variant="segmented"
+					class="order-3 w-full min-w-0 sm:order-2 sm:w-auto sm:shrink-0"
+					ariaLabel="Review view mode"
+					options={[
+						{ label: 'One-by-one', shortLabel: 'One', value: 'single', icon: Eye },
+						{ label: 'List view', shortLabel: 'List', value: 'list', icon: LayoutList }
+					]}
+					selected={viewMode}
+					onSelect={(v) => {
+						viewMode = /** @type {'single' | 'list'} */ (v);
+						if (viewMode === 'list') listPage = 1;
+						else showFilters = false;
+					}}
+				/>
 			</div>
 		</header>
 
