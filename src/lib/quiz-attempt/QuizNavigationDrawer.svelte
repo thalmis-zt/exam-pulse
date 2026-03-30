@@ -6,7 +6,7 @@
 	import QuizSidebarLinks from './QuizSidebarLinks.svelte';
 
 	/**
-	 * @typedef {'current'|'answered'|'marked'|'not-visited'} QuestionStatus
+	 * @typedef {'current'|'answered'|'marked'|'wrong'|'not-visited'} QuestionStatus
 	 * @typedef {Object} Props
 	 * @property {boolean} open - Whether drawer is open
 	 * @property {() => void} onClose - Close handler
