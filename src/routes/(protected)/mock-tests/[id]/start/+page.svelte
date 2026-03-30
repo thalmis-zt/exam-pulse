@@ -16,14 +16,15 @@
 </script>
 
 <div class="flex flex-col gap-5">
-	<button
+	<Button
+		btnType="custom"
 		type="button"
-		class="inline-flex w-fit cursor-pointer items-center gap-2 rounded-sm border-none bg-transparent p-0 text-sm font-medium text-primary hover:underline"
+		customClass="inline-flex w-fit cursor-pointer items-center gap-2 rounded-sm border-none bg-transparent p-0 text-sm font-medium normal-case text-primary hover:underline"
 		onclick={() => goto('/mock-tests')}
 	>
 		<ArrowLeft size={16} aria-hidden="true" />
 		Back to mock tests
-	</button>
+	</Button>
 
 	<ExamStartHero
 		title={mock.title}
