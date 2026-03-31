@@ -3,19 +3,25 @@
 	import { browser } from '$app/environment';
 	import { Zap } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
+	import PasswordInput from '$lib/components/PasswordInput.svelte';
 	import Error from '$lib/components/Error.svelte';
 	import { onMount } from 'svelte';
 
 	const OTP_LENGTH = 6;
+	const MIN_PASSWORD_LENGTH = 6;
 
 	let otpValues = $state(Array(OTP_LENGTH).fill(''));
 	let otpContainerRef = $state(null);
+	let newPassword = $state('');
+	let confirmPassword = $state('');
+	let passwordError = $state('');
+	let confirmPasswordError = $state('');
 	let formError = $state('');
 	let loading = $state(false);
 	let displayEmail = $state('');
 
 	function messageFromErrorBody(data) {
-		if (!data || typeof data !== 'object') return 'Verification failed';
+		if (!data || typeof data !== 'object') return 'Reset failed';
 		if ('detail' in data && typeof data.detail === 'string') return data.detail;
 		if ('error' in data && typeof data.error === 'string') return data.error;
 		if (Array.isArray(data.detail) && data.detail[0] && typeof data.detail[0] === 'object') {
@@ -24,14 +30,36 @@
 				.filter(Boolean);
 			if (msgs.length) return msgs.join(' ');
 		}
-		return 'Verification failed';
+		return 'Reset failed';
+	}
+
+	function validatePasswordFields() {
+		passwordError = '';
+		confirmPasswordError = '';
+		if (!newPassword) {
+			passwordError = 'Password is required';
+			return false;
+		}
+		if (newPassword.length < MIN_PASSWORD_LENGTH) {
+			passwordError = `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+			return false;
+		}
+		if (!confirmPassword) {
+			confirmPasswordError = 'Please confirm your password';
+			return false;
+		}
+		if (newPassword !== confirmPassword) {
+			confirmPasswordError = 'Passwords do not match';
+			return false;
+		}
+		return true;
 	}
 
 	onMount(() => {
 		if (!browser) return;
-		const email = sessionStorage.getItem('pendingVerificationEmail');
+		const email = sessionStorage.getItem('forgotPasswordEmail');
 		if (!email) {
-			goto('/register');
+			goto('/forgot-password');
 			return;
 		}
 		displayEmail = email;
@@ -68,25 +96,32 @@
 		otpContainerRef?.querySelectorAll('input')[focusIndex]?.focus();
 	}
 
-	async function handleVerify() {
+	async function handleSubmit() {
 		const code = otpValues.join('');
 		if (code.length !== OTP_LENGTH) return;
+
+		passwordError = '';
+		confirmPasswordError = '';
+		if (!validatePasswordFields()) return;
 
 		formError = '';
 		loading = true;
 		try {
-			const res = await fetch('/apis/register/verify', {
+			const res = await fetch('/apis/auth/reset-password', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				credentials: 'include',
-				body: JSON.stringify({ otp: code })
+				body: JSON.stringify({
+					otp: code,
+					new_password: newPassword
+				})
 			});
 
 			const data = await res.json().catch(() => ({}));
 
 			if (res.ok) {
-				sessionStorage.removeItem('pendingVerificationEmail');
-				goto('/login');
+				sessionStorage.removeItem('forgotPasswordEmail');
+				goto('/login?reset=success');
 				return;
 			}
 
@@ -99,11 +134,11 @@
 	}
 
 	const otpComplete = $derived(otpValues.every((v) => v));
+	const canSubmit = $derived(otpComplete && newPassword && confirmPassword);
 </script>
 
 <div class="bg-canvas flex min-h-screen items-center justify-center px-4 py-12">
 	<div class="w-full max-w-md">
-		<!-- Header -->
 		<div class="mb-8 flex flex-col items-center text-center">
 			<a href="/" class="mb-4 flex items-center gap-2 no-underline">
 				<div class="bg-primary flex size-10 items-center justify-center rounded-xl">
@@ -111,18 +146,18 @@
 				</div>
 				<span class="text-fg text-xl font-bold tracking-tight">Exam Buddy</span>
 			</a>
-			<p class="text-fg-muted text-sm">Verify your email</p>
+			<p class="text-fg-muted text-sm">Set a new password</p>
 		</div>
 
-		<!-- OTP Card -->
 		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
 			<p class="text-fg-muted mb-6 text-center text-sm">
-				We've sent a 6-digit code to
+				Enter the 6-digit code sent to
 				{#if displayEmail}
 					<span class="text-fg font-medium">{displayEmail}</span>
 				{:else}
 					your email
-				{/if}. Enter it below to verify your account.
+				{/if}
+				, then choose your new password.
 			</p>
 
 			{#if formError}
@@ -153,18 +188,37 @@
 				{/each}
 			</div>
 
+			<div class="mb-6 flex flex-col gap-5">
+				<PasswordInput
+					label="New password"
+					placeholder="Enter new password"
+					bind:value={newPassword}
+					error={passwordError}
+					required
+				/>
+				<PasswordInput
+					label="Confirm new password"
+					placeholder="Confirm new password"
+					bind:value={confirmPassword}
+					error={confirmPasswordError}
+					required
+				/>
+			</div>
+
 			<Button
 				type="button"
 				btnType="primary"
 				customClass="w-full py-3 font-semibold rounded-xl"
-				disabled={!otpComplete || loading}
-				onclick={handleVerify}
+				disabled={!canSubmit || loading}
+				onclick={handleSubmit}
 			>
-				{loading ? 'Verifying…' : 'Verify OTP'}
+				{loading ? 'Updating password…' : 'Reset password'}
 			</Button>
 
 			<p class="text-fg-muted mt-6 text-center text-sm">
-				<a href="/register" class="text-primary font-medium hover:underline">Back to registration</a>
+				<a href="/forgot-password" class="text-primary font-medium hover:underline">Request a new code</a>
+				<span class="text-fg-muted"> · </span>
+				<a href="/login" class="text-primary font-medium hover:underline">Back to sign in</a>
 			</p>
 		</div>
 	</div>

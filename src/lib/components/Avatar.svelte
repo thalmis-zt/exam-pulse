@@ -1,4 +1,5 @@
 <script>
+	import { User } from '@lucide/svelte';
 
 	let {
 		src = '',
@@ -12,13 +13,21 @@
 	let imageError = $state(false);
 
 	function getInitials(n) {
-		if (!n?.trim()) return '?';
 		const parts = n.trim().split(/\s+/);
 		if (parts.length >= 2) {
 			return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 		}
 		return n.slice(0, 2).toUpperCase();
 	}
+
+	const fallbackIconSize = $derived(
+		({
+			sm: 14,
+			md: 18,
+			lg: 28,
+			xl: 32
+		})[size] ?? 18
+	);
 
 	const sizeClasses = $derived(
 		({
@@ -70,7 +79,11 @@
 		<div
 			class="text-primary flex size-full items-center justify-center font-bold"
 		>
-			{getInitials(name)}
+			{#if name?.trim()}
+				{getInitials(name)}
+			{:else}
+				<User size={fallbackIconSize} strokeWidth={2} class="shrink-0" aria-hidden="true" />
+			{/if}
 		</div>
 	{/if}
 	</div>

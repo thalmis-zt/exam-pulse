@@ -17,17 +17,21 @@
 	 * @typedef {Object} Props
 	 * @property {NavItemDef[]} navItems            - Navigation menu items
 	 * @property {string} [logoHref]                 - Logo / brand link target
-	 * @property {User} [user]                      - Logged-in user info
+	 * @property {User} [user]                      - Logged-in user info (name / rank next to account menu)
 	 * @property {number} [notificationCount]       - Notification badge count (0 = hidden)
 	 * @property {string} [searchPlaceholder]
 	 * @property {() => void} [onSearchClick]
 	 * @property {() => void} [onNotificationClick]
-	 * @property {() => void} [onProfileClick]
+	 * @property {() => void} [onProfileClick]       - Optional; fired when "Profile" is chosen in the menu
+	 * @property {() => void} [onLogout]
+	 * @property {Array} [accountMenuItems] - Account dropdown items (see AccountMenuPanel); omit for defaults
 	 */
 
-	import { Zap, Search, Bell, Menu } from '@lucide/svelte';
+	import { Zap, Bell, Menu, User, Settings, HelpCircle, LogOut } from '@lucide/svelte';
 	import { page } from '$app/stores';
 	import NavItem from './NavItem.svelte';
+	import Avatar from './Avatar.svelte';
+	import AccountMenuPanel from './AccountMenuPanel.svelte';
 	import { sidebar } from '$lib/stores/sidebar.svelte.js';
 
 	/** @type {Props} */
@@ -39,10 +43,57 @@
 		searchPlaceholder = 'Search exams, subjects...',
 		onSearchClick,
 		onNotificationClick,
-		onProfileClick
+		onProfileClick,
+		onLogout,
+		accountMenuItems: accountMenuItemsProp
 	} = $props();
 
 	const pathname = $derived($page.url.pathname);
+
+	let menuOpen = $state(false);
+	let menuRoot = $state(/** @type {HTMLDivElement | null} */ (null));
+
+	$effect(() => {
+		if (!menuOpen) return;
+		const handler = (/** @type {MouseEvent} */ e) => {
+			const t = e.target;
+			if (menuRoot && t instanceof Node && !menuRoot.contains(t)) menuOpen = false;
+		};
+		window.addEventListener('click', handler);
+		return () => window.removeEventListener('click', handler);
+	});
+
+	function toggleMenu(/** @type {MouseEvent} */ e) {
+		e.stopPropagation();
+		menuOpen = !menuOpen;
+	}
+
+	function closeMenu() {
+		menuOpen = false;
+	}
+
+	const accountMenuItems = $derived.by(() => {
+		if (accountMenuItemsProp !== undefined) return accountMenuItemsProp;
+		return [
+			{
+				type: 'link',
+				label: 'Profile',
+				href: '/profile',
+				icon: User,
+				onNavigate: () => onProfileClick?.()
+			},
+			{ type: 'link', label: 'Settings', href: '/settings', icon: Settings },
+			{ type: 'link', label: 'Help', href: '/help', icon: HelpCircle },
+			{ type: 'separator' },
+			{
+				type: 'action',
+				label: 'Log out',
+				icon: LogOut,
+				variant: 'danger',
+				onClick: () => onLogout?.()
+			}
+		];
+	});
 </script>
 
 <header
@@ -129,42 +180,41 @@
 			{/if}
 		</button>
 
-		<!-- User profile -->
-		{#if user}
+		<!-- Account menu -->
+		<div class="relative shrink-0" bind:this={menuRoot}>
 			<button
+				type="button"
 				class="
 					hover:bg-canvas flex cursor-pointer
 					items-center gap-2.5 rounded-full
-					py-1
-					pr-2
-					pl-1 transition duration-(--motion-fast)
+					py-1 pl-1
+					pr-2 transition duration-(--motion-fast)
 					ease-(--ease-standard)
 				"
-				onclick={onProfileClick}
+				onclick={toggleMenu}
+				aria-expanded={menuOpen}
+				aria-haspopup="menu"
+				aria-label="Account menu"
 			>
-				<!-- Text -->
-				<div class="flex flex-col items-end leading-tight">
-					<span class="text-fg text-sm font-semibold">{user.name}</span>
-					{#if user.rank}
-						<span class="text-fg-muted text-xs">{user.rank}</span>
-					{/if}
-				</div>
-
-				<!-- Avatar -->
-				<div
-					class="bg-primary-light border-stroke size-9 shrink-0 overflow-hidden rounded-full border-2"
-				>
-					{#if user.avatarSrc}
-						<img src={user.avatarSrc} alt={user.name} class="size-full object-cover" />
-					{:else}
-						<div
-							class="bg-primary-light text-primary flex size-full items-center justify-center text-sm font-bold"
-						>
-							{user.name.charAt(0).toUpperCase()}
-						</div>
-					{/if}
-				</div>
+				{#if user}
+					<div class="hidden flex-col items-end leading-tight sm:flex">
+						<span class="text-fg max-w-40 truncate text-sm font-semibold">{user.name}</span>
+						{#if user.rank}
+							<span class="text-fg-muted text-xs">{user.rank}</span>
+						{/if}
+					</div>
+				{/if}
+				<Avatar
+					name={user?.name ?? ''}
+					src={user?.avatarSrc ?? ''}
+					alt={user?.name ? `${user.name} avatar` : ''}
+					size="md"
+				/>
 			</button>
-		{/if}
+
+			{#if menuOpen}
+				<AccountMenuPanel items={accountMenuItems} onClose={closeMenu} />
+			{/if}
+		</div>
 	</div>
 </header>

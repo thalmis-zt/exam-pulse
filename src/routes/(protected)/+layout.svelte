@@ -9,7 +9,15 @@
 	const route = $derived($page.url.pathname);
 	const isQuizAttempt = $derived(/^\/tests\/[^/]+\/attempt\/?$/.test(route));
 
-	const routesWithoutSidebar = ['/', '/login', '/register', '/verify-otp', '/rptview'];
+	const routesWithoutSidebar = [
+		'/',
+		'/login',
+		'/register',
+		'/verify-otp',
+		'/forgot-password',
+		'/reset-password',
+		'/rptview'
+	];
 	const showSidebar = $derived(!routesWithoutSidebar.includes(route) && !isQuizAttempt);
 </script>
 

@@ -4,6 +4,7 @@
 	import TextInput from '$lib/components/TextInput.svelte';
 	import PasswordInput from '$lib/components/PasswordInput.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Error from '$lib/components/Error.svelte';
 
 	let email = $state('');
 	let name = $state('');
@@ -14,6 +15,8 @@
 	let nameError = $state('');
 	let passwordError = $state('');
 	let confirmPasswordError = $state('');
+	let formError = $state('');
+	let loading = $state(false);
 
 	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	const MIN_PASSWORD_LENGTH = 6;
@@ -28,6 +31,20 @@
 			return false;
 		}
 		emailError = '';
+		return true;
+	}
+
+	function validateName() {
+		const t = name.trim();
+		if (!t) {
+			nameError = '';
+			return true;
+		}
+		if (t.length < 2) {
+			nameError = 'Use at least 2 characters if you enter a name';
+			return false;
+		}
+		nameError = '';
 		return true;
 	}
 
@@ -57,24 +74,64 @@
 		return true;
 	}
 
-	function handleSubmit(e) {
+	function messageFromErrorBody(data) {
+		if (!data || typeof data !== 'object') return 'Registration failed';
+		if ('detail' in data && typeof data.detail === 'string') return data.detail;
+		if ('error' in data && typeof data.error === 'string') return data.error;
+		if (Array.isArray(data.detail) && data.detail[0] && typeof data.detail[0] === 'object') {
+			const msgs = data.detail
+				.map((x) => (x && typeof x === 'object' && 'msg' in x ? String(x.msg) : ''))
+				.filter(Boolean);
+			if (msgs.length) return msgs.join(' ');
+		}
+		return 'Registration failed';
+	}
+
+	async function handleSubmit(e) {
 		e.preventDefault();
 		emailError = '';
 		nameError = '';
 		passwordError = '';
 		confirmPasswordError = '';
+		formError = '';
 
 		const emailValid = validateEmail();
 		const passwordValid = validatePassword();
 		const confirmValid = validateConfirmPassword();
 
-		if (!emailValid || !passwordValid || !confirmValid) return;
+		if (!emailValid || !validateName() || !passwordValid || !confirmValid) return;
 
-		// Store email for OTP flow (no backend yet)
-		if (typeof window !== 'undefined') {
-			sessionStorage.setItem('pendingVerificationEmail', email.trim());
+		loading = true;
+		try {
+			const payload = {
+				email: email.trim(),
+				password
+			};
+			const trimmedName = name.trim();
+			if (trimmedName) payload.full_name = trimmedName;
+
+			const res = await fetch('/apis/register', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify(payload)
+			});
+
+			const data = await res.json().catch(() => ({}));
+
+			if (res.ok) {
+				// temp_token is now set as an HTTP-only cookie by the backend
+				sessionStorage.setItem('pendingVerificationEmail', email.trim());
+				goto('/verify-otp');
+				return;
+			}
+
+			formError = messageFromErrorBody(data);
+		} catch (err) {
+			formError = messageFromErrorBody(err);
+		} finally {
+			loading = false;
 		}
-		goto('/verify-otp');
 	}
 </script>
 
@@ -94,6 +151,9 @@
 		<!-- Form Card -->
 		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
 			<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
+				{#if formError}
+					<Error title={formError} showClose={false} />
+				{/if}
 				<TextInput
 					label="Email"
 					type="email"
@@ -104,11 +164,12 @@
 					onblur={validateEmail}
 				/>
 				<TextInput
-					label="Name"
+					label="Name "
 					type="text"
 					placeholder="Enter your full name"
 					bind:value={name}
 					error={nameError}
+					onblur={validateName}
 				/>
 				<PasswordInput
 					label="Password"
@@ -127,8 +188,13 @@
 					onblur={validateConfirmPassword}
 				/>
 
-				<Button type="submit" btnType="primary" customClass="w-full py-3 font-semibold rounded-xl">
-					Verify with OTP
+				<Button
+					type="submit"
+					btnType="primary"
+					customClass="w-full py-3 font-semibold rounded-xl"
+					disabled={loading}
+				>
+					{loading ? 'Sending code…' : 'Verify with OTP'}
 				</Button>
 			</form>
 
