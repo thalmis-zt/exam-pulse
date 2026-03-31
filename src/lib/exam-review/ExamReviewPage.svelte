@@ -287,6 +287,7 @@
 					title="Review navigation"
 					legendVariant="review"
 					reviewCounts={{
+						total: data.totalQuestions,
 						correct: data.correctCount,
 						wrong: data.wrongCount,
 						unanswered: data.unansweredCount
@@ -541,6 +542,7 @@
 			title="Review navigation"
 			legendVariant="review"
 			reviewCounts={{
+				total: data.totalQuestions,
 				correct: data.correctCount,
 				wrong: data.wrongCount,
 				unanswered: data.unansweredCount
