@@ -1,15 +1,23 @@
 import { json } from '@sveltejs/kit';
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 
-export async function POST({ request, fetch: eventFetch }) {
+export async function POST({ request, fetch: eventFetch, cookies }) {
 	try {
 		const body = await request.json();
-		const { temp_token, otp, new_password } = body;
+		const { otp, new_password } = body;
 
-		if (!temp_token || !otp || !new_password) {
+		if (!otp || !new_password) {
 			return json(
-				{ detail: 'temp_token, otp, and new_password are required' },
+				{ detail: 'otp and new_password are required' },
 				{ status: 400 }
+			);
+		}
+
+		const temp_token = cookies.get('forgotPasswordTempToken');
+		if (!temp_token) {
+			return json(
+				{ detail: 'Session expired. Please start the password reset again.' },
+				{ status: 401 }
 			);
 		}
 
@@ -32,6 +40,8 @@ export async function POST({ request, fetch: eventFetch }) {
 				{ status: res.status }
 			);
 		}
+
+		cookies.delete('forgotPasswordTempToken', { path: '/' });
 
 		return json(data);
 	} catch (err) {

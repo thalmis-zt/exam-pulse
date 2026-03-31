@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { PUBLIC_API_BASE_URL } from '$env/static/public';
 
-export async function POST({ request, fetch: eventFetch }) {
+export async function POST({ request, fetch: eventFetch, cookies }) {
 	try {
 		const body = await request.json();
 		const { email } = body;
@@ -26,7 +26,18 @@ export async function POST({ request, fetch: eventFetch }) {
 			);
 		}
 
-		return json(data);
+		if (data.temp_token) {
+			cookies.set('forgotPasswordTempToken', data.temp_token, {
+				httpOnly: true,
+				secure: true,
+				sameSite: 'strict',
+				maxAge: 600, // 10 minutes
+				path: '/'
+			});
+		}
+
+		const { temp_token, ...responseData } = data;
+		return json(responseData);
 	} catch (err) {
 		return json({ detail: err?.message || 'An unexpected error occurred' }, { status: 500 });
 	}
