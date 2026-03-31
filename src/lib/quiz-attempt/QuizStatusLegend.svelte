@@ -19,37 +19,35 @@
 
 	const items = $derived(ATTEMPT_ITEMS);
 
-	const rc = $derived(
-		reviewCounts ?? { correct: 0, wrong: 0, unanswered: 0 }
-	);
+	const rc = $derived(reviewCounts ?? { correct: 0, wrong: 0, unanswered: 0 });
 </script>
 
 {#if variant === 'review'}
 	<div
-		class="flex min-w-0 flex-col gap-2.5"
+		class="grid min-w-0 grid-cols-3 gap-1 mb-2"
 		role="list"
 		aria-label="Result summary: correct, wrong, and unanswered counts"
 	>
-		<div class="flex min-w-0 items-center justify-between gap-2" role="listitem">
-			<div class="flex min-w-0 items-center gap-2">
-				<span class="h-2.5 w-2.5 shrink-0 rounded-full bg-secondary" aria-hidden="true"></span>
-				<span class="truncate text-xs font-medium text-secondary">Correct</span>
-			</div>
-			<span class="shrink-0 text-sm font-bold tabular-nums text-secondary">{rc.correct}</span>
+		<div
+			class="flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg border border-stroke/70 border-t-[3px] border-t-secondary bg-secondary-light/50 px-1 py-1.5"
+			role="listitem"
+		>
+			<span class="text-sm font-bold tabular-nums leading-none text-secondary sm:text-base">{rc.correct}</span>
+			<span class="text-center text-2xs font-semibold leading-tight text-secondary">Correct</span>
 		</div>
-		<div class="flex min-w-0 items-center justify-between gap-2" role="listitem">
-			<div class="flex min-w-0 items-center gap-2">
-				<span class="h-2.5 w-2.5 shrink-0 rounded-full bg-danger" aria-hidden="true"></span>
-				<span class="truncate text-xs font-medium text-danger">Wrong</span>
-			</div>
-			<span class="shrink-0 text-sm font-bold tabular-nums text-danger">{rc.wrong}</span>
+		<div
+			class="flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg border border-stroke/70 border-t-[3px] border-t-danger bg-danger-surface/60 px-1 py-1.5"
+			role="listitem"
+		>
+			<span class="text-sm font-bold tabular-nums leading-none text-danger sm:text-base">{rc.wrong}</span>
+			<span class="text-center text-2xs font-semibold leading-tight text-danger">Wrong</span>
 		</div>
-		<div class="flex min-w-0 items-center justify-between gap-2" role="listitem">
-			<div class="flex min-w-0 items-center gap-2">
-				<span class="h-2.5 w-2.5 shrink-0 rounded-full bg-stroke" aria-hidden="true"></span>
-				<span class="truncate text-xs font-medium text-fg-muted">Unanswered</span>
-			</div>
-			<span class="shrink-0 text-sm font-bold tabular-nums text-fg-muted">{rc.unanswered}</span>
+		<div
+			class="flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-lg border border-stroke/70 border-t-[3px] border-t-stroke bg-stroke/15 px-1 py-1.5"
+			role="listitem"
+		>
+			<span class="text-sm font-bold tabular-nums leading-none text-fg-muted sm:text-base">{rc.unanswered}</span>
+			<span class="text-center text-2xs font-semibold leading-tight text-fg-muted">Unanswered</span>
 		</div>
 	</div>
 {:else}
