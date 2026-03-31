@@ -299,13 +299,29 @@
 			>
 		<header class="flex flex-col gap-2 sm:gap-1.5">
 			<div
-				class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-3"
+				class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-3"
 			>
-				<div
-					class="order-1 flex min-w-0 flex-1 items-start justify-between gap-3 sm:min-w-0"
-				>
+				<div class="flex min-w-0 flex-1 items-start justify-between gap-3 sm:min-w-0">
 					<div class="min-w-0 flex-1">
-						<SectionHeader title={data.title} />
+						<SectionHeader title={data.title} variant="lg">
+							{#snippet meta()}
+								<div
+									class="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-fg-muted sm:gap-x-5 sm:text-sm"
+									aria-label="Exam duration and completion time"
+								>
+									<span class="inline-flex items-center gap-1.5">
+										<Clock size={16} class="shrink-0" aria-hidden="true" />
+										<span>{durationLabel}</span>
+									</span>
+									{#if completedLabel}
+										<span class="inline-flex items-center gap-1.5">
+											<Calendar size={16} class="shrink-0" aria-hidden="true" />
+											<span>{completedLabel}</span>
+										</span>
+									{/if}
+								</div>
+							{/snippet}
+						</SectionHeader>
 					</div>
 					<IconButton
 						class="shrink-0 sm:hidden"
@@ -316,24 +332,9 @@
 						onclick={() => (navDrawerOpen = true)}
 					/>
 				</div>
-				<div
-					class="order-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-fg-muted sm:order-3 sm:basis-full sm:gap-x-5 sm:text-sm"
-					aria-label="Exam duration and completion time"
-				>
-					<span class="inline-flex items-center gap-1.5">
-						<Clock size={16} class="shrink-0" aria-hidden="true" />
-						<span>{durationLabel}</span>
-					</span>
-					{#if completedLabel}
-						<span class="inline-flex items-center gap-1.5">
-							<Calendar size={16} class="shrink-0" aria-hidden="true" />
-							<span>{completedLabel}</span>
-						</span>
-					{/if}
-				</div>
 				<Tabs
 					variant="segmented"
-					class="order-3 w-full min-w-0 sm:order-2 sm:w-auto sm:shrink-0"
+					class="w-full min-w-0 sm:w-auto sm:shrink-0"
 					ariaLabel="Review view mode"
 					options={[
 						{ label: 'One-by-one', shortLabel: 'One', value: 'single', icon: Eye },
