@@ -1,5 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { Zap } from '@lucide/svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import PasswordInput from '$lib/components/PasswordInput.svelte';
@@ -72,7 +73,8 @@
 			const errData = await res.json().catch(() => ({}));
 
 			if (res.ok) {
-				goto('/home');
+				const redirectTo = $page.url.searchParams.get('redirectTo') || '/home';
+				goto(redirectTo);
 				return;
 			}
 
