@@ -100,12 +100,6 @@
 		const code = otpValues.join('');
 		if (code.length !== OTP_LENGTH) return;
 
-		const tempToken = browser ? sessionStorage.getItem('forgotPasswordTempToken') : null;
-		if (!tempToken) {
-			formError = 'Session expired. Start again from forgot password.';
-			return;
-		}
-
 		passwordError = '';
 		confirmPasswordError = '';
 		if (!validatePasswordFields()) return;
@@ -116,8 +110,8 @@
 			const res = await fetch('/apis/auth/reset-password', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
 				body: JSON.stringify({
-					temp_token: tempToken,
 					otp: code,
 					new_password: newPassword
 				})
@@ -126,16 +120,14 @@
 			const data = await res.json().catch(() => ({}));
 
 			if (res.ok) {
-				sessionStorage.removeItem('forgotPasswordTempToken');
 				sessionStorage.removeItem('forgotPasswordEmail');
-				sessionStorage.removeItem('forgotPasswordExpiresIn');
 				goto('/login?reset=success');
 				return;
 			}
 
 			formError = messageFromErrorBody(data);
-		} catch {
-			formError = 'Network error. Please try again.';
+		} catch (err) {
+			formError = messageFromErrorBody(err);
 		} finally {
 			loading = false;
 		}

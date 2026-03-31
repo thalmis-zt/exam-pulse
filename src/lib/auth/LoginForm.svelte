@@ -42,6 +42,7 @@
 		if (!data || typeof data !== 'object') return 'Login failed';
 		if ('detail' in data && typeof data.detail === 'string') return data.detail;
 		if ('error' in data && typeof data.error === 'string') return data.error;
+		if ('message' in data && typeof data.message === 'string') return data.message;
 		return 'Login failed';
 	}
 
@@ -76,8 +77,8 @@
 			}
 
 			formError = messageFromErrorBody(errData);
-		} catch {
-			formError = 'Network error. Please try again.';
+		} catch (err) {
+			formError = messageFromErrorBody(err);
 		} finally {
 			loading = false;
 		}

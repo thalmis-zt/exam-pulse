@@ -113,28 +113,22 @@
 			const res = await fetch('/apis/register', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
 				body: JSON.stringify(payload)
 			});
 
 			const data = await res.json().catch(() => ({}));
 
 			if (res.ok) {
-				if (typeof data.temp_token === 'string' && data.temp_token) {
-					sessionStorage.setItem('registrationTempToken', data.temp_token);
-					sessionStorage.setItem('pendingVerificationEmail', email.trim());
-					if (data.expires_in != null) {
-						sessionStorage.setItem('registrationExpiresIn', String(data.expires_in));
-					}
-					goto('/verify-otp');
-					return;
-				}
-				formError = 'Unexpected response from server. Please try again.';
+				// temp_token is now set as an HTTP-only cookie by the backend
+				sessionStorage.setItem('pendingVerificationEmail', email.trim());
+				goto('/verify-otp');
 				return;
 			}
 
 			formError = messageFromErrorBody(data);
-		} catch {
-			formError = 'Network error. Please try again.';
+		} catch (err) {
+			formError = messageFromErrorBody(err);
 		} finally {
 			loading = false;
 		}

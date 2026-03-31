@@ -29,12 +29,12 @@
 
 	onMount(() => {
 		if (!browser) return;
-		const token = sessionStorage.getItem('registrationTempToken');
-		if (!token) {
+		const email = sessionStorage.getItem('pendingVerificationEmail');
+		if (!email) {
 			goto('/register');
 			return;
 		}
-		displayEmail = sessionStorage.getItem('pendingVerificationEmail') ?? '';
+		displayEmail = email;
 		otpContainerRef?.querySelector('input')?.focus();
 	});
 
@@ -72,34 +72,27 @@
 		const code = otpValues.join('');
 		if (code.length !== OTP_LENGTH) return;
 
-		const tempToken = browser ? sessionStorage.getItem('registrationTempToken') : null;
-		if (!tempToken) {
-			formError = 'Session expired. Please register again.';
-			return;
-		}
-
 		formError = '';
 		loading = true;
 		try {
 			const res = await fetch('/apis/register/verify', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ temp_token: tempToken, otp: code })
+				credentials: 'include',
+				body: JSON.stringify({ otp: code })
 			});
 
 			const data = await res.json().catch(() => ({}));
 
 			if (res.ok) {
-				sessionStorage.removeItem('registrationTempToken');
 				sessionStorage.removeItem('pendingVerificationEmail');
-				sessionStorage.removeItem('registrationExpiresIn');
 				goto('/login');
 				return;
 			}
 
 			formError = messageFromErrorBody(data);
-		} catch {
-			formError = 'Network error. Please try again.';
+		} catch (err) {
+			formError = messageFromErrorBody(err);
 		} finally {
 			loading = false;
 		}

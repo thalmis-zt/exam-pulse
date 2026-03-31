@@ -56,23 +56,14 @@
 
 			if (res.ok) {
 				sessionStorage.setItem('forgotPasswordEmail', email.trim());
-				if (typeof data.temp_token === 'string' && data.temp_token) {
-					sessionStorage.setItem('forgotPasswordTempToken', data.temp_token);
-				} else {
-					sessionStorage.removeItem('forgotPasswordTempToken');
-				}
-				if (data.expires_in != null) {
-					sessionStorage.setItem('forgotPasswordExpiresIn', String(data.expires_in));
-				} else {
-					sessionStorage.removeItem('forgotPasswordExpiresIn');
-				}
+				// temp_token is now set as an HTTP-only cookie by the backend
 				goto('/reset-password');
 				return;
 			}
 
 			formError = messageFromErrorBody(data);
-		} catch {
-			formError = 'Network error. Please try again.';
+		} catch (err) {
+			formError = messageFromErrorBody(err);
 		} finally {
 			loading = false;
 		}
