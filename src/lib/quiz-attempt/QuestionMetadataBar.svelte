@@ -1,6 +1,7 @@
 <script>
-	import { Flag } from '@lucide/svelte';
+	import { Bookmark, BookMarked, Flag } from '@lucide/svelte';
 	import Badge from '$lib/components/Badge.svelte';
+	import IconButton from '$lib/components/IconButton.svelte';
 
 	/**
 	 * @typedef {'attempt' | 'review'} BarVariant
@@ -15,7 +16,12 @@
 		/** 1-based question index (review only). */
 		questionIndex = 1,
 		/** When variant is review: outcome shown after reveal. */
-		reviewOutcome = 'idle'
+		reviewOutcome = 'idle',
+		/** Review: question is in Saved Questions (mock). */
+		saved = false,
+		/** Review: toggle save for later. */
+		onToggleSave,
+		savePending = false
 	} = $props();
 </script>
 
@@ -41,16 +47,28 @@
 			Report Error
 		</button>
 	{:else}
-		<div class="flex items-center gap-2">
+		<div class="flex min-w-0 flex-1 items-center gap-2">
 			<Badge label={subject} variant="primary" size="sm" />
 			<span class="text-xs font-semibold text-fg-muted">Q{questionIndex}</span>
 		</div>
-		{#if reviewOutcome === 'unanswered'}
-			<span class="text-xs font-medium text-fg-muted">Not answered</span>
-		{:else if reviewOutcome === 'correct'}
-			<span class="text-xs font-semibold text-success">Correct</span>
-		{:else if reviewOutcome === 'incorrect'}
-			<span class="text-xs font-semibold text-danger">Incorrect</span>
-		{/if}
+		<div class="flex shrink-0 items-center gap-2">
+			{#if reviewOutcome === 'unanswered'}
+				<span class="text-xs font-medium text-fg-muted">Not answered</span>
+			{:else if reviewOutcome === 'correct'}
+				<span class="text-xs font-semibold text-success">Correct</span>
+			{:else if reviewOutcome === 'incorrect'}
+				<span class="text-xs font-semibold text-danger">Incorrect</span>
+			{/if}
+			{#if onToggleSave}
+				<IconButton
+					icon={saved ? BookMarked : Bookmark}
+					ariaLabel={saved ? 'Remove from saved questions' : 'Save question for later'}
+					variant={saved ? 'primary' : 'outline'}
+					size="sm"
+					disabled={savePending}
+					onclick={() => onToggleSave?.()}
+				/>
+			{/if}
+		</div>
 	{/if}
 </div>

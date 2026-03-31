@@ -1,6 +1,7 @@
 <script>
-	import { Eye, HelpCircle } from '@lucide/svelte';
+	import { Bookmark, BookMarked, Eye, HelpCircle } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
+	import IconButton from '$lib/components/IconButton.svelte';
 	import QuestionMetadataBar from '$lib/quiz-attempt/QuestionMetadataBar.svelte';
 	import OptionButton from '$lib/quiz-attempt/OptionButton.svelte';
 
@@ -16,7 +17,10 @@
 	 *   revealed: boolean,
 	 *   onReveal: () => void,
 	 *   embedded?: boolean,
-	 *   showHeader?: boolean
+	 *   showHeader?: boolean,
+	 *   saved?: boolean,
+	 *   onToggleSave?: () => void | Promise<void>,
+	 *   savePending?: boolean
 	 * }}
 	 */
 	let {
@@ -26,7 +30,10 @@
 		revealed,
 		onReveal,
 		embedded = false,
-		showHeader = true
+		showHeader = true,
+		saved = false,
+		onToggleSave,
+		savePending = false
 	} = $props();
 
 	const isCorrect = $derived(userAnswer != null && userAnswer === correctLabel);
@@ -50,7 +57,21 @@
 			subject={question.subject}
 			questionIndex={question.index}
 			{reviewOutcome}
+			{saved}
+			onToggleSave={onToggleSave}
+			{savePending}
 		/>
+	{:else if embedded && onToggleSave}
+		<div class="flex justify-end border-b border-stroke bg-surface-card-subtle px-4 py-2">
+			<IconButton
+				icon={saved ? BookMarked : Bookmark}
+				ariaLabel={saved ? 'Remove from saved questions' : 'Save question for later'}
+				variant={saved ? 'primary' : 'outline'}
+				size="sm"
+				disabled={savePending}
+				onclick={() => onToggleSave?.()}
+			/>
+		</div>
 	{/if}
 
 	<div class="flex flex-col gap-4 p-4 md:p-6">

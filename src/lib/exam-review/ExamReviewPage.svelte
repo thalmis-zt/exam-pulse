@@ -27,6 +27,10 @@
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import QuizNavigationSidebar from '$lib/quiz-attempt/QuizNavigationSidebar.svelte';
 	import QuizNavigationDrawer from '$lib/quiz-attempt/QuizNavigationDrawer.svelte';
+	import {
+		isSavedFromReview,
+		toggleSaveQuestionFromReview
+	} from '$lib/saved-questions/mock/saved-questions.service.js';
 
 	/** @type {readonly { id: string, label: string, value: 'all' | 'correct' | 'incorrect' | 'unanswered' }[]} */
 	const RESULT_FILTER_OPTIONS = [
@@ -35,6 +39,8 @@
 		{ id: 'incorrect', label: 'Incorrect', value: 'incorrect' },
 		{ id: 'unanswered', label: 'Unanswered', value: 'unanswered' }
 	];
+
+	const SUBJECT_FALLBACK = 'General';
 
 	let { examAttemptId } = $props();
 
@@ -63,6 +69,31 @@
 	let revealedByQuestionId = $state({});
 
 	let navDrawerOpen = $state(false);
+
+	/** Saved-for-later flags keyed by question id (synced with mock saved-questions service). */
+	let savedReviewFlags = $state(/** @type {Record<string, boolean>} */ ({}));
+	let savePendingId = $state(/** @type {string | null} */ (null));
+
+	function refreshSavedReviewFlags() {
+		if (!data) return;
+		const m = /** @type {Record<string, boolean>} */ ({});
+		for (const q of data.questions) {
+			m[q.id] = isSavedFromReview(examAttemptId, q.id);
+		}
+		savedReviewFlags = m;
+	}
+
+	async function handleToggleSaveQuestion(questionId) {
+		const q = data?.questions.find((x) => x.id === questionId);
+		if (!q || !data) return;
+		savePendingId = questionId;
+		try {
+			await toggleSaveQuestionFromReview(examAttemptId, q, data.correctAnswers[q.id], data.title);
+			refreshSavedReviewFlags();
+		} finally {
+			savePendingId = null;
+		}
+	}
 
 	/**
 	 * @param {import('$lib/quiz-attempt/mock/quiz-attempt.schema.js').Question} q
@@ -150,14 +181,45 @@
 	/** Full exam grid for nav: maps review outcomes to grid status styles */
 	const questionsForNavGrid = $derived.by(() => {
 		if (!data) return [];
-		const curId = viewMode === 'single' ? currentQuestion?.id : null;
 		return data.questions.map((q) => {
 			const oc = outcomeForQuestion(q, data);
-			let status =
+			const outcomeStatus =
 				oc === 'correct' ? 'answered' : oc === 'incorrect' ? 'wrong' : 'not-visited';
-			if (curId && q.id === curId) status = 'current';
-			return { id: q.id, index: q.index, status };
+			const saved = !!savedReviewFlags[q.id];
+			const status = saved ? 'marked' : outcomeStatus;
+			const subject = (q.subject && String(q.subject).trim()) || SUBJECT_FALLBACK;
+			return { id: q.id, index: q.index, status, subject, showBookmark: saved };
 		});
+	});
+
+	const reviewNavSections = $derived.by(() => {
+		const items = questionsForNavGrid;
+		if (items.length === 0) return [];
+		/** @type {Map<string, typeof items>} */
+		const bySubject = new Map();
+		/** @type {string[]} */
+		const subjectOrder = [];
+		for (const it of items) {
+			const s = it.subject;
+			if (!bySubject.has(s)) {
+				bySubject.set(s, []);
+				subjectOrder.push(s);
+			}
+			bySubject.get(s)?.push(it);
+		}
+		return subjectOrder.map((subject) => ({
+			subject,
+			questions: /** @type {typeof items} */ (bySubject.get(subject) ?? [])
+		}));
+	});
+
+	/** Which subject accordion is expanded in one-by-one view (list view uses expand-all). */
+	const reviewExpandedSubjectKey = $derived.by(() => {
+		if (!data) return SUBJECT_FALLBACK;
+		if (viewMode === 'list') return '';
+		const q = currentQuestion;
+		if (!q) return SUBJECT_FALLBACK;
+		return (q.subject && String(q.subject).trim()) || SUBJECT_FALLBACK;
 	});
 
 	/** 1-based question # for grid “current”; 0 = none highlighted */
@@ -199,6 +261,7 @@
 			outcomeFilter = 'all';
 			showFilters = false;
 			filterPanelValue = {};
+			refreshSavedReviewFlags();
 		} catch (e) {
 			console.error(e);
 			hasError = true;
@@ -282,6 +345,9 @@
 					exitLabel="Back to results"
 					onQuitAttempt={exitReviewToResults}
 					questions={questionsForNavGrid}
+					reviewNavSections={reviewNavSections}
+					reviewNavExpandAll={viewMode === 'list'}
+					reviewExpandedSubjectKey={reviewExpandedSubjectKey}
 					currentIndex={navGridCurrentIndex}
 					onSelectQuestion={handleNavSelectQuestion}
 					title="Review navigation"
@@ -416,6 +482,9 @@
 				correctLabel={data.correctAnswers[currentQuestion.id]}
 				revealed={revealedByQuestionId[currentQuestion.id] === true}
 				onReveal={revealCurrent}
+				saved={savedReviewFlags[currentQuestion.id] ?? false}
+				onToggleSave={() => handleToggleSaveQuestion(currentQuestion.id)}
+				savePending={savePendingId === currentQuestion.id}
 			/>
 
 			<div class="flex items-center justify-between gap-3">
@@ -488,6 +557,9 @@
 								correctLabel={data.correctAnswers[q.id]}
 								revealed={revealedByQuestionId[q.id] === true}
 								onReveal={() => setReveal(q.id, true)}
+								saved={savedReviewFlags[q.id] ?? false}
+								onToggleSave={() => handleToggleSaveQuestion(q.id)}
+								savePending={savePendingId === q.id}
 							/>
 						</div>
 					</details>
