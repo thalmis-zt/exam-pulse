@@ -34,8 +34,13 @@
 		data?.questions.find((q) => q.index === currentQuestionIndex) ?? null
 	);
 
+	function isAnswerFilled(/** @type {string | null | undefined} */ a) {
+		if (a == null) return false;
+		return String(a).trim().length > 0;
+	}
+
 	const answeredCount = $derived(
-		data ? Object.values(answers).filter((a) => a != null).length : 0
+		data ? Object.values(answers).filter((a) => isAnswerFilled(a)).length : 0
 	);
 	const unansweredCount = $derived(
 		data ? data.totalQuestions - answeredCount : 0
@@ -49,7 +54,7 @@
 						q.index === currentQuestionIndex
 							? 'current'
 								: stored === 'current'
-									? (answers[q.id] != null ? 'answered' : 'not-visited')
+									? (isAnswerFilled(answers[q.id]) ? 'answered' : 'not-visited')
 								: stored;
 					return { id: q.id, index: q.index, status };
 				})
@@ -188,6 +193,16 @@
 					<QuestionContent
 						subject={currentQuestion.subject}
 						text={currentQuestion.text}
+						questionMedia={currentQuestion.questionMedia ?? []}
+						stemMediaLayout={currentQuestion.stemMediaLayout ?? 'compact'}
+						questionType={currentQuestion.questionType ?? 'mcq'}
+						shortAnswerPlaceholder={currentQuestion.shortAnswerPlaceholder ?? 'Type your answer here'}
+						shortAnswerInputType={currentQuestion.shortAnswerInputType ?? 'text'}
+						textAnswer={answers[currentQuestion.id] ?? ''}
+						onTextAnswerChange={(v) => {
+							if (!currentQuestion) return;
+							answers = { ...answers, [currentQuestion.id]: v };
+						}}
 						options={currentQuestion.options}
 						positiveMarks={currentQuestion.positiveMarks}
 						negativeMarks={currentQuestion.negativeMarks}
