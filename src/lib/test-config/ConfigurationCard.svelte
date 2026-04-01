@@ -1,163 +1,190 @@
 <script>
 	import { getTopicsBySubject } from '$lib/test-config/mock/testConfig.service.js';
 	import { Loader2 } from '@lucide/svelte';
+	import SubjectsTopicsSection from '$lib/test-config/SubjectsTopicsSection.svelte';
+	import TestParametersSection from '$lib/test-config/TestParametersSection.svelte';
+	import DifficultySection from '$lib/test-config/DifficultySection.svelte';
+	import NegativeMarkingSection from '$lib/test-config/NegativeMarkingSection.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import StepperInput from '$lib/components/StepperInput.svelte';
-	import Dropdown from '$lib/components/Dropdown.svelte';
-	import Tabs from '$lib/components/Tabs.svelte';
-	import Error from '$lib/components/Error.svelte';
-	import SubjectCard from '$lib/test-config/SubjectCard.svelte';
-	import NegativeMarkingCard from '$lib/test-config/NegativeMarkingCard.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 
-	let {
-		subjects = [],
-		difficultyLevels = [],
-		onStartTest = () => {},
-		isLoading = false
-	} = $props();
+	let { subjects = [], onStartTest = () => {}, isLoading = false } = $props();
 
-	let selectedSubject = $state(null);
+	let selectedSubjects = $state([]);
+	// Topics per subject: subjectId → { topics, selected, loading, allTopicsSelected }
+	let subjectTopicsMap = $state({});
 
-	let selectedTopicOption = $state(null);
-	let selectedDifficulty = $state(null);
-	let questionCount = $state(25);
+	let questionCount = $state('25');
+	let duration = $state('60');
+
+	let easyPct = $state('30');
+	let moderatePct = $state('40');
+	let hardPct = $state('30');
+
 	let enableNegativeMarking = $state(false);
-	let negativeMarkingDeduction = $state(0.25);
+	let negativeMarkingDeduction = $state(0.00);
 
-	let availableTopics = $state([]);
-	let isLoadingTopics = $state(false);
 	let formError = $state('');
 
-	const MIN_QUESTIONS = 5;
-	const MAX_QUESTIONS = 200;
+	// ----------------------- Subject/ Topic Selection -------------------------------------------------
 
-	const difficultyTabOptions = $derived(
-		difficultyLevels.map((l) => ({ value: l.id, label: l.label }))
-	);
-
-	// Watch for subject changes and load topics
-	$effect(async () => {
-		if (selectedSubject) {
-			isLoadingTopics = true;
-			try {
-				availableTopics = await getTopicsBySubject(selectedSubject);
-				selectedTopicOption = null; // Reset topic when subject changes
-				formError = '';
-			} catch (error) {
-				console.error('Failed to load topics:', error);
-				formError = 'Failed to load topics. Please try again.';
-				availableTopics = [];
-			} finally {
-				isLoadingTopics = false;
+	async function toggleSubject(subjectId) {
+		formError = '';
+		if (selectedSubjects.includes(subjectId)) {
+			selectedSubjects = selectedSubjects.filter((id) => id !== subjectId);
+		} else {
+			selectedSubjects = [...selectedSubjects, subjectId];
+			if (!subjectTopicsMap[subjectId]) {
+				subjectTopicsMap = {
+					...subjectTopicsMap,
+					[subjectId]: { topics: [], selected: [], allTopicsSelected: false, loading: true }
+				};
+				try {
+					const data = await getTopicsBySubject(subjectId);
+					subjectTopicsMap = {
+						...subjectTopicsMap,
+						[subjectId]: { topics: data, selected: [], allTopicsSelected: false, loading: false }
+					};
+				} catch {
+					subjectTopicsMap = {
+						...subjectTopicsMap,
+						[subjectId]: { topics: [], selected: [], allTopicsSelected: false, loading: false }
+					};
+				}
 			}
 		}
-	});
+	}
 
-	// ----------------------------- Start Test Handler --------------------------------
+	// Toggle a topic chip within a subject
+	function toggleTopic(subjectId, topicId) {
+		const cur = subjectTopicsMap[subjectId];
+		if (!cur) return;
+		const next = cur.selected.includes(topicId)
+			? cur.selected.filter((id) => id !== topicId)
+			: [...cur.selected, topicId];
+		// Clear allTopicsSelected when selecting individual topics
+		subjectTopicsMap = {
+			...subjectTopicsMap,
+			[subjectId]: { ...cur, selected: next, allTopicsSelected: false }
+		};
+	}
+
+	// Toggle all topics for a subject
+	function toggleAllTopics(subjectId) {
+		const cur = subjectTopicsMap[subjectId];
+		if (!cur) return;
+		// Toggle the explicit flag
+		const next = !cur.allTopicsSelected;
+		subjectTopicsMap = {
+			...subjectTopicsMap,
+			[subjectId]: { 
+				...cur, 
+				allTopicsSelected: next, 
+				selected: next ? cur.topics.map((t) => t.id) : [] 
+			}
+		};
+	}
+
+	// ---------------------- Start Test Handler ----------------------------
 	function handleStartTest() {
-		// Validate form
-		if (!selectedSubject) {
-			formError = 'Please select a subject';
+		if (selectedSubjects.length === 0) {
+			formError = 'Please select at least one subject to continue';
 			return;
 		}
-		if (!selectedTopicOption) {
-			formError = 'Please select a topic';
+
+		// Check if at least one topic is selected per subject
+		for (const subjectId of selectedSubjects) {
+			const td = subjectTopicsMap[subjectId];
+			if (!td || (!td.allTopicsSelected && (!td.selected || td.selected.length === 0))) {
+				formError = 'Please select at least one topic for each subject';
+				return;
+			}
+		}
+
+		// Check if difficulty adds up to 100%
+		const difficultyTotal = toPct(easyPct) + toPct(moderatePct) + toPct(hardPct);
+		if (difficultyTotal !== 100) {
+			formError = 'Difficulty allocation must add up to 100%';
 			return;
 		}
-		if (!selectedDifficulty) {
-			formError = 'Please select a difficulty level';
+
+
+		if (toCount(questionCount) < 1) {
+			formError = 'Please enter at least 1 question';
+			return;
+		}
+
+		if (toCount(duration) < 1) {
+			formError = 'Duration cannot be 0 minutes';
 			return;
 		}
 
 		formError = '';
-
-		const config = {
-			subjectId: selectedSubject,
-			topicId: selectedTopicOption?.id ?? selectedTopicOption,
-			difficultyId: selectedDifficulty,
-			questionCount,
+		onStartTest({
+			subjects: selectedSubjects.map((id) => {
+				const td = subjectTopicsMap[id];
+				const topicIds = td?.allTopicsSelected
+					? td.topics.map((t) => t.id)
+					: td?.selected ?? [];
+				return { subjectId: id, topicIds };
+			}),
+			questionCount: toCount(questionCount),
+			duration: toCount(duration),
+			difficulty: {
+				easyPct: toPct(easyPct),
+				moderatePct: toPct(moderatePct),
+				hardPct: toPct(hardPct)
+			},
 			enableNegativeMarking,
 			negativeMarkingDeduction: enableNegativeMarking ? negativeMarkingDeduction : null
-		};
+		});
+	}
 
-		onStartTest(config);
+	// --------------------------- General ------------------------------
+
+	function toPct(val) {
+		const n = parseInt(val);
+		return isNaN(n) || n < 0 ? 0 : n > 100 ? 100 : n;
+	}
+
+	function toCount(val) {
+		const n = parseInt(val);
+		return isNaN(n) || n < 0 ? 0 : n;
 	}
 </script>
 
-<div class="bg-surface-card border-stroke rounded-md border p-4 shadow-sm md:p-6">
-	<form class="space-y-6" onsubmit={(e) => e.preventDefault()}>
-		<SubjectCard
+<div class="bg-surface-card rounded-md shadow-sm">
+	<form onsubmit={(e) => e.preventDefault()} class="divide-stroke divide-y">
+		<!-- Subjects & Topics Section -->
+		<SubjectsTopicsSection
 			{subjects}
-			bind:selectedSubject
-			onSelectSubject={(id) => {
-				selectedSubject = id;
-			}}
+			{selectedSubjects}
+			{subjectTopicsMap}
+			onToggleSubject={toggleSubject}
+			onToggleTopic={toggleTopic}
+			onToggleAllTopics={toggleAllTopics}
 		/>
 
-		<!-- Topic, Difficulty Level, and Questions Row -->
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-			<Dropdown
-				title="Topic / Chapter"
-				bind:value={selectedTopicOption}
-				options={availableTopics}
-				placeholder="Select a topic"
-				disabled={!selectedSubject || isLoadingTopics}
-				loading={isLoadingTopics}
-				required={true}
-			/>
+		<TestParametersSection bind:questionCount bind:duration />
 
-			<StepperInput
-				bind:value={questionCount}
-				min={MIN_QUESTIONS}
-				max={MAX_QUESTIONS}
-				label="Number of Questions"
-				unit="Questions"
-				required={true}
-			/>
+		<DifficultySection bind:easyPct bind:moderatePct bind:hardPct />
 
-			<!-- Difficulty Level replace with tabs component -->
-			<div>
-				<span class="text-fg mb-2 block text-xs leading-5 font-medium">
-					Difficulty Level <span class="text-danger ml-0.5">*</span>
-				</span>
-				<Tabs
-					options={difficultyLevels.map((level) => ({ label: level.label, value: level.id }))}
-					selected={selectedDifficulty}
-					onSelect={(value) => (selectedDifficulty = value)}
-					size="md"
-				/>
+		<NegativeMarkingSection bind:enableNegativeMarking bind:negativeMarkingDeduction />
+
+		<section class="px-6 py-6 md:px-8">
+			{#if formError}
+				<div class="mb-4">
+					<InlineAlert variant="error" message={formError} showClose={false} />
+				</div>
+			{/if}
+			<div class="flex items-center justify-end">
+				<Button btnType="primary" type="button" onclick={handleStartTest} disabled={isLoading}>
+					{#if isLoading}
+						<Loader2 size={16} class="mr-1.5 animate-spin" />
+					{/if}
+					Start Mock Test
+				</Button>
 			</div>
-		</div>
-
-		<!-- Negative Marking -->
-		<div class="grid grid-cols-1 sm:grid-cols-2">
-			<NegativeMarkingCard
-				isEnabled={enableNegativeMarking}
-				deductionAmount={negativeMarkingDeduction}
-				onToggle={(enabled) => {
-					enableNegativeMarking = enabled;
-				}}
-			/>
-		</div>
-
-		<!-- Error Message -->
-		{#if formError}
-			<Error title="Error" subtitle={formError} showClose={false} />
-		{/if}
-
-		<!-- Start Test Button -->
-		<div class="flex justify-end">
-			<Button
-				btnType="primary"
-				type="button"
-				onclick={handleStartTest}
-				disabled={isLoading || isLoadingTopics}
-			>
-				{#if isLoading}
-					<Loader2 size={18} class="animate-spin" />
-				{/if}
-				Start Mock Test
-			</Button>
-		</div>
+		</section>
 	</form>
 </div>
