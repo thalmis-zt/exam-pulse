@@ -2,7 +2,7 @@
 	import { Trash2 } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	let {
 		open = false,
@@ -104,9 +104,10 @@
 		{#if entity}
 			<div class="space-y-6">
 				{#if showModalError}
-					<Error
+					<InlineAlert
+						variant="error"
 						title="Error"
-						subtitle={modalError}
+						message={modalError}
 						action={{ text: 'Retry', handler: handleRetry }}
 						showClose={true}
 						onclose={handleErrorClose}

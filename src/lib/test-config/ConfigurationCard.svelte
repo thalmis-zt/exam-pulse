@@ -5,7 +5,7 @@
 	import StepperInput from '$lib/components/StepperInput.svelte';
 	import Dropdown from '$lib/components/Dropdown.svelte';
 	import Tabs from '$lib/components/Tabs.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 	import SubjectCard from '$lib/test-config/SubjectCard.svelte';
 	import NegativeMarkingCard from '$lib/test-config/NegativeMarkingCard.svelte';
 
@@ -142,7 +142,7 @@
 
 		<!-- Error Message -->
 		{#if formError}
-			<Error title="Error" subtitle={formError} showClose={false} />
+			<InlineAlert variant="error" title="Error" message={formError} showClose={false} />
 		{/if}
 
 		<!-- Start Test Button -->

@@ -3,7 +3,7 @@
 	import { Zap } from '@lucide/svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 
 	let email = $state('');
 	let emailError = $state('');
@@ -89,7 +89,7 @@
 
 			<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
 				{#if formError}
-					<Error title={formError} showClose={false} />
+					<InlineAlert variant="error" title={formError} showClose={false} />
 				{/if}
 				<TextInput
 					label="Email"
