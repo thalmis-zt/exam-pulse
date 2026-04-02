@@ -284,8 +284,8 @@ await loadFormData();
 			{#if validationErrors.length > 0}
 				<InlineAlert
 					variant="error"
-					title="Please fix the following issues:"
 					message={validationErrors.join(', ')}
+					showClose={false}
 				/>
 			{/if}
 
