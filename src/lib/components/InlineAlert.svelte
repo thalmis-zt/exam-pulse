@@ -30,7 +30,7 @@
 			icon: XCircle,
 			iconBg: 'bg-danger/10',
 			iconColor: 'text-danger',
-			containerBg: 'bg-danger-surface',
+			containerBg: 'bg-danger-surface/60',
 			border: 'border-danger/30'
 		},
 		info: {
@@ -69,27 +69,27 @@
 {#if title || message}
 	<div
 		class="
-			w-full rounded-xl border p-3 shadow-sm {cfg.containerBg} {cfg.border}
+			w-full rounded-md p-2 {cfg.containerBg} {cfg.border}
 			{className}
 		"
 		role="alert"
 		aria-live="polite"
 		aria-atomic="true"
 	>
-		<div class="flex items-start gap-3">
+		<div class="flex items-center gap-2">
 			<div class="flex shrink-0">
 				<div
-					class="flex size-10 items-center justify-center rounded-full {cfg.iconBg} {cfg.iconColor}"
+					class="flex size-8 items-center justify-center rounded-full {cfg.iconBg} {cfg.iconColor}"
 				>
-					<Icon size={20} />
+					<Icon size={18} />
 				</div>
 			</div>
 
 			<div class="min-w-0 flex-1">
-				<div class="flex items-start justify-between gap-2">
+				<div class="flex items-center justify-between gap-2">
 					<div class="min-w-0 flex-1">
 						{#if title}
-							<p class="font-semibold text-fg">{title}</p>
+							<p class="font-medium text-fg/90 text-sm">{title}</p>
 						{:else if message}
 							<p class="text-sm text-fg">{message}</p>
 						{/if}
@@ -100,7 +100,7 @@
 							<button
 								type="button"
 								class="
-									rounded-md px-2.5 py-1 text-xs font-medium
+									rounded-md px-2.5 py-1 text-2xs
 									transition duration-(--motion-fast)
 									{actionBtn}
 								"
@@ -113,7 +113,7 @@
 							<button
 								type="button"
 								class="
-									rounded-md px-2.5 py-1 text-xs font-medium
+									rounded-md px-2.5 py-1 text-2xs
 									transition duration-(--motion-fast)
 									{actionBtn}
 								"
@@ -126,7 +126,7 @@
 				</div>
 
 				{#if title && message}
-					<p class="text-fg-muted mt-1 text-sm">{message}</p>
+					<p class="text-fg-muted text-xs">{message}</p>
 				{/if}
 			</div>
 		</div>
