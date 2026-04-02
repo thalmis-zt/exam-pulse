@@ -99,7 +99,7 @@
 {#if open}
 	<Portal>
 		<div
-			class="bg-surface-card-subtle relative w-full max-w-lg rounded-lg px-4 sm:px-6 shadow-sm"
+			class="bg-surface-card-subtle relative w-full max-w-lg rounded-md px-4 sm:px-6 shadow-sm"
 			role="dialog"
 			aria-labelledby="dialog-title"
 			tabindex="0"
