@@ -29,10 +29,13 @@
 	});
 
 	// Check if primary goal exists (excluding the one being edited)
+	const primaryGoal = $derived.by(() => {
+		return goals.find((g) => g.base.isPrimary);
+	});
+
 	const isPrimaryGoalDisabled = $derived.by(() => {
-		const existingPrimaryGoal = goals.find((g) => g.base.isPrimary);
 		// Disable if there's an existing primary goal and we're not editing it
-		return existingPrimaryGoal && existingPrimaryGoal.base.id !== selectedGoal?.goal?.base.id;
+		return primaryGoal && primaryGoal.base.id !== selectedGoal?.goal?.base.id;
 	});
 	// ------------------------- Goal Add -------------------------------
 	function handleAddGoal() {
@@ -247,6 +250,7 @@
 		onSave={handleSaveGoal}
 		editingGoal={selectedGoal?.goal}
 		isPrimaryGoalDisabled
+		currentPrimaryGoal={primaryGoal}
 	/>
 {/if}
 
