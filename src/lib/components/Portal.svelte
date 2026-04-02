@@ -20,8 +20,12 @@
 	});
 </script>
 
-<div>
-	<div bind:this={slotContainer} class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-[999] flex items-center justify-center">
-			<slot />
+<div bind:this={slotContainer} class="fixed inset-0 z-999 flex items-center justify-center">
+	<!-- Background -->
+	<div class="absolute inset-0 bg-gray-500/75"></div>
+
+	<!-- Modal content -->
+	<div class="relative z-10">
+		<slot />
 	</div>
 </div>
