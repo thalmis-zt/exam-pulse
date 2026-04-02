@@ -91,7 +91,7 @@
 						{#if title}
 							<p class="font-medium text-fg/90 text-sm">{title}</p>
 						{:else if message}
-							<p class="text-sm text-fg">{message}</p>
+							<p class="text-sm text-/90">{message}</p>
 						{/if}
 					</div>
 
