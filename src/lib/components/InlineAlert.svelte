@@ -89,7 +89,7 @@
 				<div class="flex items-start justify-between gap-2">
 					<div class="min-w-0 flex-1">
 						{#if title}
-							<p class="font-semibold text-fg">{title}</p>
+							<p class="font-semibold text-fg mt-2">{title}</p>
 						{:else if message}
 							<p class="text-sm text-fg">{message}</p>
 						{/if}
