@@ -1,8 +1,8 @@
 <script>
-	import { Trash2 } from '@lucide/svelte';
-	import Modal from '$lib/components/Modal.svelte';
+	import { Trash2, X } from '@lucide/svelte';
+	import Portal from '$lib/components/Portal.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	let {
 		open = false,
@@ -16,7 +16,9 @@
 		confirmationValue = 'delete',
 		confirmationLabel = '',
 		onconfirm,
-		oncancel
+		oncancel,
+		showClose = true,
+		closeOnEscape = true
 	} = $props();
 
 	let confirmationText = $state('');
@@ -28,13 +30,15 @@
 		confirmationText.trim().toLowerCase() === String(confirmationValue).trim().toLowerCase()
 	);
 
-	const displayConfirmationLabel = $derived(confirmationLabel || `Type "${confirmationValue}" to confirm`);
+	const displayConfirmationLabel = $derived(
+		confirmationLabel || `Type "${String(confirmationValue).toUpperCase()}" to confirm`
+	);
 
 	const modalTitle = $derived.by(() => {
 		const custom = (titleOverride ?? '').trim();
 		if (custom) return custom;
 		const displayName = entity?.[fields[0]?.key] ?? entityName;
-		return `About to delete the ${entityType} '${displayName}'`;
+		return `About to delete the ${entityType} - "${displayName}"`;
 	});
 
 	$effect(() => {
@@ -85,73 +89,92 @@
 			event.preventDefault();
 			handleDelete();
 		}
+		if (event.key === 'Escape' && closeOnEscape && !loading) {
+			event.preventDefault();
+			handleCancel();
+		}
 	}
 </script>
 
-<Modal
-	open={open}
-	title={modalTitle}
-	size="lg"
-	showClose={!loading}
-	closeOnBackdropClick={!loading}
-	closeOnEscape={!loading}
-	onclose={handleCancel}
->
-	{#snippet titleIcon()}
-		<Trash2 />
-	{/snippet}
-	{#snippet children()}
-		{#if entity}
-			<div class="space-y-6">
-				{#if showModalError}
-					<Error
-						title="Error"
-						subtitle={modalError}
-						action={{ text: 'Retry', handler: handleRetry }}
-						showClose={true}
-						onclose={handleErrorClose}
-					/>
-				{/if}
+{#if open}
+	<Portal>
+		<div
+			class="bg-surface-card-subtle relative w-full max-w-lg rounded-lg px-4 sm:px-6 shadow-sm"
+			role="dialog"
+			aria-labelledby="dialog-title"
+			tabindex="0"
+			onkeydown={handleKeydown}
+		>
+			{#if showModalError}
+			<div class="pt-4">
+			<InlineAlert
+				variant="error"
+				message={ modalError ?? `Error deleting the ${entityType}. Please try again.`}
+				showClose={false}
+			/>
+			</div>
+			{/if}
 
+			<!-- Header -->
+			<div class="border-stroke flex items-center justify-between gap-3 pb-3 {showModalError ? 'pt-4' : 'pt-6'}">
+				<div class="flex items-center gap-2">
+					<div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-100">
+						<Trash2 size={18} class="text-red-600" />
+					</div>
+					<div>
+						<h2 id="dialog-title" class="text-base font-bold text-red-500">
+							{modalTitle}
+						</h2>
+					</div>
+				</div>
+			</div>
+			<p class="text-fg-muted text-sm">
+				Are you sure you want to delete this {entityType}? This action cannot be undone.
+			</p>
+			<!-- Body -->
+			<div class="flex flex-col gap-4 py-3">
+				{#if entity}
+					<!-- Entity details: custom snippet or default dl -->
+					{#if details}
+						{@render details()}
+					{:else if fields.length}
+						<div class="border-stroke bg-surface-card rounded-md border p-4">
+							<h4 class="text-fg mb-2 text-xs font-medium uppercase">{entityName} details</h4>
+							<dl class="space-y-1">
+								{#each fields as field (field.key)}
+									<div class="flex items-start gap-x-2">
+										<dt class="text-fg/80 shrink-0 text-sm font-medium">{field.label} :</dt>
+										<dd class="text-fg min-w-0 flex-1 text-sm">
+											{entity[field.key] ?? '—'}
+										</dd>
+									</div>
+								{/each}
+							</dl>
+						</div>
+					{/if}
 
-				<!-- Entity details: custom snippet or default dl -->
-				{#if details}
-					{@render details()}
-				{:else if fields.length}
-					<div class="rounded-md border border-stroke bg-fg-muted/10 p-4">
-						<h4 class="text-fg mb-3 text-sm font-semibold">{entityName} details</h4>
-						<dl class="grid gap-y-2">
-							{#each fields as field}
-								<div class="flex items-start gap-x-2">
-									<dt class="text-fg-muted shrink-0 text-sm font-medium">{field.label}:</dt>
-									<dd class="text-fg min-w-0 flex-1 wrap-break-word text-sm font-medium">
-										{entity[field.key] ?? '—'}
-									</dd>
-								</div>
-							{/each}
-						</dl>
+					<!-- Confirmation input -->
+					<div class="">
+						<label for="delete-confirm-input" class="text-fg-muted mb-1 block text-sm"
+							>{displayConfirmationLabel}</label
+						>
+						<TextInput
+							id="delete-confirm-input"
+							placeholder={String(confirmationValue).toUpperCase()}
+							bind:value={confirmationText}
+						/>
 					</div>
 				{/if}
-
-				<!-- Confirmation input -->
-				<TextInput
-					id="delete-confirm-input"
-					label={displayConfirmationLabel}
-					placeholder={confirmationValue}
-					bind:value={confirmationText}
-				/>
 			</div>
-		{/if}
-	{/snippet}
 
-	{#snippet footer()}
-		<div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-			<Button btnType="neutral" disabled={loading} onclick={handleCancel}>
-				Cancel
-			</Button>
-			<Button btnType="danger" disabled={!canDelete || loading} onclick={handleDelete}>
-				{loading ? 'Deleting...' : 'Delete'}
-			</Button>
+			<!-- Footer -->
+
+			<div class="flex flex-col-reverse gap-3 pt-2 pb-6 sm:flex-row sm:justify-end">
+				<Button btnType="neutral" disabled={loading} onclick={handleCancel}>Cancel</Button>
+				<Button btnType="danger" disabled={!canDelete || loading} onclick={handleDelete}>
+					{loading ? 'DELETING...' : 'DELETE'}
+				</Button>
+			</div>
 		</div>
-	{/snippet}
-</Modal>
+	</Portal>
+{/if}
