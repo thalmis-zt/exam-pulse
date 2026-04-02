@@ -260,7 +260,6 @@
 	entity={displayGoal}
 	entityName="goal"
 	entityType="goal"
-	titleOverride="Delete this goal?"
 	confirmationValue="delete"
 	fields={[
 		{ key: 'displayTitle', label: 'Goal Title' },
