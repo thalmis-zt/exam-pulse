@@ -94,8 +94,155 @@ export const geometryAssessmentQuestions = [
 				{ label: 'C', text: 'Option C' },
 				{ label: 'D', text: 'Option D' }
 			],
-			positiveMarks: 4,
-			negativeMarks: 1
+		positiveMarks: 4,
+		negativeMarks: 1
 		};
 	})
+];
+
+/**
+ * Multi-subject mock (JEE-style) — use attempt id containing `jee`, e.g. `/tests/jee-demo/review`.
+ * @type {import('./quiz-attempt.schema.js').Question[]}
+ */
+export const jeeMockQuestions = [
+	{
+		id: 'jee-q1',
+		index: 1,
+		subject: 'Physics',
+		text: 'A body moves with uniform acceleration. Which quantity remains constant?',
+		options: [
+			{ label: 'A', text: 'Velocity' },
+			{ label: 'B', text: 'Acceleration' },
+			{ label: 'C', text: 'Displacement per second' },
+			{ label: 'D', text: 'Kinetic energy' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q2',
+		index: 2,
+		subject: 'Physics',
+		text: 'The SI unit of power is:',
+		options: [
+			{ label: 'A', text: 'Joule' },
+			{ label: 'B', text: 'Watt' },
+			{ label: 'C', text: 'Newton' },
+			{ label: 'D', text: 'Pascal' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q3',
+		index: 3,
+		subject: 'Physics',
+		text: 'Which wave requires a material medium to propagate?',
+		options: [
+			{ label: 'A', text: 'Light' },
+			{ label: 'B', text: 'Sound' },
+			{ label: 'C', text: 'X-rays' },
+			{ label: 'D', text: 'Radio (in vacuum)' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q4',
+		index: 4,
+		subject: 'Chemistry',
+		text: 'The atomic number of carbon is:',
+		options: [
+			{ label: 'A', text: '4' },
+			{ label: 'B', text: '6' },
+			{ label: 'C', text: '8' },
+			{ label: 'D', text: '12' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q5',
+		index: 5,
+		subject: 'Chemistry',
+		text: 'Which bond is strongest in typical organic molecules?',
+		options: [
+			{ label: 'A', text: 'Hydrogen bond' },
+			{ label: 'B', text: 'Ionic bond' },
+			{ label: 'C', text: 'Covalent bond' },
+			{ label: 'D', text: 'Van der Waals' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q6',
+		index: 6,
+		subject: 'Chemistry',
+		text: 'pH of a neutral solution at 25°C is approximately:',
+		options: [
+			{ label: 'A', text: '0' },
+			{ label: 'B', text: '7' },
+			{ label: 'C', text: '14' },
+			{ label: 'D', text: '1' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q7',
+		index: 7,
+		subject: 'Mathematics',
+		text: 'The derivative of x² with respect to x is:',
+		options: [
+			{ label: 'A', text: 'x' },
+			{ label: 'B', text: '2x' },
+			{ label: 'C', text: 'x²' },
+			{ label: 'D', text: '2' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q8',
+		index: 8,
+		subject: 'Mathematics',
+		text: 'Sum of angles in a triangle (degrees):',
+		options: [
+			{ label: 'A', text: '90' },
+			{ label: 'B', text: '180' },
+			{ label: 'C', text: '270' },
+			{ label: 'D', text: '360' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q9',
+		index: 9,
+		subject: 'Mathematics',
+		text: 'If sin θ = 0.5, θ in first quadrant, θ equals:',
+		options: [
+			{ label: 'A', text: '15°' },
+			{ label: 'B', text: '30°' },
+			{ label: 'C', text: '45°' },
+			{ label: 'D', text: '60°' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	},
+	{
+		id: 'jee-q10',
+		index: 10,
+		subject: 'Mathematics',
+		text: 'The value of log₁₀(100) is:',
+		options: [
+			{ label: 'A', text: '1' },
+			{ label: 'B', text: '2' },
+			{ label: 'C', text: '10' },
+			{ label: 'D', text: '100' }
+		],
+		positiveMarks: 4,
+		negativeMarks: 1
+	}
 ];

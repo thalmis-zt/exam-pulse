@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { getQuizSummaryData } from '$lib/quiz-summary/mock/quiz-summary.service.js';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import QuizResultsBanner from '$lib/quiz-summary/QuizResultsBanner.svelte';
@@ -58,6 +59,7 @@
 				quizTitle={data.quizResult.quizTitle}
 				message={data.quizResult.message}
 				xpEarned={data.quizResult.xpEarned}
+				onReview={() => goto(`/tests/${testId}/review`)}
 			/>
 			<PerformanceOverview metrics={data.performanceMetrics} />
 			<TimeBreakdown metrics={data.timeBreakdownMetrics} />
