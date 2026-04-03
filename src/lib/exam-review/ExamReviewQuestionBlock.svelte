@@ -1,7 +1,6 @@
 <script>
-	import { Bookmark, BookMarked, Eye, HelpCircle } from '@lucide/svelte';
+	import { Eye, HelpCircle } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
-	import IconButton from '$lib/components/IconButton.svelte';
 	import QuestionMetadataBar from '$lib/quiz-attempt/QuestionMetadataBar.svelte';
 	import OptionButton from '$lib/quiz-attempt/OptionButton.svelte';
 	import QuestionImageContent from '$lib/quiz-attempt/QuestionImageContent.svelte';
@@ -74,17 +73,6 @@
 			onToggleSave={onToggleSave}
 			{savePending}
 		/>
-	{:else if embedded && onToggleSave}
-		<div class="flex justify-end border-b border-stroke bg-surface-card-subtle px-4 py-2">
-			<IconButton
-				icon={saved ? BookMarked : Bookmark}
-				ariaLabel={saved ? 'Remove from saved questions' : 'Save question for later'}
-				variant={saved ? 'primary' : 'outline'}
-				size="sm"
-				disabled={savePending}
-				onclick={() => onToggleSave?.()}
-			/>
-		</div>
 	{/if}
 
 	<div class="flex flex-col gap-4 p-4 md:p-6">

@@ -1,6 +1,6 @@
 <script>
-	import { Clock, LayoutGrid } from '@lucide/svelte';
-	import Badge from '$lib/components/Badge.svelte';
+	import { LayoutGrid } from '@lucide/svelte';
+	import TimerBadge from '$lib/components/TimerBadge.svelte';
 	import IconButton from '$lib/components/IconButton.svelte';
 
 	let {
@@ -13,40 +13,44 @@
 	} = $props();
 </script>
 
-<div
-	class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2"
->
-	<!-- Left: Question number + desktop stats -->
-	<div class="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
-		<span class="text-base font-bold text-fg sm:text-lg">
-			Question {currentQuestion} / {totalQuestions}
-		</span>
-		<div class="hidden items-center gap-4 text-sm text-fg-muted sm:flex">
-			<span>Answered: {answered}</span>
-			<span>Unanswered: {unanswered}</span>
+<div class="flex flex-col gap-2 sm:gap-3">
+	<!-- One row on all breakpoints: question (+ desktop stats) | time badge | grid (mobile only) -->
+	<div class="flex w-full min-w-0 items-center justify-between gap-2">
+		<div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
+			<span
+				class="truncate text-sm font-bold leading-tight text-fg sm:text-base lg:text-lg"
+			>
+				Question {currentQuestion} / {totalQuestions}
+			</span>
+			<div class="hidden shrink-0 items-center gap-4 text-sm text-fg-muted sm:flex">
+				<span>Answered: {answered}</span>
+				<span>Unanswered: {unanswered}</span>
+			</div>
+		</div>
+
+		<div class="flex shrink-0 items-center gap-2">
+			<div class="sm:hidden">
+				<TimerBadge time={timeSpent} variant="default" size="sm" label="Time Spent" />
+			</div>
+			<div class="hidden sm:block">
+				<TimerBadge time={timeSpent} variant="default" size="md" label="Time Spent" />
+			</div>
+			{#if onOpenGrid}
+				<IconButton
+					icon={LayoutGrid}
+					ariaLabel="Open question navigation"
+					variant="ghost-subtle"
+					size="md"
+					onclick={onOpenGrid}
+					class="sm:hidden"
+				/>
+			{/if}
 		</div>
 	</div>
 
-	<!-- Right: Time spent + grid (own row on mobile so nothing crowds the title area) -->
-	<div class="flex min-w-0 items-center justify-between gap-2 sm:justify-end">
-		<Badge label="Time Spent: {timeSpent}" variant="default" size="md">
-			{#snippet icon()}<Clock size={14} />{/snippet}
-		</Badge>
-		{#if onOpenGrid}
-			<IconButton
-				icon={LayoutGrid}
-				ariaLabel="Open question navigation"
-				variant="ghost-subtle"
-				size="md"
-				onclick={onOpenGrid}
-				class="shrink-0 sm:hidden"
-			/>
-		{/if}
+	<!-- Mobile: Answered / Unanswered -->
+	<div class="flex items-center justify-between gap-2 text-xs text-fg-muted sm:hidden">
+		<span>Answered: {answered}</span>
+		<span>Unanswered: {unanswered}</span>
 	</div>
-</div>
-
-<!-- Mobile: Stats row -->
-<div class="flex items-center justify-between gap-2 text-xs text-fg-muted sm:hidden">
-	<span>Answered: {answered}</span>
-	<span>Unanswered: {unanswered}</span>
 </div>
