@@ -26,7 +26,7 @@
 		/>
 	{/if}
 	<div class="flex flex-col gap-0.5 min-w-0">
-		<span class="text-xs font-medium text-fg-muted uppercase tracking-wide">{label}</span>
-		<span class="text-lg font-bold text-fg leading-tight">{valueText}</span>
+		<span class="text-2xs font-medium text-fg-muted uppercase tracking-wide">{label}</span>
+		<span class="text-base font-bold text-fg leading-tight">{valueText}</span>
 	</div>
 </div>

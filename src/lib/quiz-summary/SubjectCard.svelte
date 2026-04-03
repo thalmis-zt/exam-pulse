@@ -36,7 +36,7 @@
 				<h3 class="m-0 truncate text-sm font-bold text-fg">{subjectName}</h3>
 			{/if}
 		</div>
-		<Badge label={timeFormatted} variant="danger" size="sm">
+		<Badge label={timeFormatted} variant="primary" size="sm" hasBorder={false}>
 			{#snippet icon()}<Clock size={14} />{/snippet}
 		</Badge>
 	</div>
@@ -44,21 +44,21 @@
 	<!-- Metrics: TOTAL, CORRECT, WRONG -->
 	<div class="grid grid-cols-3 gap-2">
 		<div
-			class="flex flex-col gap-0.5 p-3 rounded-xl bg-surface-card border border-stroke"
+			class="flex flex-col gap-0.5 p-3 rounded-xl bg-info-surface "
 		>
-			<span class="text-xs font-medium text-fg-muted uppercase tracking-wide whitespace-nowrap">Total</span>
+			<span class="text-2xs font-medium text-fg-muted uppercase tracking-wide whitespace-nowrap">Total</span>
 			<span class="text-lg font-bold text-fg">{metrics.total}</span>
 		</div>
 		<div
-			class="flex flex-col gap-0.5 p-3 rounded-xl bg-secondary-light border border-secondary"
+			class="flex flex-col gap-0.5 p-3 rounded-xl bg-secondary-light"
 		>
-			<span class="text-xs font-medium text-secondary uppercase tracking-wide whitespace-nowrap">Correct</span>
+			<span class="text-2xs font-medium text-secondary uppercase tracking-wide whitespace-nowrap">Correct</span>
 			<span class="text-lg font-bold text-secondary">{metrics.correct}</span>
 		</div>
 		<div
-			class="flex flex-col gap-0.5 p-3 rounded-xl bg-danger-surface border border-danger"
+			class="flex flex-col gap-0.5 p-3 rounded-xl bg-danger-surface/80"
 		>
-			<span class="text-xs font-medium text-danger uppercase tracking-wide whitespace-nowrap">Wrong</span>
+			<span class="text-2xs font-medium text-danger uppercase tracking-wide whitespace-nowrap">Wrong</span>
 			<span class="text-lg font-bold text-danger">{metrics.wrong}</span>
 		</div>
 	</div>

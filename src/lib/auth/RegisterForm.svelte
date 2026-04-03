@@ -139,9 +139,9 @@
 	<div class="w-full max-w-md">
 		<!-- Header -->
 		<div class="mb-8 flex flex-col items-center text-center">
-			<a href="/" class="mb-4 flex items-center gap-2 no-underline">
-				<div class="bg-primary flex size-10 items-center justify-center rounded-xl">
-					<Zap size={22} color="white" fill="white" />
+			<a href="/" class="mb-2 flex items-center gap-2 no-underline">
+				<div class="bg-primary flex size-8 items-center justify-center rounded-lg">
+					<Zap size={18} color="white" fill="white" />
 				</div>
 				<span class="text-fg text-xl font-bold tracking-tight">Exam Buddy</span>
 			</a>
@@ -149,7 +149,7 @@
 		</div>
 
 		<!-- Form Card -->
-		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
+		<div class="bg-surface-card border-stroke rounded-md border p-6 shadow-sm">
 			<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
 				{#if formError}
 					<InlineAlert variant="error" title={formError} showClose={false} />
@@ -191,14 +191,14 @@
 				<Button
 					type="submit"
 					btnType="primary"
-					customClass="w-full py-3 font-semibold rounded-xl"
+					customClass="w-full py-3"
 					disabled={loading}
 				>
 					{loading ? 'Sending code…' : 'Verify with OTP'}
 				</Button>
 			</form>
 
-			<div class="border-stroke mt-6 flex items-center gap-3 border-t pt-6">
+			<div class="border-stroke mt-6 flex items-center gap-3 pt-2">
 				<span class="bg-stroke h-px flex-1"></span>
 				<span class="text-fg-muted text-xs">OR</span>
 				<span class="bg-stroke h-px flex-1"></span>

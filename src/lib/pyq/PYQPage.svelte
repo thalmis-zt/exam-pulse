@@ -210,8 +210,8 @@
 					<HelpCircle size={24} class="text-info" />
 				</div>
 				<div class="min-w-0 flex-1">
-					<h4 class="text-fg font-semibold wrap-break-word">Can't find what you're looking for?</h4>
-					<p class="text-fg-muted text-sm wrap-break-word">
+					<h4 class="text-fg font-semibold wrap-break-word text-sm mb-1">Can't find what you're looking for?</h4>
+					<p class="text-fg-muted text-xs wrap-break-word">
 						We're constantly updating our database. Request content and we'll add it soon.
 					</p>
 				</div>

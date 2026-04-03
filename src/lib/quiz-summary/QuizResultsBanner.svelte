@@ -44,9 +44,9 @@
 	</p>
 
 	<!-- XP badge -->
-	<Badge label="{xpEarned} XP Earned" variant="primary" size="md">
+	<Badge label="{xpEarned} XP Earned" variant="primary" size="sm">
 		{#snippet icon()}
-			<TrendingUp size={18} />
+			<TrendingUp size={12} />
 		{/snippet}
 	</Badge>
 

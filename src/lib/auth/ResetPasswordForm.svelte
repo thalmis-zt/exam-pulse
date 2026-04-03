@@ -206,10 +206,10 @@
 <div class="bg-canvas flex min-h-screen items-center justify-center px-4 py-12">
 	<div class="w-full max-w-md">
 		<div class="mb-8 flex flex-col items-center text-center">
-			<div class="bg-primary mb-5 flex size-14 items-center justify-center rounded-xl shadow-sm">
-				<Key class="size-8 text-canvas-base-fixed" strokeWidth={2} aria-hidden="true" />
+			<div class="bg-primary mb-5 flex size-12 items-center justify-center rounded-xl shadow-sm">
+				<Key class="size-6 text-canvas-base-fixed" strokeWidth={2} aria-hidden="true" />
 			</div>
-			<h1 class="text-fg mb-2 text-2xl font-bold tracking-tight">Reset password</h1>
+			<h1 class="text-fg mb-2 text-xl font-bold tracking-tight">Reset password</h1>
 			<p class="text-fg-muted max-w-sm text-sm leading-relaxed">
 				Enter the 6-digit code sent to
 				{#if displayEmail}
@@ -290,7 +290,7 @@
 				<Button
 					type="button"
 					btnType="primary"
-					customClass="w-full py-3 font-semibold rounded-xl"
+					customClass="w-full py-3"
 					disabled={!canSubmit || loading || resendLoading}
 					onclick={handleSubmit}
 				>

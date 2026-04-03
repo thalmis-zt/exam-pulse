@@ -146,6 +146,7 @@
 				<Badge
 					label={subj}
 					hasBorder={true}
+					size="sm"
 					isActive={activeSubject === subj}
 					onclick={() => (activeSubject = subj)}
 				/>

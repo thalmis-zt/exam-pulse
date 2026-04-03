@@ -156,7 +156,7 @@
 			<Button
 				type="button"
 				btnType="primary"
-				customClass="w-full py-3 font-semibold rounded-xl"
+				customClass="w-full py-3"
 				disabled={!otpComplete || loading}
 				onclick={handleVerify}
 			>

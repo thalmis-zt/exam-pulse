@@ -84,17 +84,17 @@
 	<div class="w-full max-w-md">
 		<div class="mb-8 flex flex-col items-center text-center">
 			<div
-				class="bg-primary mb-5 flex size-14 items-center justify-center rounded-xl shadow-sm"
+				class="bg-primary mb-5 flex size-12 items-center justify-center rounded-xl shadow-sm"
 			>
-				<Key class="size-8 text-canvas-base-fixed" strokeWidth={2} aria-hidden="true" />
+				<Key class="size-6 text-canvas-base-fixed" strokeWidth={2} aria-hidden="true" />
 			</div>
-			<h1 class="text-fg mb-2 text-2xl font-bold tracking-tight">Forgot password?</h1>
+			<h1 class="text-fg mb-1 text-xl font-bold tracking-tight">Forgot password?</h1>
 			<p class="text-fg-muted max-w-sm text-sm leading-relaxed">
 				Enter your email and we'll send you a reset code.
 			</p>
 		</div>
 
-		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
+		<div class="bg-surface-card border-stroke rounded-md border p-6 shadow-sm">
 			<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
 				{#if formError}
 					<InlineAlert variant="error" title={formError} showClose={false} />
@@ -114,7 +114,7 @@
 				<Button
 					type="submit"
 					btnType="primary"
-					customClass="w-full py-3 font-semibold rounded-xl"
+					customClass="w-full py-3"
 					disabled={loading}
 				>
 					{loading ? 'Sending…' : 'Send OTP'}
