@@ -26,7 +26,7 @@
 		{/if}
 	</div>
 	<p class="text-xs text-fg-muted  font-semibold uppercase tracking-wide">{card.examType}</p>
-	<div class="flex items-center justify-between gap-2">
+	<!-- <div class="flex items-center justify-between gap-2">
 		<span class="flex-1 py-2 text-sm font-semibold text-fg">Practice Now</span>
 		<IconButton
 			icon={ChevronRight}
@@ -36,5 +36,14 @@
 			size="md"
 			onclick={() => onPractice?.()}
 		/>
-	</div>
+	</div> -->
+
+	<Button
+		btnType="primaryLight"
+		type="button"
+		size="sm"
+		onclick={() => onPractice?.()}
+	>
+ Practice Now
+	</Button>
 </article>
