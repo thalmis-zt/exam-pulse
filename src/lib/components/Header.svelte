@@ -82,8 +82,8 @@
 				icon: User,
 				onNavigate: () => onProfileClick?.()
 			},
-			{ type: 'link', label: 'Settings', href: '/settings', icon: Settings },
-			{ type: 'link', label: 'Help', href: '/help', icon: HelpCircle },
+			// { type: 'link', label: 'Settings', href: '/settings', icon: Settings },
+			// { type: 'link', label: 'Help', href: '/help', icon: HelpCircle },
 			{ type: 'separator' },
 			{
 				type: 'action',
@@ -104,7 +104,7 @@
 		px-2 md:px-4 lg:px-6
 	"
 >
-	<div class="flex justify-center gap-2">
+	<div class="flex justify-center gap-1">
 		<!-- ── Hamburger (mobile only) ──────────────────────────── -->
 		<button
 			class="text-fg-muted hover:bg-canvas hover:text-fg mr-1 flex size-10 cursor-pointer
@@ -113,15 +113,15 @@
 			onclick={sidebar.toggle}
 			aria-label="Toggle navigation"
 		>
-			<Menu size={24} />
+			<Menu size={20} />
 		</button>
 
 		<!-- ── Brand ─────────────────────────────────────────────── -->
 		<a href={logoHref} class="flex shrink-0 items-center gap-2 no-underline">
-			<div class="bg-primary flex size-9 items-center justify-center rounded-xl">
-				<Zap size={18} color="white" fill="white" />
+			<div class="bg-primary flex size-8 items-center justify-center rounded-lg">
+				<Zap size={14} color="white" fill="white" />
 			</div>
-			<span class="text-fg text-base font-bold tracking-tight">Exam Buddy</span>
+			<span class="text-fg text-sm sm:text-base font-bold tracking-tight">Exam Buddy</span>
 		</a>
 	</div>
 

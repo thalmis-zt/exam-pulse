@@ -18,7 +18,7 @@
 </script>
 
 <div
-	class="border-stroke bg-surface-card absolute right-0 top-full z-60 mt-2 min-w-54 rounded-xl border py-1 shadow-lg"
+	class="border-stroke bg-surface-card absolute right-0 top-full z-60 mt-3 min-w-54 rounded-md border py-1 shadow-lg"
 	role="menu"
 	tabindex="-1"
 >
