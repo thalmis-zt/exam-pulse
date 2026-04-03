@@ -4,7 +4,7 @@
 	import { Zap } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
 	import PasswordInput from '$lib/components/PasswordInput.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 	import { onMount } from 'svelte';
 
 	const OTP_LENGTH = 6;
@@ -162,7 +162,7 @@
 
 			{#if formError}
 				<div class="mb-4">
-					<Error title={formError} showClose={false} />
+					<InlineAlert variant="error" title={formError} showClose={false} />
 				</div>
 			{/if}
 
