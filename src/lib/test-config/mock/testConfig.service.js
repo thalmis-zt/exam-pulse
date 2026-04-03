@@ -102,8 +102,19 @@ export async function startMockTest(config) {
 	// Simulate network delay
 	await new Promise((resolve) => setTimeout(resolve, 200));
 
-	if (!config.subjectId || !config.topicId || !config.difficultyId) {
-		throw new Error('Subject, topic, and difficulty are required');
+	if (!config.subjects || config.subjects.length === 0) {
+		throw new Error('At least one subject is required');
+	}
+
+	// Validate each subject has topics selected
+	for (const subject of config.subjects) {
+		if (!subject.topicIds || subject.topicIds.length === 0) {
+			throw new Error('At least one topic per subject is required');
+		}
+	}
+
+	if (!config.difficulty || (config.difficulty.easyPct + config.difficulty.moderatePct + config.difficulty.hardPct) !== 100) {
+		throw new Error('Difficulty must add up to 100%');
 	}
 
 	if (config.questionCount < 1 || config.questionCount > 100) {
