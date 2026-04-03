@@ -229,7 +229,7 @@
 				{#if showResendSuccess}
 					<InlineAlert
 						variant="success"
-						title="New code sent"
+						title="New OTP sent"
 						message="Check your email for the new OTP."
 						onclose={dismissResendSuccess}
 					/>
