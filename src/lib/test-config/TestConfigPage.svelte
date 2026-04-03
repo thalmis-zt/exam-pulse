@@ -2,15 +2,15 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { getTestConfigData, startMockTest } from '$lib/test-config/mock/testConfig.service.js';
+	import { goto } from '$app/navigation';
 	import ConfigurationCard from '$lib/test-config/ConfigurationCard.svelte';
-	import GuidelinesCard from '$lib/test-config/GuidelinesCard.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import StateDisplay from '$lib/components/StateDisplay.svelte';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 
 	let subjects = $state([]);
 	let difficultyLevels = $state([]);
-	let examGuidelines = $state([]);
 
 	let isLoading = $state(true);
 	let hasError = $state(false);
@@ -48,7 +48,6 @@
 			const config = await getTestConfigData();
 			subjects = config.subjects;
 			difficultyLevels = config.difficultyLevels;
-			examGuidelines = config.examGuidelines;
 		} catch (error) {
 			console.error('Failed to load test configuration:', error);
 			hasError = true;
@@ -63,7 +62,7 @@
 	});
 </script>
 
-<div class="duration-motion-normal ease-ease-standard transition">
+<div>
 	<div class="flex flex-col gap-6">
 		<SectionHeader
 			title="Test Configuration"
@@ -95,17 +94,15 @@
 						isLoading={isStartingTest}
 					/>
 
-					<!-- Use inline notification here once reusable components are ready -->
+					<!-- Error notification -->
 					{#if startTestError}
-						<div
-							class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300"
-						>
-							{startTestError}
-						</div>
+						<InlineAlert
+							variant="error"
+							title={startTestError}
+							showClose={true}
+							onclose={() => (startTestError = '')}
+						/>
 					{/if}
-
-					<!-- Guidelines Card -->
-					<GuidelinesCard guidelines={examGuidelines} />
 				</div>
 			{/if}
 		</div>

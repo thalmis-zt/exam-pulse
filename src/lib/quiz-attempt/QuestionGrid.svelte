@@ -22,6 +22,7 @@
 				number={q.index}
 				status={q.status}
 				isCurrent={q.index === currentIndex}
+				showBookmark={q.showBookmark === true}
 				onclick={onSelect ? () => onSelect(q.id) : undefined}
 			/>
 		</div>

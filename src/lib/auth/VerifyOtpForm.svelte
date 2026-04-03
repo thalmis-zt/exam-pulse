@@ -3,7 +3,7 @@
 	import { browser } from '$app/environment';
 	import { Zap } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 	import { onMount } from 'svelte';
 
 	const OTP_LENGTH = 6;
@@ -116,18 +116,18 @@
 
 		<!-- OTP Card -->
 		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
-			<p class="text-fg-muted mb-6 text-center text-sm">
-				We've sent a 6-digit code to
-				{#if displayEmail}
-					<span class="text-fg font-medium">{displayEmail}</span>
-				{:else}
-					your email
-				{/if}. Enter it below to verify your account.
-			</p>
+			<div class="mb-6">
+				<InlineAlert
+					variant="success"
+					title="Check your email"
+					message={`We've sent a 6-digit code to ${displayEmail || 'your email'}. Enter it below to verify your account.`}
+					showClose={false}
+				/>
+			</div>
 
 			{#if formError}
 				<div class="mb-4">
-					<Error title={formError} showClose={false} />
+					<InlineAlert variant="error" title={formError} showClose={false} />
 				</div>
 			{/if}
 

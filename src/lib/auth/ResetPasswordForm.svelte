@@ -1,10 +1,10 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
-	import { Zap } from '@lucide/svelte';
+	import { ArrowLeft, Key } from '@lucide/svelte';
 	import Button from '$lib/components/Button.svelte';
 	import PasswordInput from '$lib/components/PasswordInput.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 	import { onMount } from 'svelte';
 
 	const OTP_LENGTH = 6;
@@ -18,11 +18,18 @@
 	let confirmPasswordError = $state('');
 	let formError = $state('');
 	let loading = $state(false);
+	let resendLoading = $state(false);
+	let showResendSuccess = $state(false);
 	let displayEmail = $state('');
+
+	function dismissResendSuccess() {
+		showResendSuccess = false;
+	}
 
 	function messageFromErrorBody(data) {
 		if (!data || typeof data !== 'object') return 'Reset failed';
 		if ('detail' in data && typeof data.detail === 'string') return data.detail;
+		if ('message' in data && typeof data.message === 'string') return data.message;
 		if ('error' in data && typeof data.error === 'string') return data.error;
 		if (Array.isArray(data.detail) && data.detail[0] && typeof data.detail[0] === 'object') {
 			const msgs = data.detail
@@ -31,6 +38,33 @@
 			if (msgs.length) return msgs.join(' ');
 		}
 		return 'Reset failed';
+	}
+
+	/** Forgot-password API errors when resending OTP (same rules as ForgotPasswordForm). */
+	function errorMessageForForgotPasswordResponse(res, data) {
+		if (res.status === 422) return 'Please enter a valid email address.';
+		if (res.status === 429) return 'Too many attempts. Please try again in an hour.';
+		if (!data || typeof data !== 'object') return 'Request failed';
+		if ('detail' in data && typeof data.detail === 'string') return data.detail;
+		if ('message' in data && typeof data.message === 'string') return data.message;
+		if ('error' in data && typeof data.error === 'string') return data.error;
+		if (Array.isArray(data.detail) && data.detail[0] && typeof data.detail[0] === 'object') {
+			const msgs = data.detail
+				.map((x) => (x && typeof x === 'object' && 'msg' in x ? String(x.msg) : ''))
+				.filter(Boolean);
+			if (msgs.length) return msgs.join(' ');
+		}
+		return 'Request failed';
+	}
+
+	/** Maps HTTP status when reset-password response is not OK. */
+	function errorMessageForResetPasswordResponse(res, data) {
+		if (res.status === 400) return 'Invalid or expired OTP. Please request a new one.';
+		if (res.status === 422) {
+			return 'Password must be 8+ characters with uppercase, lowercase, and a special character.';
+		}
+		if (res.status === 429) return 'Too many attempts. Please try again in an hour.';
+		return messageFromErrorBody(data);
 	}
 
 	function validatePasswordFields() {
@@ -96,6 +130,37 @@
 		otpContainerRef?.querySelectorAll('input')[focusIndex]?.focus();
 	}
 
+	async function handleResendOtp() {
+		const email = displayEmail.trim();
+		if (!email) return;
+
+		resendLoading = true;
+		formError = '';
+		showResendSuccess = false;
+		try {
+			const res = await fetch('/apis/auth/forgot-password', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email })
+			});
+
+			const data = await res.json().catch(() => ({}));
+
+			if (res.ok) {
+				otpValues = Array(OTP_LENGTH).fill('');
+				showResendSuccess = true;
+				otpContainerRef?.querySelector('input')?.focus();
+				return;
+			}
+
+			formError = errorMessageForForgotPasswordResponse(res, data);
+		} catch (err) {
+			formError = err instanceof Error ? err.message : 'Request failed';
+		} finally {
+			resendLoading = false;
+		}
+	}
+
 	async function handleSubmit() {
 		const code = otpValues.join('');
 		if (code.length !== OTP_LENGTH) return;
@@ -105,6 +170,7 @@
 		if (!validatePasswordFields()) return;
 
 		formError = '';
+		showResendSuccess = false;
 		loading = true;
 		try {
 			const res = await fetch('/apis/auth/reset-password', {
@@ -125,9 +191,9 @@
 				return;
 			}
 
-			formError = messageFromErrorBody(data);
+			formError = errorMessageForResetPasswordResponse(res, data);
 		} catch (err) {
-			formError = messageFromErrorBody(err);
+			formError = err instanceof Error ? err.message : 'Reset failed';
 		} finally {
 			loading = false;
 		}
@@ -140,85 +206,106 @@
 <div class="bg-canvas flex min-h-screen items-center justify-center px-4 py-12">
 	<div class="w-full max-w-md">
 		<div class="mb-8 flex flex-col items-center text-center">
-			<a href="/" class="mb-4 flex items-center gap-2 no-underline">
-				<div class="bg-primary flex size-10 items-center justify-center rounded-xl">
-					<Zap size={22} color="white" fill="white" />
-				</div>
-				<span class="text-fg text-xl font-bold tracking-tight">Exam Buddy</span>
-			</a>
-			<p class="text-fg-muted text-sm">Set a new password</p>
-		</div>
-
-		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
-			<p class="text-fg-muted mb-6 text-center text-sm">
+			<div class="bg-primary mb-5 flex size-14 items-center justify-center rounded-xl shadow-sm">
+				<Key class="size-8 text-canvas-base-fixed" strokeWidth={2} aria-hidden="true" />
+			</div>
+			<h1 class="text-fg mb-2 text-2xl font-bold tracking-tight">Reset password</h1>
+			<p class="text-fg-muted max-w-sm text-sm leading-relaxed">
 				Enter the 6-digit code sent to
 				{#if displayEmail}
 					<span class="text-fg font-medium">{displayEmail}</span>
 				{:else}
-					your email
+					<span class="text-fg font-medium">your email</span>
 				{/if}
 				, then choose your new password.
 			</p>
+		</div>
 
-			{#if formError}
-				<div class="mb-4">
-					<Error title={formError} showClose={false} />
-				</div>
-			{/if}
-
-			<p id="otp-label" class="text-fg mb-3 block text-sm font-semibold">Enter OTP</p>
-			<div
-				bind:this={otpContainerRef}
-				class="mb-6 flex gap-2"
-				role="group"
-				aria-labelledby="otp-label"
-			>
-				{#each otpValues as _, i}
-					<input
-						type="text"
-						inputmode="numeric"
-						maxlength="1"
-						autocomplete="one-time-code"
-						class="border-stroke focus:border-primary bg-canvas text-fg size-12 rounded-lg border text-center text-lg font-semibold outline-none transition duration-(--motion-fast) focus:ring-2 focus:ring-primary/20"
-						value={otpValues[i]}
-						oninput={(e) => handleInput(i, e)}
-						onkeydown={(e) => handleKeydown(i, e)}
-						onpaste={i === 0 ? handlePaste : undefined}
+		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
+			<div class="flex flex-col gap-5">
+				{#if formError}
+					<InlineAlert variant="error" title={formError} showClose={false} />
+				{/if}
+				{#if showResendSuccess}
+					<InlineAlert
+						variant="success"
+						title="New OTP sent"
+						message="Check your email for the new OTP."
+						onclose={dismissResendSuccess}
 					/>
-				{/each}
+				{/if}
+
+				<div>
+					<div class="mb-3 flex items-center justify-between gap-2">
+						<p id="otp-label" class="text-fg text-sm font-semibold">Enter OTP</p>
+						<Button
+							type="button"
+							btnType="custom"
+							customClass="text-primary h-auto min-h-0 shrink-0 cursor-pointer bg-transparent p-0 text-sm font-medium hover:underline border-0 shadow-none disabled:cursor-not-allowed disabled:opacity-50"
+							disabled={loading || resendLoading}
+							onclick={handleResendOtp}
+						>
+							{resendLoading ? 'Sending…' : 'Resend OTP'}
+						</Button>
+					</div>
+					<div
+						bind:this={otpContainerRef}
+						class="flex gap-2"
+						role="group"
+						aria-labelledby="otp-label"
+					>
+						{#each otpValues as _, i}
+							<input
+								type="text"
+								inputmode="numeric"
+								maxlength="1"
+								autocomplete="one-time-code"
+								class="border-stroke focus:border-primary bg-canvas text-fg size-12 rounded-lg border text-center text-lg font-semibold outline-none transition duration-(--motion-fast) focus:ring-2 focus:ring-primary/20"
+								value={otpValues[i]}
+								oninput={(e) => handleInput(i, e)}
+								onkeydown={(e) => handleKeydown(i, e)}
+								onpaste={i === 0 ? handlePaste : undefined}
+							/>
+						{/each}
+					</div>
+				</div>
+
+				<div class="flex flex-col gap-5">
+					<PasswordInput
+						label="New password"
+						placeholder="Enter new password"
+						bind:value={newPassword}
+						error={passwordError}
+						required
+					/>
+					<PasswordInput
+						label="Confirm new password"
+						placeholder="Confirm new password"
+						bind:value={confirmPassword}
+						error={confirmPasswordError}
+						required
+					/>
+				</div>
+
+				<Button
+					type="button"
+					btnType="primary"
+					customClass="w-full py-3 font-semibold rounded-xl"
+					disabled={!canSubmit || loading || resendLoading}
+					onclick={handleSubmit}
+				>
+					{loading ? 'Updating password…' : 'Reset password'}
+				</Button>
 			</div>
 
-			<div class="mb-6 flex flex-col gap-5">
-				<PasswordInput
-					label="New password"
-					placeholder="Enter new password"
-					bind:value={newPassword}
-					error={passwordError}
-					required
-				/>
-				<PasswordInput
-					label="Confirm new password"
-					placeholder="Confirm new password"
-					bind:value={confirmPassword}
-					error={confirmPasswordError}
-					required
-				/>
-			</div>
-
-			<Button
-				type="button"
-				btnType="primary"
-				customClass="w-full py-3 font-semibold rounded-xl"
-				disabled={!canSubmit || loading}
-				onclick={handleSubmit}
-			>
-				{loading ? 'Updating password…' : 'Reset password'}
-			</Button>
-
-			<p class="text-fg-muted mt-6 text-center text-sm">
-				<a href="/forgot-password" class="text-primary font-medium hover:underline">Request a new code</a>
-				<span class="text-fg-muted"> · </span>
-				<a href="/login" class="text-primary font-medium hover:underline">Back to sign in</a>
+			<p class="mt-6 text-center">
+				<a
+					href="/login"
+					class="text-primary inline-flex items-center justify-center gap-1.5 text-sm font-medium hover:underline"
+				>
+					<ArrowLeft class="size-4 shrink-0" aria-hidden="true" />
+					Back
+				</a>
 			</p>
 		</div>
 	</div>

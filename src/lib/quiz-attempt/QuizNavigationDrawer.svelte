@@ -6,7 +6,7 @@
 	import QuizSidebarLinks from './QuizSidebarLinks.svelte';
 
 	/**
-	 * @typedef {'current'|'answered'|'marked'|'not-visited'} QuestionStatus
+	 * @typedef {'current'|'answered'|'marked'|'wrong'|'not-visited'} QuestionStatus
 	 * @typedef {Object} Props
 	 * @property {boolean} open - Whether drawer is open
 	 * @property {() => void} onClose - Close handler
@@ -24,7 +24,14 @@
 		currentIndex = 1,
 		onSelectQuestion,
 		onQuizInstructions,
-		onQuitAttempt
+		onQuitAttempt,
+		title = 'Quiz Navigation',
+		legendVariant = 'attempt',
+		instructionsLabel = 'Quiz Instructions',
+		exitLabel = 'Quit Attempt',
+		showFooterLinks = true,
+		showInstructions = true,
+		reviewCounts = null
 	} = $props();
 
 	function handleSelectQuestion(questionId) {
@@ -54,12 +61,12 @@
 
 		<div class="flex items-center justify-between">
 			<h2 class="text-xs font-bold uppercase tracking-wide text-fg-muted">
-				Quiz Navigation
+				{title}
 			</h2>
 			<IconButton icon={X} ariaLabel="Close" variant="ghost-subtle" size="md" onclick={onClose} />
 		</div>
 
-		<QuizStatusLegend />
+		<QuizStatusLegend variant={legendVariant} {reviewCounts} />
 
 		<div class="min-h-0 flex-1 overflow-y-auto py-4">
 			<QuestionGrid
@@ -70,9 +77,14 @@
 			/>
 		</div>
 
-		<QuizSidebarLinks
-			onQuizInstructions={onQuizInstructions}
-			onQuitAttempt={onQuitAttempt}
-		/>
+		{#if showFooterLinks}
+			<QuizSidebarLinks
+				onQuizInstructions={onQuizInstructions}
+				onQuitAttempt={onQuitAttempt}
+				{instructionsLabel}
+				{exitLabel}
+				{showInstructions}
+			/>
+		{/if}
 	</div>
 {/if}
