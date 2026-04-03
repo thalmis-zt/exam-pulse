@@ -349,9 +349,9 @@
 		</div>
 	{:else if data}
 		<div
-			class="flex min-h-0 w-full flex-1 flex-col sm:flex-row sm:items-stretch sm:gap-0"
+			class="flex min-h-0 w-full flex-1 flex-col lg:flex-row lg:items-stretch lg:gap-0"
 		>
-			<div class="hidden min-h-0 self-stretch sm:flex">
+			<div class="hidden min-h-0 self-stretch lg:flex">
 				<QuizNavigationSidebar
 					variant="review"
 					showFooterLinks={true}
@@ -380,9 +380,9 @@
 			>
 		<header class="flex flex-col gap-2 sm:gap-1.5">
 			<div
-				class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-3"
+				class="flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-start lg:justify-between lg:gap-3"
 			>
-				<div class="flex min-w-0 flex-1 items-start justify-between gap-3 sm:min-w-0">
+				<div class="flex min-w-0 flex-1 items-start justify-between gap-3">
 					<div class="min-w-0 flex-1">
 						<SectionHeader title={data.title} variant="lg">
 							{#snippet meta()}
@@ -405,7 +405,7 @@
 						</SectionHeader>
 					</div>
 					<IconButton
-						class="shrink-0 sm:hidden"
+						class="shrink-0 lg:hidden"
 						icon={LayoutGrid}
 						ariaLabel="Open question navigation"
 						variant="outline"
@@ -415,7 +415,7 @@
 				</div>
 				<Tabs
 					variant="segmented"
-					class="w-full min-w-0 sm:w-auto sm:shrink-0"
+					class="mt-2 w-full min-w-0 lg:mt-0 lg:w-auto lg:shrink-0"
 					ariaLabel="Review view mode"
 					options={[
 						{ label: 'One-by-one', shortLabel: 'One', value: 'single', icon: Eye },
