@@ -134,7 +134,7 @@
 			<p id="otp-label" class="text-fg mb-3 block text-sm font-semibold">Enter OTP</p>
 			<div
 				bind:this={otpContainerRef}
-				class="mb-6 flex gap-2"
+				class="mb-6 flex flex-wrap gap-2"
 				role="group"
 				aria-labelledby="otp-label"
 			>

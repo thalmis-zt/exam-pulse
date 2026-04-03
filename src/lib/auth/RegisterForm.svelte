@@ -5,6 +5,7 @@
 	import PasswordInput from '$lib/components/PasswordInput.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import InlineAlert from '$lib/components/InlineAlert.svelte';
+	import { getNewPasswordError } from '$lib/auth/passwordValidation.js';
 
 	let email = $state('');
 	let name = $state('');
@@ -19,7 +20,6 @@
 	let loading = $state(false);
 
 	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	const MIN_PASSWORD_LENGTH = 6;
 
 	function validateEmail() {
 		if (!email.trim()) {
@@ -49,16 +49,9 @@
 	}
 
 	function validatePassword() {
-		if (!password) {
-			passwordError = 'Password is required';
-			return false;
-		}
-		if (password.length < MIN_PASSWORD_LENGTH) {
-			passwordError = `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
-			return false;
-		}
-		passwordError = '';
-		return true;
+		const err = getNewPasswordError(password);
+		passwordError = err;
+		return !err;
 	}
 
 	function validateConfirmPassword() {

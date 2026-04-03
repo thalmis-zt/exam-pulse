@@ -6,9 +6,9 @@
 	import PasswordInput from '$lib/components/PasswordInput.svelte';
 	import InlineAlert from '$lib/components/InlineAlert.svelte';
 	import { onMount } from 'svelte';
+	import { getNewPasswordError, PASSWORD_POLICY_MESSAGE } from '$lib/auth/passwordValidation.js';
 
 	const OTP_LENGTH = 6;
-	const MIN_PASSWORD_LENGTH = 6;
 
 	let otpValues = $state(Array(OTP_LENGTH).fill(''));
 	let otpContainerRef = $state(null);
@@ -61,7 +61,7 @@
 	function errorMessageForResetPasswordResponse(res, data) {
 		if (res.status === 400) return 'Invalid or expired OTP. Please request a new one.';
 		if (res.status === 422) {
-			return 'Password must be 8+ characters with uppercase, lowercase, and a special character.';
+			return PASSWORD_POLICY_MESSAGE;
 		}
 		if (res.status === 429) return 'Too many attempts. Please try again in an hour.';
 		return messageFromErrorBody(data);
@@ -70,12 +70,9 @@
 	function validatePasswordFields() {
 		passwordError = '';
 		confirmPasswordError = '';
-		if (!newPassword) {
-			passwordError = 'Password is required';
-			return false;
-		}
-		if (newPassword.length < MIN_PASSWORD_LENGTH) {
-			passwordError = `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+		const pwdErr = getNewPasswordError(newPassword);
+		if (pwdErr) {
+			passwordError = pwdErr;
 			return false;
 		}
 		if (!confirmPassword) {
@@ -250,7 +247,7 @@
 					</div>
 					<div
 						bind:this={otpContainerRef}
-						class="flex gap-2"
+						class="flex flex-wrap gap-2"
 						role="group"
 						aria-labelledby="otp-label"
 					>
