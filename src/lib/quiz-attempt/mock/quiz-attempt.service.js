@@ -4,7 +4,14 @@
  * Fetches quiz attempt data for a given test ID.
  */
 
-import { geometryAssessmentQuestions } from './quiz-attempt.data.js';
+import { geometryAssessmentQuestions, jeeMockQuestions } from './quiz-attempt.data.js';
+
+/**
+ * Example: open `/tests/jee-demo/review` for subject-wise review navigation.
+ */
+function useJeeMock(testId) {
+	return /jee/i.test(testId);
+}
 
 /**
  * Fetches quiz attempt data for a test session
@@ -15,7 +22,8 @@ import { geometryAssessmentQuestions } from './quiz-attempt.data.js';
 export async function getQuizAttemptData(testId) {
 	await new Promise((resolve) => setTimeout(resolve, 300));
 
-	const questions = geometryAssessmentQuestions;
+	const jee = useJeeMock(testId);
+	const questions = jee ? jeeMockQuestions : geometryAssessmentQuestions;
 	const questionStatuses = {};
 	const answers = {};
 
@@ -36,8 +44,8 @@ export async function getQuizAttemptData(testId) {
 
 	return {
 		testId,
-		title: 'Geometry Assessment',
-		section: 'Section B: Advanced Properties',
+		title: jee ? 'JEE Main Mock — Multi-subject' : 'Geometry Assessment',
+		section: jee ? 'Physics · Chemistry · Mathematics' : 'Section B: Advanced Properties',
 		totalQuestions: questions.length,
 		durationSeconds: 3 * 60 * 60, // 3 hours
 		questions,

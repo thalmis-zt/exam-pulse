@@ -13,6 +13,66 @@
 import { allQuestions, physicsQuestions, chemistryQuestions, mathsQuestions } from './saved-questions.data.js';
 
 /**
+ * In-memory questions saved from exam review (mock). Clears on full page reload.
+ * @type {import('./saved-questions.schema.js').SavedQuestion[]}
+ */
+let runtimeSavedFromReview = [];
+
+/**
+ * @param {string} attemptId
+ * @param {string} questionId
+ */
+export function savedReviewRecordId(attemptId, questionId) {
+	const safe = String(attemptId).replace(/[^a-zA-Z0-9-_]/g, '_');
+	return `review-${safe}-${questionId}`;
+}
+
+/**
+ * @param {string} attemptId
+ * @param {string} questionId
+ */
+export function isSavedFromReview(attemptId, questionId) {
+	return runtimeSavedFromReview.some((q) => q.id === savedReviewRecordId(attemptId, questionId));
+}
+
+/**
+ * Save or unsave a question from exam review (toggle). Mock only — persists until reload.
+ *
+ * @param {string} attemptId
+ * @param {import('$lib/quiz-attempt/mock/quiz-attempt.schema.js').Question} question
+ * @param {string} correctOptionLabel
+ * @param {string} [testTitle]
+ * @returns {Promise<{ saved: boolean }>}
+ */
+export async function toggleSaveQuestionFromReview(attemptId, question, correctOptionLabel, testTitle = '') {
+	await new Promise((resolve) => setTimeout(resolve, 180));
+
+	const id = savedReviewRecordId(attemptId, question.id);
+	const idx = runtimeSavedFromReview.findIndex((q) => q.id === id);
+
+	if (idx >= 0) {
+		runtimeSavedFromReview = runtimeSavedFromReview.filter((q) => q.id !== id);
+		return { saved: false };
+	}
+
+	/** @type {import('./saved-questions.schema.js').SavedQuestion} */
+	const entry = {
+		id,
+		subject: question.subject,
+		topic: testTitle ? `Review · ${testTitle}` : 'Exam review',
+		difficulty: 'Medium',
+		text: question.text,
+		options: question.options.map((o) => ({ label: o.label, text: o.text })),
+		correctOptionLabel,
+		explanation:
+			'Saved from exam review. Revisit the completed test to see timing, section breakdown, and full solution context.',
+		savedAt: new Date().toISOString()
+	};
+	runtimeSavedFromReview = [entry, ...runtimeSavedFromReview];
+	return { saved: true };
+}
+
+/**
  * Fetches paginated saved questions with optional filters.
  * Simulates a backend API response with a small delay.
  *
@@ -38,8 +98,8 @@ export async function getSavedQuestions(page = 1, pageSize = 10, filters = null)
 			throw new Error('Page size must be between 1 and 50');
 		}
 
-		// Apply filters
-		let filtered = allQuestions;
+		// Apply filters (include questions saved from exam review first)
+		let filtered = [...runtimeSavedFromReview, ...allQuestions];
 
 		if (filters?.subject) {
 			filtered = filtered.filter((q) => q.subject === filters.subject);
@@ -172,14 +232,16 @@ export async function deleteSavedQuestion(questionId) {
 			throw new Error('Network error: Failed to delete question. Please retry.');
 		}
 
-		// Check if question exists
-		const exists = allQuestions.some((q) => q.id === questionId);
-		if (!exists) {
+		const inRuntime = runtimeSavedFromReview.some((q) => q.id === questionId);
+		const inSeed = allQuestions.some((q) => q.id === questionId);
+		if (!inRuntime && !inSeed) {
 			throw new Error(`Question with ID ${questionId} not found`);
 		}
 
-		// In real API, this would remove from database
-		// For mock, just confirm success
+		if (inRuntime) {
+			runtimeSavedFromReview = runtimeSavedFromReview.filter((q) => q.id !== questionId);
+		}
+
 		console.log(`[Mock] Deleted question: ${questionId}`);
 
 		return {

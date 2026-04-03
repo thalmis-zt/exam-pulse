@@ -8,6 +8,7 @@
 
 	const route = $derived($page.url.pathname);
 	const isQuizAttempt = $derived(/^\/tests\/[^/]+\/attempt\/?$/.test(route));
+	const isExamReview = $derived(/^\/tests\/[^/]+\/review\/?$/.test(route));
 
 	const routesWithoutSidebar = [
 		'/',
@@ -27,9 +28,11 @@
 	{/if}
 
 	<main
-		class="flex-1 flex flex-col w-full min-w-0 {isQuizAttempt
+		class="flex min-h-0 flex-1 flex-col w-full min-w-0 {isQuizAttempt
 			? 'pb-24 lg:pb-0'
-			: 'px-4 sm:px-6 pt-6 pb-24 max-w-6xl mx-auto'}"
+			: isExamReview
+				? 'p-0 pb-24 lg:pb-0'
+				: 'px-4 sm:px-6 pt-6 pb-24'}"
 	>
 		{@render children?.()}
 		<BottomNav />

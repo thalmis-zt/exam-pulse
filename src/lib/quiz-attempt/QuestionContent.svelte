@@ -3,7 +3,6 @@
 	import QuestionMetadataBar from './QuestionMetadataBar.svelte';
 	import OptionButton from './OptionButton.svelte';
 
-
 	let {
 		subject,
 		text,
@@ -18,6 +17,7 @@
 
 <div class="overflow-hidden rounded-lg border border-stroke bg-surface-card">
 	<QuestionMetadataBar
+		variant="attempt"
 		{subject}
 		{positiveMarks}
 		{negativeMarks}
@@ -25,7 +25,6 @@
 	/>
 
 	<div class="flex flex-col gap-4 p-4 md:p-6">
-		<!-- Question text -->
 		<div class="flex items-start gap-3">
 			<HelpCircle size={20} class="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
 			<p class="min-w-0 flex-1 text-base leading-relaxed text-fg">{text}</p>
