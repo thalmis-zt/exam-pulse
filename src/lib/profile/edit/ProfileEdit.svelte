@@ -7,6 +7,7 @@
 	import GoalModal from '$lib/profile/GoalModal.svelte';
 	import GoalItem from '$lib/profile/GoalItem.svelte';
 	import SubjectCard from '$lib/test-config/SubjectCard.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 	import {
 		generateGoalTitle,
 		generateGoalDescription
@@ -22,6 +23,9 @@
 	let isGoalModalOpen = $state(false);
 	let showDeleteModal = $state(false);
 	let selectedGoal = $state(null);
+	let alertMessage = $state('');
+	let alertType = $state(null); // 'success' or 'error'
+	let isSubmitting = $state(false);
 
 	// Primary Subjects
 	let primarySubjects = $state(['Mathematics', 'Physics']);
@@ -180,6 +184,73 @@
 			reader.readAsDataURL(file);
 		}
 	}
+
+	// -------------------- Form Validation --------------------
+	function validateForm() {
+		const errors = [];
+
+		// Validate full name
+		if (!fullName || fullName.trim().length === 0) {
+			errors.push('Full name is required');
+		}
+
+		// Validate email
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!email || !emailRegex.test(email)) {
+			errors.push('Please enter a valid email address');
+		}
+
+		return errors;
+	}
+
+	// -------------------- Form Submission --------------------
+	async function handleSaveProfile() {
+		alertMessage = '';
+		alertType = null;
+		isSubmitting = true;
+
+		try {
+			// Validate form
+			const validationErrors = validateForm();
+
+			if (validationErrors.length > 0) {
+				alertType = 'error';
+				alertMessage = validationErrors.join('. ');
+				isSubmitting = false;
+				return;
+			}
+
+			// Simulate API call
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+
+			// Mock success/failure (90% success rate for demo)
+			const isSuccess = Math.random() > 0.1;
+
+			if (isSuccess) {
+				alertType = 'success';
+				alertMessage = 'Profile updated successfully! Your changes have been saved.';
+				console.log('Profile saved:', {
+					fullName,
+					email,
+					phoneNumber,
+					primarySubjects,
+					selectedLearningGoals,
+					questionsPerDay,
+					studyDurationMinutes,
+					goals
+				});
+			} else {
+				alertType = 'error';
+				alertMessage = 'Failed to update profile. Please try again.';
+			}
+		} catch (err) {
+			alertType = 'error';
+			alertMessage = 'An unexpected error occurred. Please try again.';
+			console.error('Error saving profile:', err);
+		} finally {
+			isSubmitting = false;
+		}
+	}
 </script>
 
 <div class="flex flex-col gap-6">
@@ -242,6 +313,7 @@
 					label="Email Address"
 					type="email"
 					placeholder="arjun.mehta@example.com"
+                    disabled={true}
 					bind:value={email}
 				/>
 
@@ -253,12 +325,15 @@
 
 	<!-- Academic Goals Section -->
 	<div class="bg-surface-card rounded-md p-4 shadow-sm sm:p-6">
-		<div class="mb-4 flex items-center justify-between">
-			<SectionHeader
+		<div class="mb-4 flex flex-col 450px:flex-row items-center justify-between">
+			<div class="self-start">
+            <SectionHeader
 				title="Academic Goals"
 				subtitle="Define your academic aspirations"
 				variant="sm"
 			/>
+            </div>
+            <div class="self-end mt-2 450px:mt-0">
 			<Button
 				btnType="primary"
 				size="sm"
@@ -271,13 +346,13 @@
 				<Plus size={16} />
 				Add Goal
 			</Button>
+            </div>
 		</div>
 
 		<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 			{#if goals.length === 0}
 				<div class="col-span-1 py-8 text-center sm:col-span-2">
-					<p class="text-fg-muted text-sm">No academic goals added yet.</p>
-					<p class="text-fg-muted text-xs">Click "Add Goal" to get started.</p>
+					<p class="text-fg-muted text-sm italic">No academic goals added yet</p>
 				</div>
 			{:else}
 				{#each goals as goal (goal.base.id)}
@@ -377,10 +452,19 @@
 		</div>
 	</div>
 
+	<!-- Alert Message -->
+	{#if alertMessage}
+		<InlineAlert variant={alertType} message={alertMessage} onclose={() => (alertMessage = '')} />
+	{/if}
+
 	<!-- Footer Buttons -->
 	<div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-		<Button btnType="neutral" onclick={() => window.history.back()}>Cancel</Button>
-		<Button btnType="primary" onclick={() => console.log('Save profile')}>Save Changes</Button>
+		<Button btnType="neutral" onclick={() => window.history.back()} disabled={isSubmitting}>
+			Cancel
+		</Button>
+		<Button btnType="primary" onclick={handleSaveProfile} disabled={isSubmitting}>
+			{isSubmitting ? 'Saving...' : 'Save Changes'}
+		</Button>
 	</div>
 </div>
 
