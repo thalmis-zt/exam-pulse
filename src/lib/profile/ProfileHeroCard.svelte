@@ -4,6 +4,7 @@
 	import ProgressBar from '$lib/components/ProgressBar.svelte';
 	import Avatar from '$lib/components/Avatar.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import { goto } from '$app/navigation';
 
 	/** @type {{ user: import('./mock/profile.schema.js').UserProfile }} */
 	let { user } = $props();
@@ -17,6 +18,7 @@
 			type="button"
 			customClass="text-primary flex items-center gap-1 text-sm font-medium hover:opacity-80"
 			ariaLabel="Edit profile"
+			onclick={() => goto('/profile/edit')}
 		>
 			<Pencil size={14} />
 			Edit

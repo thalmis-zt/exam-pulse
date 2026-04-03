@@ -48,16 +48,16 @@
 	<!-- Metrics section - three columns on all screen sizes -->
 	<div class="flex flex-nowrap items-stretch gap-0 divide-x divide-stroke">
 		<div class="flex flex-col gap-1 flex-1 px-4 first:pl-0 last:pr-0 min-w-0">
-			<span class="text-xs font-medium text-fg-muted uppercase tracking-wide whitespace-nowrap">Correct Time</span>
-			<span class="text-lg font-bold text-fg">{correctFormatted}</span>
+			<span class="text-2xs font-medium text-fg-muted uppercase tracking-wide whitespace-nowrap">Correct Time</span>
+			<span class="text-base font-bold text-fg">{correctFormatted}</span>
 		</div>
 		<div class="flex flex-col gap-1 flex-1 px-4 first:pl-0 last:pr-0 min-w-0">
-			<span class="text-xs font-medium text-fg-muted uppercase tracking-wide whitespace-nowrap">Wrong Time</span>
-			<span class="text-lg font-bold text-fg">{wrongFormatted}</span>
+			<span class="text-2xs font-medium text-fg-muted uppercase tracking-wide whitespace-nowrap">Wrong Time</span>
+			<span class="text-base font-bold text-fg">{wrongFormatted}</span>
 		</div>
 		<div class="flex flex-col gap-1 flex-1 px-4 first:pl-0 last:pr-0 min-w-0">
-			<span class="text-xs font-medium text-fg-muted uppercase tracking-wide whitespace-nowrap">Unattempted</span>
-			<span class="text-lg font-bold text-fg">{unattemptedFormatted}</span>
+			<span class="text-2xs font-medium text-fg-muted uppercase tracking-wide whitespace-nowrap">Unattempted</span>
+			<span class="text-base font-bold text-fg">{unattemptedFormatted}</span>
 		</div>
 	</div>
 </div>

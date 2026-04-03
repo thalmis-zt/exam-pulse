@@ -26,7 +26,7 @@
 	</div>
 
 	<!-- Mock test cards: horizontal scroll on mobile, grid on larger screens -->
-	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+	<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 		{#each mocks as mock, i (mock.title + mock.duration + i)}
 			<MockTestCard
 				title={mock.title}

@@ -15,7 +15,7 @@
 			{#snippet icon()}<BookOpen size={20} />{/snippet}
 		</IconHeading>
 		<span
-			class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-info-surface text-primary border border-primary/30"
+			class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-info-surface text-primary border border-primary/30"
 		>
 			{subjectCount} {subjectCount === 1 ? 'Subject' : 'Subjects'} Analyzed
 		</span>

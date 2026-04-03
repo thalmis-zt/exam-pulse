@@ -31,7 +31,7 @@
 			<p class="text-sm text-fg-muted m-0">Track your progress across all core modules</p>
 		</div>
 
-		{#if termOptions.length > 0}
+		<!-- {#if termOptions.length > 0}
 			<div
 				class="flex flex-wrap gap-2 shrink-0"
 				role="group"
@@ -55,7 +55,7 @@
 					</button>
 				{/each}
 			</div>
-		{/if}
+		{/if} -->
 	</div>
 
 	<div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">

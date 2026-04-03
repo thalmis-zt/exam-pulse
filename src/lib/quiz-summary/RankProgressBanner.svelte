@@ -22,7 +22,7 @@
 		>
 			<Trophy size={22} />
 		</div>
-		<p class="text-sm sm:text-base text-fg font-medium m-0 leading-snug">
+		<p class="text-sm text-fg font-medium m-0">
 			{message}
 		</p>
 	</div>
