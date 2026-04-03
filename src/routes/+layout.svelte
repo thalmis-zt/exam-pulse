@@ -18,6 +18,7 @@
 		'/verify-otp',
 		'/forgot-password',
 		'/reset-password',
+		'/unauthorized',
 		'/rptview'
 	];
 	const showHeader = $derived(!routesWithoutHeader.includes(route) && !isQuizAttempt);
@@ -29,7 +30,10 @@
 	}
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<link rel="icon" href={favicon} type="image/svg+xml" />
+	<title>Exam Buddy</title>
+</svelte:head>
 <div class="min-h-screen flex flex-col">
 	{#if showHeader}
 		<Header onLogout={handleLogout} />
