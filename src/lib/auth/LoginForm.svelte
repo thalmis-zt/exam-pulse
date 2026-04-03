@@ -68,10 +68,10 @@
 		passwordError = '';
 		formError = '';
 
-		const emailValid = validateEmail();
+		// const emailValid = validateEmail();
 		const passwordValid = validatePassword();
 
-		if (!emailValid || !passwordValid) return;
+		if (!passwordValid) return;
 
 		loading = true;
 		try {
@@ -88,7 +88,8 @@
 			const errData = await res.json().catch(() => ({}));
 
 			if (res.ok) {
-				goto('/home');
+				const redirectTo = $page.url.searchParams.get('redirectTo') || '/home';
+				goto(redirectTo);
 				return;
 			}
 
@@ -131,7 +132,6 @@
 				{/if}
 				<TextInput
 					label="Email"
-					type="email"
 					placeholder="Enter your email"
 					autocomplete="email"
 					bind:value={email}

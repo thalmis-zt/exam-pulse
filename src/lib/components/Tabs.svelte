@@ -6,6 +6,8 @@
 		size = 'md',
 		title = '',
 		required = false,
+		ariaLabel = '',
+		variant = 'default',
 		class: className = ''
 	} = $props();
 
@@ -48,9 +50,36 @@
 		md: 'px-4 py-2 text-sm',
 		lg: 'px-5 py-2.5 text-base'
 	};
+
+	const tablistClasses = $derived(
+		variant === 'segmented'
+			? 'flex w-full min-w-0 max-w-full items-stretch gap-0 overflow-hidden rounded-lg border border-stroke bg-surface-card shadow-sm divide-x divide-stroke p-0'
+			: 'flex w-full min-w-0 items-center gap-1 rounded-lg bg-stroke px-3 py-1 sm:px-6'
+	);
+
+	/**
+	 * @param {boolean} isSelected
+	 */
+	function tabButtonClasses(isSelected) {
+		const base =
+			'min-w-0 font-medium whitespace-nowrap transition duration-(--motion-fast) ease-(--ease-standard) flex items-center justify-center gap-2 normal-case';
+		if (variant === 'segmented') {
+			const state = isSelected
+				? 'bg-primary text-canvas-base-fixed hover:bg-primary-hover'
+				: 'bg-canvas text-fg hover:bg-stroke/80';
+			return `${base} ${sizeClasses[size] ?? sizeClasses.md} flex-1 sm:min-w-[7.5rem] rounded-none border-0 shadow-none ${state}`;
+		}
+		return [
+			'min-w-0 flex-1 text-center rounded-md',
+			sizeClasses[size] ?? sizeClasses.md,
+			isSelected
+				? 'bg-surface-card text-primary shadow-sm'
+				: 'bg-transparent text-fg-muted hover:text-fg'
+		].join(' ');
+	}
 </script>
 
-<div class="w-full min-w-0 {className}">
+<div class="min-w-0 {variant === 'segmented' ? 'w-full max-w-full' : 'w-full'} {className}">
 	{#if title}
 		<p id={titleId} class="text-fg mb-2 block text-sm font-medium leading-5">
 			{title}{#if required}<span class="text-danger ml-0.5">*</span>{/if}
@@ -59,13 +88,14 @@
 
 	<div
 		role="tablist"
-		aria-label={title ? undefined : 'Tabs'}
+		aria-label={ariaLabel || (title ? undefined : 'Tabs')}
 		aria-labelledby={title ? titleId : undefined}
 		tabindex="0"
-		class="flex w-full min-w-0 items-center gap-1 rounded-lg bg-stroke px-3 py-1 sm:px-6"
+		class="{tablistClasses}"
 		onkeydown={handleKeydown}
 	>
 		{#each options as option, i}
+			{@const Icon = option.icon}
 			<button
 				role="tab"
 				type="button"
@@ -73,19 +103,19 @@
 				aria-selected={selected === option.value}
 				aria-controls="tabpanel-{option.value}"
 				id="tab-{option.value}"
-				class="
-					min-w-0 flex-1 text-center
-					rounded-md font-medium whitespace-nowrap
-					transition duration-(--motion-fast) ease-(--ease-standard)
-					{sizeClasses[size]}
-					{selected === option.value
-						? 'bg-surface-card text-primary shadow-sm'
-						: 'bg-transparent text-fg-muted hover:text-fg'}
-				"
+				class={tabButtonClasses(selected === option.value)}
 				onclick={() => onSelect?.(option.value)}
 				onfocus={() => (focusedIndex = i)}
 			>
-				{option.label}
+				{#if Icon}
+					<Icon size={16} class="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" aria-hidden="true" />
+				{/if}
+				{#if option.shortLabel}
+					<span class="sm:hidden">{option.shortLabel}</span>
+					<span class="hidden sm:inline">{option.label}</span>
+				{:else}
+					{option.label}
+				{/if}
 			</button>
 		{/each}
 	</div>
