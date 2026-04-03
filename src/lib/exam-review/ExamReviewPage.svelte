@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import {
+		Bookmark,
+		BookMarked,
 		ChevronDown,
 		ChevronLeft,
 		ChevronRight,
@@ -553,12 +555,27 @@
 									{/if}
 								</div>
 							</div>
-							<span
-								class="inline-flex shrink-0 text-fg-muted transition-transform duration-(--motion-fast) ease-(--ease-standard) group-open:rotate-180"
-								aria-hidden="true"
-							>
-								<ChevronDown size={20} strokeWidth={2} />
-							</span>
+							<div class="flex shrink-0 items-center gap-1">
+								<IconButton
+									icon={savedReviewFlags[q.id] ? BookMarked : Bookmark}
+									ariaLabel={savedReviewFlags[q.id]
+										? 'Remove from saved questions'
+										: 'Save question for later'}
+									variant={savedReviewFlags[q.id] ? 'primary' : 'outline'}
+									size="sm"
+									disabled={savePendingId === q.id}
+									onclick={(e) => {
+										e.stopPropagation();
+										handleToggleSaveQuestion(q.id);
+									}}
+								/>
+								<span
+									class="inline-flex text-fg-muted transition-transform duration-(--motion-fast) ease-(--ease-standard) group-open:rotate-180"
+									aria-hidden="true"
+								>
+									<ChevronDown size={24} strokeWidth={2} />
+								</span>
+							</div>
 						</summary>
 						<div class="border-t border-stroke">
 							<ExamReviewQuestionBlock

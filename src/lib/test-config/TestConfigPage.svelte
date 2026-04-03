@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { getTestConfigData, startMockTest } from '$lib/test-config/mock/testConfig.service.js';
-	import { goto } from '$app/navigation';
 	import ConfigurationCard from '$lib/test-config/ConfigurationCard.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import StateDisplay from '$lib/components/StateDisplay.svelte';
