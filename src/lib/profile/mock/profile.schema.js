@@ -31,13 +31,16 @@
 
 /**
  * @typedef {Object} Goal
- * @property {string} id
- * @property {boolean} isPrimary - true = Primary Goal, false = Secondary Goal
- * @property {string} title - e.g. "IIT JEE - 2027"
- * @property {string} description - Short description
- * @property {number} examsCount - Number of exams associated
- * @property {number} topicsCount - Number of topics covered
- * @property {number} questionsCount - Total questions in goal bank
+ * @property {string} base.id
+ * @property {'entrance' | 'classwise'} base.type
+ * @property {number} base.targetYear
+ * @property {string | null} base.name
+ * @property {boolean} base.isPrimary
+ * @property {string | null} entranceExamId - For entrance goals
+ * @property {string | null} stateId - For classwise goals
+ * @property {string | null} boardId - For classwise goals
+ * @property {string | null} mediumId - For classwise goals
+ * @property {string | null} classId - For classwise goals
  */
 
 /**

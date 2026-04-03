@@ -26,25 +26,35 @@ export const stats = {
 	totalQuizzes: 142
 };
 
-/** @type {import('./profile.schema.js').Goal[]} */
+/** @type {import('../schemas/goal.schema.js').Goal[]} */
 export const goals = [
 	{
-		id: 'goal_1',
-		isPrimary: true,
-		title: 'IIT JEE - 2027',
-		description: 'Practice mock tests and master IIT JEE concepts.',
-		examsCount: 1140,
-		topicsCount: 110,
-		questionsCount: 2000
+		base: {
+			id: 'goal_entrance_1',
+			type: 'entrance',
+			targetYear: 2027,
+			name: null,
+			isPrimary: true
+		},
+		entranceExamId: 'exam_jee_main',
+		stateId: null,
+		boardId: null,
+		mediumId: null,
+		classId: null
 	},
 	{
-		id: 'goal_2',
-		isPrimary: false,
-		title: 'BITSAT - 2027',
-		description: 'Cover all BITSAT syllabus with targeted practice.',
-		examsCount: 480,
-		topicsCount: 80,
-		questionsCount: 1500
+		base: {
+			id: 'goal_classwise_1',
+			type: 'classwise',
+			targetYear: 2024,
+			name: 'CBSE English Medium',
+			isPrimary: false
+		},
+		entranceExamId: null,
+		stateId: 'state_all',
+		boardId: 'board_cbse',
+		mediumId: 'medium_english',
+		classId: 'class_12'
 	}
 ];
 
