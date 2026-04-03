@@ -88,7 +88,8 @@
 			const errData = await res.json().catch(() => ({}));
 
 			if (res.ok) {
-				goto('/home');
+				const redirectTo = $page.url.searchParams.get('redirectTo') || '/home';
+				goto(redirectTo);
 				return;
 			}
 

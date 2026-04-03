@@ -65,6 +65,14 @@
 
 	let collapsed = $state(false);
 	const pathname = $derived($page.url.pathname);
+
+	const isExamReviewPage = $derived(/^\/tests\/[^/]+\/review\/?$/.test(pathname));
+
+	$effect(() => {
+		if (isExamReviewPage) {
+			collapsed = true;
+		}
+	});
 </script>
 
 {#if sidebar.open}
