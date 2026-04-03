@@ -145,13 +145,12 @@
 							Password
 							<span class="text-danger" aria-hidden="true">*</span>
 						</label>
-						<Button
-							type="button"
-							btnType="custom"
-							customClass="text-primary h-auto min-h-0 cursor-pointer bg-transparent p-0 text-sm font-medium hover:underline border-0 shadow-none"
+						<a
+							href="/forgot-password"
+							class="text-primary h-auto min-h-0 cursor-pointer bg-transparent p-0 text-sm font-medium hover:underline"
 						>
 							Forgot password?
-						</Button>
+						</a>
 					</div>
 					<PasswordInput
 						id="login-password"

@@ -1,6 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { Zap } from '@lucide/svelte';
+	import { ArrowLeft, Key, Mail } from '@lucide/svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import InlineAlert from '$lib/components/InlineAlert.svelte';
@@ -28,6 +28,7 @@
 	function messageFromErrorBody(data) {
 		if (!data || typeof data !== 'object') return 'Request failed';
 		if ('detail' in data && typeof data.detail === 'string') return data.detail;
+		if ('message' in data && typeof data.message === 'string') return data.message;
 		if ('error' in data && typeof data.error === 'string') return data.error;
 		if (Array.isArray(data.detail) && data.detail[0] && typeof data.detail[0] === 'object') {
 			const msgs = data.detail
@@ -36,6 +37,12 @@
 			if (msgs.length) return msgs.join(' ');
 		}
 		return 'Request failed';
+	}
+
+	function errorMessageForForgotPasswordResponse(res, data) {
+		if (res.status === 422) return 'Please enter a valid email address.';
+		if (res.status === 429) return 'Too many attempts. Please try again in an hour.';
+		return messageFromErrorBody(data);
 	}
 
 	async function handleSubmit(e) {
@@ -56,37 +63,38 @@
 
 			if (res.ok) {
 				sessionStorage.setItem('forgotPasswordEmail', email.trim());
-				// temp_token is now set as an HTTP-only cookie by the backend
 				goto('/reset-password');
 				return;
 			}
 
-			formError = messageFromErrorBody(data);
+			formError = errorMessageForForgotPasswordResponse(res, data);
 		} catch (err) {
-			formError = messageFromErrorBody(err);
+			formError = err instanceof Error ? err.message : 'Request failed';
 		} finally {
 			loading = false;
 		}
 	}
 </script>
 
+{#snippet emailFieldIcon()}
+	<Mail />
+{/snippet}
+
 <div class="bg-canvas flex min-h-screen items-center justify-center px-4 py-12">
 	<div class="w-full max-w-md">
 		<div class="mb-8 flex flex-col items-center text-center">
-			<a href="/" class="mb-4 flex items-center gap-2 no-underline">
-				<div class="bg-primary flex size-10 items-center justify-center rounded-xl">
-					<Zap size={22} color="white" fill="white" />
-				</div>
-				<span class="text-fg text-xl font-bold tracking-tight">Exam Buddy</span>
-			</a>
-			<p class="text-fg-muted text-sm">Reset your password</p>
+			<div
+				class="bg-primary mb-5 flex size-14 items-center justify-center rounded-xl shadow-sm"
+			>
+				<Key class="size-8 text-canvas-base-fixed" strokeWidth={2} aria-hidden="true" />
+			</div>
+			<h1 class="text-fg mb-2 text-2xl font-bold tracking-tight">Forgot password?</h1>
+			<p class="text-fg-muted max-w-sm text-sm leading-relaxed">
+				Enter your email and we'll send you a reset code.
+			</p>
 		</div>
 
 		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
-			<p class="text-fg-muted mb-6 text-sm">
-				Enter the email for your account. We'll send a code you can use to choose a new password.
-			</p>
-
 			<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
 				{#if formError}
 					<InlineAlert variant="error" title={formError} showClose={false} />
@@ -98,6 +106,7 @@
 					autocomplete="email"
 					bind:value={email}
 					error={emailError}
+					icon={emailFieldIcon}
 					required
 					onblur={validateEmail}
 				/>
@@ -108,12 +117,18 @@
 					customClass="w-full py-3 font-semibold rounded-xl"
 					disabled={loading}
 				>
-					{loading ? 'Sending code…' : 'Send reset code'}
+					{loading ? 'Sending…' : 'Send OTP'}
 				</Button>
 			</form>
 
-			<p class="text-fg-muted mt-6 text-center text-sm">
-				<a href="/login" class="text-primary font-medium hover:underline">Back to sign in</a>
+			<p class="mt-6 text-center">
+				<a
+					href="/login"
+					class="text-primary inline-flex items-center justify-center gap-1.5 text-sm font-medium hover:underline"
+				>
+					<ArrowLeft class="size-4 shrink-0" aria-hidden="true" />
+					Back
+				</a>
 			</p>
 		</div>
 	</div>
