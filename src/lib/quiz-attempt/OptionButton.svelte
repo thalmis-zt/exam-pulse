@@ -1,9 +1,12 @@
 <script>
 	import { Check } from '@lucide/svelte';
+	import QuestionImage from './QuestionImage.svelte';
 
 	let {
 		label,
 		text,
+		/** @type {string[]} */
+		mediaUrls = [],
 		selected = false,
 		onclick = () => {},
 		/** When true, renders a non-interactive row (exam review). */
@@ -48,43 +51,89 @@
 				return 'bg-stroke/50 text-fg-muted';
 		}
 	});
+
+	const hasMedia = $derived(mediaUrls.length > 0);
+	const rowClass = $derived.by(() => {
+		if (readonly) return reviewRowClass;
+		return selected
+			? 'border-primary bg-primary-light text-primary'
+			: 'border-stroke bg-surface-card text-fg hover:border-primary/50';
+	});
+	const letterClass = $derived.by(() => {
+		if (readonly) return reviewLetterClass;
+		return selected
+			? 'bg-primary text-canvas-base-fixed'
+			: 'bg-stroke/50 text-fg-muted';
+	});
 </script>
 
 {#if readonly}
 	<div
-		class="flex w-full items-center gap-4 rounded-xl border-2 px-4 py-4 text-left transition duration-motion-fast ease-ease-standard {reviewRowClass}"
+		class="flex w-full flex-col gap-3 rounded-xl border-2 px-4 py-4 text-left transition duration-motion-fast ease-ease-standard {rowClass}"
 		role="listitem"
 	>
-		<span
-			class="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold {reviewLetterClass}"
-		>
-			{label}
-		</span>
-		<span class="min-w-0 flex-1 font-medium">{text}</span>
-		{#if endLabel}
-			<span class="text-xs font-semibold {endToneClass[endLabelTone] ?? endToneClass.muted}">
-				{endLabel}
-			</span>
+		{#if hasMedia}
+			<div class="flex w-full min-w-0 flex-col items-center gap-2">
+				{#each mediaUrls as url, i (url + i)}
+					<QuestionImage
+						src={url}
+						alt={`Option ${label} figure ${i + 1}`}
+						variant="option"
+						loading="lazy"
+					/>
+				{/each}
+			</div>
 		{/if}
+		<div class="flex w-full items-center gap-4">
+			<span
+				class="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold {letterClass}"
+			>
+				{label}
+			</span>
+			{#if text}
+				<span class="min-w-0 flex-1 font-medium">{text}</span>
+			{:else}
+				<span class="min-w-0 flex-1 text-sm font-medium italic text-fg-muted">Image only</span>
+			{/if}
+			{#if endLabel}
+				<span class="text-xs font-semibold {endToneClass[endLabelTone] ?? endToneClass.muted}">
+					{endLabel}
+				</span>
+			{/if}
+		</div>
 	</div>
 {:else}
 	<button
 		type="button"
-		class="flex w-full items-center gap-4 rounded-xl border-2 px-4 py-4 text-left transition duration-motion-fast ease-ease-standard {selected
-			? 'border-primary bg-primary-light text-primary'
-			: 'border-stroke bg-surface-card text-fg hover:border-primary/50'}"
+		class="flex w-full flex-col gap-3 rounded-xl border-2 px-4 py-4 text-left transition duration-motion-fast ease-ease-standard {rowClass}"
 		onclick={onclick}
 	>
-		<span
-			class="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold {selected
-				? 'bg-primary text-canvas-base-fixed'
-				: 'bg-stroke/50 text-fg-muted'}"
-		>
-			{label}
-		</span>
-		<span class="min-w-0 flex-1 font-medium">{text}</span>
-		{#if selected}
-			<Check size={20} class="shrink-0" aria-hidden="true" />
+		{#if hasMedia}
+			<div class="flex w-full min-w-0 flex-col items-center gap-2 pointer-events-none">
+				{#each mediaUrls as url, i (url + i)}
+					<QuestionImage
+						src={url}
+						alt={`Option ${label} figure ${i + 1}`}
+						variant="option"
+						loading="lazy"
+					/>
+				{/each}
+			</div>
 		{/if}
+		<div class="flex w-full items-center gap-4">
+			<span
+				class="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold {letterClass}"
+			>
+				{label}
+			</span>
+			{#if text}
+				<span class="min-w-0 flex-1 font-medium">{text}</span>
+			{:else}
+				<span class="min-w-0 flex-1 text-sm font-medium italic text-fg-muted">Image only</span>
+			{/if}
+			{#if selected}
+				<Check size={20} class="shrink-0" aria-hidden="true" />
+			{/if}
+		</div>
 	</button>
 {/if}

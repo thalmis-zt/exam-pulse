@@ -103,6 +103,18 @@
 		const ua = d.userAnswers[q.id] ?? null;
 		const ca = d.correctAnswers[q.id];
 		if (ua == null) return 'unanswered';
+		if (q.questionType === 'short_answer') {
+			if (String(ua).trim() === '') return 'unanswered';
+			const caStr = String(ca ?? '').trim();
+			if (q.shortAnswerInputType === 'number') {
+				const nU = Number(String(ua).trim());
+				const nC = Number(caStr);
+				if (Number.isFinite(nU) && Number.isFinite(nC) && nU === nC) return 'correct';
+				return 'incorrect';
+			}
+			if (String(ua).trim().toLowerCase() === caStr.toLowerCase()) return 'correct';
+			return 'incorrect';
+		}
 		if (ua === ca) return 'correct';
 		return 'incorrect';
 	}
