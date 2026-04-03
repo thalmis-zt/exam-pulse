@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { getTestConfigData, startMockTest } from '$lib/test-config/mock/testConfig.service.js';
 	import { goto } from '$app/navigation';
 	import ConfigurationCard from '$lib/test-config/ConfigurationCard.svelte';
@@ -28,10 +29,7 @@
 			const result = await startMockTest(config);
 			console.log('Test started:', result);
 
-			// Navigate to test page with test ID
-			// TODO: Update route when test attempt page is ready
-			const testAttemptRoute = `/tests/${result.testId}/attempt`;
-			goto(testAttemptRoute);
+			await goto(`/tests/${result.testId}/start`);
 		} catch (error) {
 			console.error('Failed to start test:', error);
 			startTestError = error?.message || 'Failed to start test. Please try again.';

@@ -23,7 +23,7 @@
 		onclick={() => goto('/mock-tests')}
 	>
 		<ArrowLeft size={16} aria-hidden="true" />
-		Back to mock tests
+		Back
 	</Button>
 
 	<ExamStartHero

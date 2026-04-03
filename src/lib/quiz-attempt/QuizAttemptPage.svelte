@@ -124,6 +124,10 @@
 		console.log('Submit clicked');
 	}
 
+	function handleBackFromAttempt() {
+		goto(`/tests/${testId}/start`);
+	}
+
 	function handleSelectQuestion(questionId) {
 		const q = data?.questions.find((x) => x.id === questionId);
 		if (q) currentQuestionIndex = q.index;
@@ -176,6 +180,7 @@
 					title={data.title}
 					section={data.section}
 					timeDisplay={timeDisplay}
+					onBack={handleBackFromAttempt}
 					onSubmit={handleSubmit}
 				/>
 

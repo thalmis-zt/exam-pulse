@@ -13,9 +13,11 @@
 	} = $props();
 </script>
 
-<div class="flex flex-wrap items-center justify-between gap-2">
-	<!-- Left: Question number (mobile) / Stats (desktop) -->
-	<div class="flex items-center gap-4">
+<div
+	class="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2"
+>
+	<!-- Left: Question number + desktop stats -->
+	<div class="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
 		<span class="text-base font-bold text-fg sm:text-lg">
 			Question {currentQuestion} / {totalQuestions}
 		</span>
@@ -25,8 +27,8 @@
 		</div>
 	</div>
 
-	<!-- Right: Time spent (pill badge) + Grid icon (mobile) -->
-	<div class="flex items-center gap-2">
+	<!-- Right: Time spent + grid (own row on mobile so nothing crowds the title area) -->
+	<div class="flex min-w-0 items-center justify-between gap-2 sm:justify-end">
 		<Badge label="Time Spent: {timeSpent}" variant="default" size="md">
 			{#snippet icon()}<Clock size={14} />{/snippet}
 		</Badge>
@@ -37,7 +39,7 @@
 				variant="ghost-subtle"
 				size="md"
 				onclick={onOpenGrid}
-				class="sm:hidden"
+				class="shrink-0 sm:hidden"
 			/>
 		{/if}
 	</div>

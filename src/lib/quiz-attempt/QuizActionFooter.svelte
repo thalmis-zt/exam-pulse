@@ -17,40 +17,41 @@
 </script>
 
 <div class="border-t border-stroke pt-4">
-	<!-- Mobile: [<] [Mark for Review] [Save & Next] [>] - single row -->
-	<div class="flex items-stretch justify-between gap-2 sm:hidden">
-		<IconButton
-			icon={ChevronLeft}
-			ariaLabel="Previous question"
-			variant="outline"
-			size="md"
-			disabled={!hasPrevious}
-			onclick={onPrevious}
-		/>
-		<div class="flex flex-1 items-stretch justify-center gap-2">
+	<div class="flex min-w-0 flex-col gap-2 sm:hidden">
+		<div class="flex items-center justify-between gap-2">
+			<IconButton
+				icon={ChevronLeft}
+				ariaLabel="Previous question"
+				variant="outline"
+				size="md"
+				disabled={!hasPrevious}
+				onclick={onPrevious}
+			/>
+			<IconButton
+				icon={ChevronRight}
+				ariaLabel="Next question"
+				variant="outline"
+				size="md"
+				disabled={!hasNext}
+				onclick={onNext}
+			/>
+		</div>
+		<div class="flex min-w-0 items-stretch gap-2">
 			<Button
 				btnType={isMarked ? 'flagged' : 'flaggedLight'}
 				onclick={onMarkForReview}
-				customClass="min-h-[42px] min-w-0 flex-1 normal-case"
+				customClass="min-h-[42px] min-w-0 flex-1 normal-case text-center whitespace-normal"
 			>
 				Mark for Review
 			</Button>
 			<Button
 				btnType="primary"
 				onclick={onSaveAndNext}
-				customClass="min-h-[42px] min-w-0 flex-1"
+				customClass="min-h-[42px] min-w-0 flex-1 text-center whitespace-normal"
 			>
 				Save & Next
 			</Button>
 		</div>
-		<IconButton
-			icon={ChevronRight}
-			ariaLabel="Next question"
-			variant="outline"
-			size="md"
-			disabled={!hasNext}
-			onclick={onNext}
-		/>
 	</div>
 
 	<!-- Desktop: [<] [>] on left, [Mark for Review] [Save & Next] on right -->

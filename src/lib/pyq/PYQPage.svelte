@@ -133,23 +133,30 @@
 		{:else}
 		<!-- Year-Wise Mock Tests -->
 		<section>
-			<div class="flex flex-wrap items-center justify-between gap-3">
+			<div
+				class="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3"
+			>
 				<IconHeading
 					title="Year-Wise Mock Tests"
 					size="sm"
-					class="[&_h2]:text-fg-muted [&_h2]:uppercase [&_h2]:tracking-widest"
+					class="min-w-0 shrink-0 [&_h2]:text-fg-muted [&_h2]:uppercase [&_h2]:tracking-widest"
 				>
 					{#snippet icon()}<Sparkles size={16} />{/snippet}
 				</IconHeading>
-				<div class="flex flex-wrap items-center gap-2">
-					<ChipGroup
-						options={(data.examTypes ?? []).map((t) => ({ id: t, label: t }))}
-						bind:selected={examTypeSelected}
-						singleSelect
-						variant="filter"
-						class="gap-2"
-					/>
-					<div class="w-auto min-w-28">
+				<div
+					class="flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-nowrap sm:items-center sm:justify-end sm:gap-2.5"
+				>
+					<div class="flex min-w-0 flex-1 flex-nowrap items-center gap-1.5 overflow-x-auto sm:gap-2.5">
+						<ChipGroup
+							compact
+							singleSelect
+							options={(data.examTypes ?? []).map((t) => ({ id: t, label: t }))}
+							bind:selected={examTypeSelected}
+						/>
+					</div>
+					<div
+						class="w-full min-w-0 shrink-0 sm:w-auto sm:min-w-30 max-sm:[&_button]:rounded-full max-sm:[&_button]:px-2.5 max-sm:[&_button]:py-2 max-sm:[&_button]:text-xs max-sm:[&_button]:leading-tight max-sm:[&_svg]:size-3.5"
+					>
 						<Dropdown
 							options={yearOptions}
 							bind:value={selectedYearValue}

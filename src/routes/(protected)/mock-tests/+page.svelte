@@ -1,9 +1,14 @@
 <script>
+	import { goto } from '$app/navigation';
 	import SectionHeader from '$lib/components/SectionHeader.svelte';
 	import RecommendedMock from '$lib/components/RecommendedMock.svelte';
 	import MockTestCard from '$lib/components/MockTestCard.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Badge from '$lib/components/Badge.svelte';
+
+
+
+
 
 	/* ── Mock data (replace with server load data) ─────────── */
 	const recommended = [
@@ -67,6 +72,9 @@
 			xp: '+150 XP'
 		}
 	];
+	function goToStart() {
+		goto(`/tests/${startTestId}/start`);
+	}
 
 	let activeSubject = $state('All');
 	let activeLevel = $state('All');
@@ -91,6 +99,7 @@
 							duration={mock.duration}
 							xp={mock.xp}
 							variant={mock.variant}
+							onclick={goToStart}
 						/>
 					</div>
 				{/each}
@@ -105,6 +114,7 @@
 					duration={mock.duration}
 					xp={mock.xp}
 					variant={mock.variant}
+					onclick={goToStart}
 				/>
 			{/each}
 		</div>
@@ -125,7 +135,7 @@
 						size="sm"
 						isActive={activeLevel === lvl}
 						onclick={() => (activeLevel = lvl)}
-z					/>
+					/>
 				{/each}
 			</div>
 		</div>
@@ -152,6 +162,7 @@ z					/>
 					questions={mock.questions}
 					users={mock.users}
 					xp={mock.xp}
+					onclick={goToStart}
 				/>
 			{/each}
 		</div>

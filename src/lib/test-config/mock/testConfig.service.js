@@ -11,6 +11,7 @@
  */
 
 import { subjects, topics, difficultyLevels, examGuidelines } from './testConfig.data.js';
+import { listMockTests } from '$lib/mock-tests/mockTests.catalog.js';
 
 /**
  * Fetches all available subjects for test configuration
@@ -121,9 +122,12 @@ export async function startMockTest(config) {
 		throw new Error('Question count must be between 1 and 100');
 	}
 
-	// Return mock test ID
+	// Use a catalog id so /tests/[id]/start and /tests/[id]/attempt resolve
+	const catalog = listMockTests();
+	const testId = catalog[0]?.id ?? 'jee-main-full-08';
+
 	return {
-		testId: `test_${Date.now()}`,
+		testId,
 		message: 'Test started successfully'
 	};
 }
