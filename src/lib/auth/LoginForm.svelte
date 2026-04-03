@@ -1,11 +1,12 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { Zap } from '@lucide/svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import PasswordInput from '$lib/components/PasswordInput.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import Error from '$lib/components/Error.svelte';
+	import InlineAlert from '$lib/components/InlineAlert.svelte';
 
 	let email = $state('');
 	let password = $state('');
@@ -14,6 +15,20 @@
 	let passwordError = $state('');
 	let formError = $state('');
 	let loading = $state(false);
+	let showResetPasswordSuccess = $state(false);
+
+	$effect(() => {
+		if ($page.url.searchParams.get('reset') === 'success') {
+			showResetPasswordSuccess = true;
+			if (browser) {
+				goto('/login', { replaceState: true, noScroll: true, keepFocus: true });
+			}
+		}
+	});
+
+	function dismissResetPasswordSuccess() {
+		showResetPasswordSuccess = false;
+	}
 
 	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -103,8 +118,17 @@
 		<!-- Form Card -->
 		<div class="bg-surface-card border-stroke rounded-xl border p-6 shadow-sm">
 			<form class="flex flex-col gap-5" onsubmit={handleSubmit}>
+				{#if showResetPasswordSuccess}
+					<InlineAlert
+						variant="success"
+						title="Password updated"
+						message="Sign in with your new password."
+						showClose={true}
+						onclose={dismissResetPasswordSuccess}
+					/>
+				{/if}
 				{#if formError}
-					<Error title={formError} showClose={false} />
+					<InlineAlert variant="error" title={formError} showClose={false} />
 				{/if}
 				<TextInput
 					label="Email"
